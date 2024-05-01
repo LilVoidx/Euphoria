@@ -1,13 +1,13 @@
-package fire.soul;
+package soul.euphoria;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SoulApplication {
+public class EuphoriaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SoulApplication.class, args);
+		SpringApplication.run(EuphoriaApplication.class, args);
 	}
 
 }
