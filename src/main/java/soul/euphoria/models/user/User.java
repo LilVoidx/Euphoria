@@ -80,24 +80,6 @@ public class User {
     )
     private List<Song> favoriteSongs;
 
-    // Artist fields (nullable)
-    private String stageName;
-
-    @Column(length = 1000)
-    private String bio;
-
-    @Column
-    @Enumerated(EnumType.STRING)
-    private Genre genre;
-
-
-    //mapped to private User artist in album
-    @OneToMany(mappedBy = "artist")
-    private List<Album> albums;
-
-    //mapped to private User artist in song
-    @OneToMany(mappedBy = "artist")
-    private List<Song> songs;
-
-
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Artist artist;
 }

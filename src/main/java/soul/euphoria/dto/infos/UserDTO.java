@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import soul.euphoria.models.Enum.Genre;
+import soul.euphoria.models.user.Artist;
 import soul.euphoria.models.user.User;
 
 import java.time.LocalDate;
@@ -25,6 +26,9 @@ public class UserDTO {
     private String profilePictureUrl;
     private List<PlaylistDTO> playlists;
     private List<SongDTO> favoriteSongs;
+
+    // Properties specific to Artist
+    private Long artistId;
     private String stageName;
     private String bio;
     private Genre genre;
@@ -37,22 +41,29 @@ public class UserDTO {
             profilePictureUrl = user.getProfilePicture().getStorageFileName();
         }
 
-        return UserDTO.builder()
+        UserDTO.UserDTOBuilder builder = UserDTO.builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .fullName(user.getFirstName()+ " " + user.getLastName())
+                .fullName(user.getFirstName() + " " + user.getLastName())
                 .phoneNumber(user.getPhoneNumber())
                 .registrationDate(user.getRegistrationDate())
                 .profilePictureUrl(profilePictureUrl)
                 .playlists(user.getPlaylists().stream().map(PlaylistDTO::from).collect(Collectors.toList()))
-                .favoriteSongs(user.getFavoriteSongs().stream().map(SongDTO::from).collect(Collectors.toList()))
-                .stageName(user.getStageName())
-                .bio(user.getBio())
-                .genre(user.getGenre())
-                .albums(user.getAlbums().stream().map(AlbumDTO::from).collect(Collectors.toList()))
-                .songs(user.getSongs().stream().map(SongDTO::from).collect(Collectors.toList()))
-                .build();
+                .favoriteSongs(user.getFavoriteSongs().stream().map(SongDTO::from).collect(Collectors.toList()));
+
+        Artist artist = user.getArtist();
+        if (artist != null) {
+            builder
+                    .artistId(artist.getArtistId())
+                    .stageName(artist.getStageName())
+                    .bio(artist.getBio())
+                    .genre(artist.getGenre())
+                    .albums(artist.getAlbums().stream().map(AlbumDTO::from).collect(Collectors.toList()))
+                    .songs(artist.getSongs().stream().map(SongDTO::from).collect(Collectors.toList()));
+        }
+
+        return builder.build();
     }
 
     public static List<UserDTO> userList(List<User> users) {

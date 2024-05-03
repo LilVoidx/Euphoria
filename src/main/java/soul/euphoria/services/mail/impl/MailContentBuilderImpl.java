@@ -2,7 +2,7 @@ package soul.euphoria.services.mail.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import soul.euphoria.services.mail.MailContentBuilder;
 
 import freemarker.template.Configuration;
@@ -17,7 +17,7 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
+@Service
 public class MailContentBuilderImpl implements MailContentBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(MailContentBuilderImpl.class);

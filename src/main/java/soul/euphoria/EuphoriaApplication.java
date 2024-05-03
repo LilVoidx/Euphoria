@@ -7,7 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"soul.euphoria.controllers", "soul.euphoria.services","soul.euphoria.dto","soul.euphoria.repositories" , "soul.euphoria.security", "soul.euphoria.models"})
 public class EuphoriaApplication {
 
 	@Bean

@@ -8,11 +8,11 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import soul.euphoria.services.mail.EmailSender;
 import soul.euphoria.services.mail.MailContentBuilder;
 
-@Component
+@Service
 public class EmailSenderImpl implements EmailSender {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailSenderImpl.class);
