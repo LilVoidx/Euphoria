@@ -10,6 +10,7 @@ import soul.euphoria.models.user.User;
 import soul.euphoria.repositories.user.UsersRepository;
 import soul.euphoria.services.mail.EmailSender;
 import soul.euphoria.services.user.RegisterService;
+import soul.euphoria.services.user.UserService;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -17,16 +18,18 @@ import java.util.UUID;
 @Service
 public class RegisterServiceImpl implements RegisterService {
 
-    private final UsersRepository usersRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final EmailSender emailSender;
+    @Autowired
+    private UsersRepository usersRepository;
 
     @Autowired
-    public RegisterServiceImpl(UsersRepository usersRepository, PasswordEncoder passwordEncoder, EmailSender emailSender) {
-        this.usersRepository = usersRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.emailSender = emailSender;
-    }
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailSender emailSender;
+
+    @Autowired
+    private UserService userService;
+
 
     @Override
     public User registerUser(UserForm userForm) {
@@ -40,7 +43,7 @@ public class RegisterServiceImpl implements RegisterService {
                 .role(Role.LISTENER)  // Default
                 .state(State.NOT_CONFIRMED)  // Default
                 .registrationDate(LocalDate.now())
-                .confirmationCode(UUID.randomUUID().toString())
+                .confirmationCode(userService.generateToken())
                 .build();
 
         // Save user to repository

@@ -18,5 +18,6 @@
     </div>
     <button type="submit">Sign In</button>
 </form>
+<p><a href="/password/forgot">Forgot Password?</a></p>
 </body>
 </html>

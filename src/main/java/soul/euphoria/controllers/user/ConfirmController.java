@@ -1,5 +1,7 @@
 package soul.euphoria.controllers.user;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +11,8 @@ import soul.euphoria.services.mail.ConfirmationService;
 
 @Controller
 public class ConfirmController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ConfirmController.class);
 
     @Autowired
     private ConfirmationService confirmationService;
@@ -20,7 +24,7 @@ public class ConfirmController {
         if (isConfirmed) {
             return "redirect:/confirmation-success";
         } else {
-            // Redirect to the central error page with an error message
+            logger.error("Failed to confirm account with code: {}", code);
             model.addAttribute("errorMessage", "Failed to confirm account. Please try again.");
             return "redirect:/error";
         }

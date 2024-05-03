@@ -31,24 +31,39 @@ public class EmailSenderImpl implements EmailSender {
         // Build email content
         String mailText = mailContentBuilder.buildConfirmationEmail(code);
         // Prepare email message
-        MimeMessagePreparator messagePreparator = getEmail(email, mailText);
-        try {
-            // Send email
-            javaMailSender.send(messagePreparator);
-            logger.info("Confirmation email sent to: {}", email);
-        } catch (MailException e) {
-            // Log error if sending fails
-            logger.error("Error occurred while sending confirmation email to: {}", email, e);
-        }
+        MimeMessagePreparator messagePreparator = getEmail(email, mailText, "Email Confirmation");
+        // Send email
+        sendEmail(messagePreparator, email);
     }
 
-    private MimeMessagePreparator getEmail(String email, String mailText) {
+    @Override
+    public void sendEmailForResetPassword(String email, String resetPasswordCode) {
+        // Build email content
+        String mailText = mailContentBuilder.buildResetPasswordEmail(resetPasswordCode);
+        // Prepare email message
+        MimeMessagePreparator messagePreparator = getEmail(email, mailText, "Password Reset");
+        // Send email
+        sendEmail(messagePreparator, email);
+    }
+
+    private MimeMessagePreparator getEmail(String email, String mailText, String subject) {
         return mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setFrom(mailFrom);
             messageHelper.setTo(email);
-            messageHelper.setSubject("Email Confirmation");
+            messageHelper.setSubject(subject);
             messageHelper.setText(mailText, true);
         };
+    }
+
+    private void sendEmail(MimeMessagePreparator messagePreparator, String email) {
+        try {
+            // Send email
+            javaMailSender.send(messagePreparator);
+            logger.info("Email sent to: {}", email);
+        } catch (MailException e) {
+            // Log error if sending fails
+            logger.error("Error occurred while sending email to: {}", email, e);
+        }
     }
 }

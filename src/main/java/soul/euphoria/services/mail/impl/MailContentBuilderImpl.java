@@ -23,6 +23,7 @@ public class MailContentBuilderImpl implements MailContentBuilder {
     private static final Logger logger = LoggerFactory.getLogger(MailContentBuilderImpl.class);
 
     private final Template confirmMailTemplate;
+    private final Template resetPasswordTemplate;
 
     public MailContentBuilderImpl() {
         // Initialize FreeMarker configuration
@@ -34,9 +35,11 @@ public class MailContentBuilderImpl implements MailContentBuilder {
         try {
             // Load the confirmation email template
             this.confirmMailTemplate = configuration.getTemplate("templates/auth/confirm_mail.ftlh");
+            // Load the reset password email template
+            this.resetPasswordTemplate = configuration.getTemplate("templates/auth/password/reset_password_mail.ftlh");
         } catch (IOException e) {
             // Log error if template loading fails
-            logger.error("Error loading confirmation email template", e);
+            logger.error("Error loading email templates", e);
             throw new IllegalStateException(e);
         }
     }
@@ -46,15 +49,28 @@ public class MailContentBuilderImpl implements MailContentBuilder {
         Map<String, String> attributes = new HashMap<>();
         attributes.put("confirm_code", code);
 
+        return processTemplate(confirmMailTemplate, attributes);
+    }
+
+    @Override
+    public String buildResetPasswordEmail(String resetPasswordCode) {
+        Map<String, String> attributes = new HashMap<>();
+        attributes.put("reset_password_code", resetPasswordCode);
+
+        return processTemplate(resetPasswordTemplate, attributes);
+    }
+
+    private String processTemplate(Template template, Map<String, String> attributes) {
         StringWriter writer = new StringWriter();
         try {
-            // Process the confirmation email template
-            confirmMailTemplate.process(attributes, writer);
+            // Process the email template
+            template.process(attributes, writer);
         } catch (TemplateException | IOException e) {
             // Log error if template processing fails
-            logger.error("Error processing confirmation email template", e);
+            logger.error("Error processing email template", e);
             throw new IllegalStateException(e);
         }
         return writer.toString();
     }
 }
+

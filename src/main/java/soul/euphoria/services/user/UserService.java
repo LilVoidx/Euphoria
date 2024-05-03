@@ -5,5 +5,7 @@ import soul.euphoria.models.user.User;
 
 public interface UserService {
     void registerAsArtist(User user, ArtistForm artistForm);
+    void resetPassword(String email);
     User getUserById(Long userId);
+    String generateToken();
 }

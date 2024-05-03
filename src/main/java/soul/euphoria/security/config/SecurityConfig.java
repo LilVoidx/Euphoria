@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin().loginPage("/signIn")
                 .usernameParameter("username")
-                .defaultSuccessUrl("/artistregistration")
+                .defaultSuccessUrl("/user_account/artist-registration")
                 .failureUrl("/signIn?error")
                 .permitAll();
     }
