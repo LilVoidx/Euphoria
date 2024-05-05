@@ -1,0 +1,102 @@
+header {
+    background-color: transparent;
+    position: fixed;
+    top: 30px;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    margin-left: 50px;
+
+}
+
+.ring-nav {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 30px;
+}
+
+.ring-nav i {
+    position: absolute;
+    inset: 0;
+    border: 2px solid #fff;
+    transition: 0.5s;
+}
+
+.ring-nav i:nth-child(1) {
+    border-radius: 41% 44% 56% 59%/38% 62% 63% 37%;
+    transform: rotate(45deg);
+
+}
+
+.ring-nav i:nth-child(2) {
+    border-radius: 38% 62% 63% 37% / 41% 44% 56% 59%;
+    transform: rotate(90deg);
+
+}
+
+.ring-nav i:nth-child(3) {
+    border-radius: 41% 44% 56% 59%/38% 62% 63% 37%;
+    transform: rotate(135deg);
+
+}
+
+.ring-nav:hover i:nth-child(1) {
+    border: 6px solid #4d4dff;
+    filter: drop-shadow(0 0 20px #4d4dff);
+}
+
+.ring-nav:hover i:nth-child(2) {
+    border: 6px solid #6600cc;
+    filter: drop-shadow(0 0 20px #6600cc);
+}
+
+.ring-nav:hover i:nth-child(3) {
+    border: 6px solid #8000ff;
+    filter: drop-shadow(0 0 20px #8000ff);
+}
+
+
+.company-name {
+    font-size: 1.8em;
+    color: white;
+    margin-left: 30px;
+
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin-right: 50px;
+}
+
+nav ul li {
+    margin-right: 50px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #6600cc;
+}

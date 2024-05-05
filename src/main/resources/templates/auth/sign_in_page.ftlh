@@ -4,20 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In</title>
+    <link rel="stylesheet" href="/static/css/auth/sign_in.css">
 </head>
 <body>
-<h2>Sign In</h2>
-<form action="/signIn" method="post">
-    <div>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
+<#include "components/navbar.ftlh">
+
+<div class="container">
+    <div class="ring">
+        <i></i>
+        <i></i>
+        <i></i>
+        <div class="login">
+            <h2>Login</h2>
+            <form action="/signIn" method="post">
+                <div class="inputBx">
+                    <input type="text" id="username" name="username" placeholder="Username" required>
+                </div>
+                <div class="inputBx">
+                    <input type="password" id="passwordInput" name="password" placeholder="Password" required>
+                    <span class="toggle-password" onclick="togglePasswordVisibility()"></span>
+                </div>
+                <div class="inputBx">
+                    <input type="submit" value="Sign in">
+                </div>
+            </form>
+            <div class="links">
+                <a href="/password/forgot">Forgot Password?</a>
+                <a href="/signUp">Signup</a>
+            </div>
+        </div>
     </div>
-    <div>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-    </div>
-    <button type="submit">Sign In</button>
-</form>
-<p><a href="/password/forgot">Forgot Password?</a></p>
+</div>
+<#include "components/footer.ftlh">
+
+
+<script src="/static/js/passVisibility.js"></script>
 </body>
 </html>

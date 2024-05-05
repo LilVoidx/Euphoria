@@ -24,7 +24,6 @@ public class PasswordController {
     @Autowired
     private ConfirmationService confirmationService;
 
-
     @GetMapping("/forgot")
     public String showForgotPasswordForm() {
         return "/auth/password/forgot_password";

@@ -30,9 +30,13 @@ public class RegisterServiceImpl implements RegisterService {
     @Autowired
     private UserService userService;
 
-
     @Override
     public User registerUser(UserForm userForm) {
+        // Check if passwords match
+        if (!userForm.getPassword().equals(userForm.getConfirmPassword())) {
+            throw new IllegalArgumentException("Passwords do not match");
+        }
+
         User user = User.builder()
                 .username(userForm.getUsername())
                 .email(userForm.getEmail())
