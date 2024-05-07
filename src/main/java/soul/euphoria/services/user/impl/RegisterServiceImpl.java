@@ -8,11 +8,13 @@ import soul.euphoria.models.Enum.Role;
 import soul.euphoria.models.Enum.State;
 import soul.euphoria.models.user.User;
 import soul.euphoria.repositories.user.UsersRepository;
+import soul.euphoria.services.file.FileStorageService;
 import soul.euphoria.services.mail.EmailSender;
 import soul.euphoria.services.user.RegisterService;
 import soul.euphoria.services.user.UserService;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Service
 public class RegisterServiceImpl implements RegisterService {
@@ -29,12 +31,17 @@ public class RegisterServiceImpl implements RegisterService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private FileStorageService fileStorageService;
+
     @Override
     public User registerUser(UserForm userForm) {
         // Check if passwords match
         if (!userForm.getPassword().equals(userForm.getConfirmPassword())) {
             throw new IllegalArgumentException("Passwords do not match");
         }
+
+        String storageFileName = fileStorageService.saveFile(userForm.getProfilePicture());
 
         User user = User.builder()
                 .username(userForm.getUsername())
@@ -47,6 +54,7 @@ public class RegisterServiceImpl implements RegisterService {
                 .state(State.NOT_CONFIRMED)  // Default
                 .registrationDate(LocalDate.now())
                 .confirmationCode(userService.generateToken())
+                .profilePicture(fileStorageService.findByStorageName(storageFileName))
                 .build();
 
         // Save user to repository

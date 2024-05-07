@@ -9,6 +9,7 @@
 <body>
 <#include "components/navbar.ftlh">
 
+
 <div class="container">
     <div class="ring register-ring">
         <i></i>
@@ -46,6 +47,10 @@
 
                 <div class="inputBx">
                     <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Phone Number">
+                </div>
+
+                <div class="inputBx">
+                    <input type="file" id="profilePicture" name="profilePicture" accept=".jpg, .jpeg, .png" required>
                 </div>
 
                 <div class="inputBx">

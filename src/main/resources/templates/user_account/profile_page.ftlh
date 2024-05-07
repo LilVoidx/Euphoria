@@ -113,7 +113,7 @@
                 <button class="menu-btn" id="menu-open">
                     <i class='bx bx-menu'></i>
                 </button>
-                <a href="/home/${user.userId}">Music</a>
+                <a href="/home">Music</a>
                 <a href="#">Live</a>
                 <a href="#">Podcast</a>
             </div>
@@ -138,7 +138,7 @@
                     </div>
                 </div>
             </div>
-            <img src="/static/files/img/${user.getProfilePictureUrl()}" alt="Profile Image">
+            <img src="/files/img/${user.getProfilePictureUrl()}" alt="Profile Image">
         </div>
 
         <div class="playlist">
@@ -265,7 +265,7 @@
                     <img src="/files/img/${user.getProfilePictureUrl()}" alt="Profile Image">
                 </div>
                 <div class="right">
-                    <a href = "/profile/${user.userId}">${user.username}</a>
+                    <a href = "/profile">${user.username}</a>
                 </div>
             </div>
         </div>

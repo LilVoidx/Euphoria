@@ -9,13 +9,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import soul.euphoria.dto.infos.UserDTO;
 import soul.euphoria.models.user.User;
 import soul.euphoria.security.details.UserDetailsImpl;
+import soul.euphoria.services.file.FileStorageService;
 import soul.euphoria.services.user.UserService;
+
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class HomeController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @GetMapping("/home")
     public String home(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -31,5 +37,9 @@ public class HomeController {
             model.addAttribute("errorMessage", "User not found");
             return "error/error_page";
         }
+    }
+    @GetMapping("/files/img/{file-name:.+}")
+    public void getFile(@PathVariable("file-name") String fileName, HttpServletResponse response){
+        fileStorageService.writeFileToResponse(fileName, response);
     }
 }
