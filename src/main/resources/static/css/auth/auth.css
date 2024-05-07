@@ -19,8 +19,6 @@ body {
 
 .ring {
     position: relative;
-    width: 800px;
-    height: 800px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -81,10 +79,19 @@ body {
     }
 }
 
-.login {
+.login-ring {
+    width: 500px;
+    height: 500px;
+}
+
+.register-ring {
+    width: 800px;
+    height: 800px;
+}
+
+.login,
+.register {
     position: absolute;
-    width: 400px;
-    height: 400px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -92,7 +99,8 @@ body {
     gap: 20px;
 }
 
-.login h2 {
+.login h2,
+.register h2 {
     font-size: 2em;
     color: #fff;
 }
@@ -159,12 +167,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0px 0;
+    margin-top: -20px;
 }
 
 .links .already-registered {
     color: #fff;
-    margin-right: 10px;
+    margin-right: 0px;
 }
 
 .links a {
@@ -176,3 +184,34 @@ body {
 .links a:hover {
     color: #6600cc;
 }
+
+.links a:last-child {
+    margin-left: 20px;
+    margin-right: 10px;
+}
+
+.form-messages {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    font-size: 0.8em;
+}
+
+.form-success {
+    color: #fff;
+}
+
+.form-error {
+    color: #ff0000;
+}
+
+.confirm-font {
+    font-size: 2.5em;
+    padding: 20px;
+    color: white;
+}
+
+

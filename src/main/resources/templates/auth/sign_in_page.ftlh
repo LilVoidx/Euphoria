@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In</title>
-    <link rel="stylesheet" href="/static/css/auth/sign_in.css">
+    <link rel="stylesheet" href="/static/css/auth/auth.css">
 </head>
 <body>
 <#include "components/navbar.ftlh">
 
 <div class="container">
-    <div class="ring">
+    <div class="ring login-ring">
         <i></i>
         <i></i>
         <i></i>

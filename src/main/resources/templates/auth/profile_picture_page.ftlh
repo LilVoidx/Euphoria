@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Profile Picture</title>
+    <link rel="stylesheet" href="/static/css/auth/auth.css">
+</head>
+<body>
+<#include "components/navbar.ftlh">
+
+<div class="container">
+    <div class="ring login-ring">
+        <i></i>
+        <i></i>
+        <i></i>
+        <div class="register">
+            <h2>Upload Profile Picture</h2>
+            <form action="/signUp/uploadProfilePicture" method="post" enctype="multipart/form-data">
+
+                <input type="hidden" id="userId" name="userId" value="${userId}">
+
+                <div class="inputBx">
+                    <input type="file" id="profilePicture" name="profilePicture" accept=".jpg, .jpeg, .png" required>
+                </div>
+
+                <div class="inputBx">
+                    <input type="submit" value="Upload">
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<#include "components/footer.ftlh">
+</body>
+</html>

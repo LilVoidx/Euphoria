@@ -4,18 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SignUp</title>
-    <link rel="stylesheet" href="/static/css/auth/sign_up.css">
+    <link rel="stylesheet" href="/static/css/auth/auth.css">
 </head>
 <body>
 <#include "components/navbar.ftlh">
 
-
 <div class="container">
-    <div class="ring">
+    <div class="ring register-ring">
         <i></i>
         <i></i>
         <i></i>
-        <div class="login">
+        <div class="register">
             <h2>SignUp</h2>
             <form action="/signUp" method="post" enctype="multipart/form-data">
 

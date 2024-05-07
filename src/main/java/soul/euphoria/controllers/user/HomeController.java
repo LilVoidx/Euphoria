@@ -1,5 +1,6 @@
 package soul.euphoria.controllers.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,26 +10,22 @@ import soul.euphoria.dto.infos.UserDTO;
 import soul.euphoria.models.user.User;
 import soul.euphoria.security.details.UserDetailsImpl;
 import soul.euphoria.services.user.UserService;
-import soul.euphoria.services.user.impl.UserServiceImpl;
 
 @Controller
-public class ProfileController {
+public class HomeController {
 
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
-    public ProfileController(UserService userService) {
-        this.userService = userService;
-    }
-
-    @GetMapping("/profile")
-    public String userProfile(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    @GetMapping("/home")
+    public String home(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         // Retrieve user by userId
         User user = userService.getUserById(userDetails.getUserId());
         if (user != null) {
             // Convert User entity to UserDTO
             UserDTO userDTO = UserDTO.from(user);
             model.addAttribute("user", userDTO);
-            return "user_account/profile_page";
+            return "user_account/home_page";
         } else {
             // User not found, handle error
             model.addAttribute("errorMessage", "User not found");

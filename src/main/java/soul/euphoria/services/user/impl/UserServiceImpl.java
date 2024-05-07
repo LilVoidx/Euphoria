@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import soul.euphoria.dto.forms.ArtistForm;
 import soul.euphoria.models.Enum.Role;
+import soul.euphoria.models.FileInfo;
 import soul.euphoria.models.user.Artist;
 import soul.euphoria.models.user.User;
 import soul.euphoria.repositories.user.ArtistRepository;
@@ -93,6 +94,12 @@ public class UserServiceImpl implements UserService {
     public String generateToken() {
         // Generate a random token for reset password
         return UUID.randomUUID().toString();
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+
     }
 
 }

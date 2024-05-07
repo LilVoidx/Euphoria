@@ -26,15 +26,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http.authorizeRequests()
-                .antMatchers("/signUp","/static/**").permitAll()
-                .antMatchers("/users").hasAnyAuthority("ADMIN")
+        http.csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/static/**").permitAll()
+                .antMatchers("/signUp", "/password/**").permitAll()
+                .antMatchers("/users").hasAuthority("ADMIN")
                 .antMatchers("/profile").authenticated()
                 .and()
-                .formLogin().loginPage("/signIn")
+                .formLogin()
+                .loginPage("/signIn")
                 .usernameParameter("username")
-                .defaultSuccessUrl("/user_account/artist-registration")
+                .defaultSuccessUrl("/home")
                 .failureUrl("/signIn?error")
                 .permitAll();
     }

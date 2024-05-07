@@ -13,7 +13,6 @@ import soul.euphoria.services.user.RegisterService;
 import soul.euphoria.services.user.UserService;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Service
 public class RegisterServiceImpl implements RegisterService {
