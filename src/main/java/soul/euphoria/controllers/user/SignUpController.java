@@ -6,13 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import soul.euphoria.dto.forms.UserForm;
 import soul.euphoria.services.user.RegisterService;
+import soul.euphoria.services.user.UserService;
 
 import javax.validation.Valid;
 
@@ -24,6 +22,9 @@ public class SignUpController {
     @Autowired
     private RegisterService registerService;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/signUp")
     public String showRegistrationForm(Model model) {
         model.addAttribute("userForm", new UserForm());
@@ -32,26 +33,42 @@ public class SignUpController {
 
     @PostMapping("/signUp")
     public String registerUser(@Valid @ModelAttribute("userForm") UserForm userForm,
-                               BindingResult bindingResult,
-                               @RequestParam("profilePicture") MultipartFile profilePicture) {
+                               BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "auth/sign_up_page";
         }
         try {
             logger.info("User registration details: {}", userForm.toString());
-            //Save Profile Picture
-            userForm.setProfilePicture(profilePicture);
-            // Register the user
-            registerService.registerUser(userForm);
+            // Register the user without profile picture
+            Long registeredUserId = registerService.registerUser(userForm).getUserId();
             logger.info("User registered successfully");
-            return "redirect:/confirm-account";
 
+            // Redirect to profile picture upload page with the user ID
+            return "redirect:/signUp/ProfilePicture?userId=" + registeredUserId;
         } catch (IllegalArgumentException e) {
             bindingResult.rejectValue("confirmPassword", "error.userForm", e.getMessage());
             return "auth/sign_up_page";
-
         } catch (Exception e) {
             logger.error("Error occurred during user registration", e);
+            return "redirect:/error";
+        }
+    }
+
+    @GetMapping("/signUp/ProfilePicture")
+    public String showProfilePictureForm(@RequestParam("userId") Long userId, Model model) {
+        model.addAttribute("userId", userId);
+        return "auth/profile_picture_page";
+    }
+
+    @PostMapping("/signUp/uploadProfilePicture")
+    public String uploadProfilePicture(@RequestParam("userId") Long userId,
+                                       @RequestParam("profilePicture") MultipartFile profilePicture) {
+        try {
+            // Upload the profile picture and associate it with the user
+            registerService.uploadProfilePicture(userId, profilePicture);
+            return "redirect:/confirm-account";
+        } catch (Exception e) {
+            logger.error("Error occurred during profile picture upload", e);
             return "redirect:/error";
         }
     }

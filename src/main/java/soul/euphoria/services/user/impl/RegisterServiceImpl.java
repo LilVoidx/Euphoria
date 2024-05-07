@@ -3,6 +3,7 @@ package soul.euphoria.services.user.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import soul.euphoria.dto.forms.UserForm;
 import soul.euphoria.models.Enum.Role;
 import soul.euphoria.models.Enum.State;
@@ -14,7 +15,6 @@ import soul.euphoria.services.user.RegisterService;
 import soul.euphoria.services.user.UserService;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Service
 public class RegisterServiceImpl implements RegisterService {
@@ -41,8 +41,6 @@ public class RegisterServiceImpl implements RegisterService {
             throw new IllegalArgumentException("Passwords do not match");
         }
 
-        String storageFileName = fileStorageService.saveFile(userForm.getProfilePicture());
-
         User user = User.builder()
                 .username(userForm.getUsername())
                 .email(userForm.getEmail())
@@ -54,14 +52,27 @@ public class RegisterServiceImpl implements RegisterService {
                 .state(State.NOT_CONFIRMED)  // Default
                 .registrationDate(LocalDate.now())
                 .confirmationCode(userService.generateToken())
-                .profilePicture(fileStorageService.findByStorageName(storageFileName))
                 .build();
 
         // Save user to repository
         user = usersRepository.save(user);
-        // Send confirmation email
-        emailSender.sendEmailForConfirm(user.getEmail(), user.getConfirmationCode());
 
         return user;
+    }
+
+    @Override
+    public void uploadProfilePicture(Long userId, MultipartFile profilePicture) {
+        // Retrieve the user by ID
+        User user = usersRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Save the profile picture and associate it with the user
+        String storageFileName = fileStorageService.saveFile(profilePicture);
+        user.setProfilePicture(fileStorageService.findByStorageName(storageFileName));
+
+        // Update the user
+        usersRepository.save(user);
+    // Send confirmation email
+        emailSender.sendEmailForConfirm(user.getEmail(), user.getConfirmationCode());
     }
 }

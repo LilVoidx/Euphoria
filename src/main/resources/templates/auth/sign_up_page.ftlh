@@ -50,10 +50,6 @@
                 </div>
 
                 <div class="inputBx">
-                    <input type="file" id="profilePicture" name="profilePicture" accept=".jpg, .jpeg, .png" required>
-                </div>
-
-                <div class="inputBx">
                     <input type="submit" value="SignUp">
                 </div>
 

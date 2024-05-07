@@ -6,4 +6,6 @@ import soul.euphoria.models.user.User;
 
 public interface RegisterService {
     User registerUser(UserForm userForm);
+
+    void uploadProfilePicture(Long userId, MultipartFile profilePicture);
 }
