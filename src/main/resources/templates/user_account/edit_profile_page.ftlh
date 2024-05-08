@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="/static/css/home/profile.css">
+    <link rel="stylesheet" href="/static/css/home/profile_edit.css">
     <title>Profile</title>
     <link rel="icon" href="/static/files/assets/favicon.ico" type="image/x-icon">
+
 </head>
 
 <body>
@@ -135,7 +136,7 @@
                     <h5>${user.email}</h5>
                     <div class="buttons">
                         <a href="/profile/${user.username}/edit">
-                            <button>Edit user info</button>
+                            <button id="changeInfoBtn">Change info</button>
                         </a>
                         <i class='bx bxs-heart'></i>
                     </div>
@@ -145,113 +146,59 @@
         </div>
 
         <div class="playlist">
-            <div class="genres">
-                <div class="header">
-                    <h5>Your Playlists</h5>
-                    <a href="#">See all</a>
-                </div>
-
-                <div class="items">
-                    <div class="item">
-                        <p>Electro<br>Pop</p>
+            <form method="post" action="/profile/${user.username}/edit" enctype="multipart/form-data">
+                <div>
+                    <div class="label-wrapper">
+                        <label for="username">Username:</label>
                     </div>
-                    <div class="item">
-                        <p>Dance<br>Beeat</p>
-                    </div>
-                    <div class="item">
-                        <p>Clubhouse<br>Remix</p>
-                    </div>
-                    <div class="item">
-                        <p>Hip Hop<br>Rap</p>
-                    </div>
-                    <div class="item">
-                        <p>Alternative<br>Indie</p>
-                    </div>
-                    <div class="item">
-                        <p>Classical<br>Period</p>
+                    <div class="inputBx">
+                        <input type="text" id="username" name="username" value="${user.username}">
                     </div>
                 </div>
-
-            </div>
-
-            <div class="music-list">
-                <div class="header">
-                    <h5>Your Fav Songs</h5>
-                    <a href="#">See all</a>
-                </div>
-
-                <div class="items">
-                    <div class="item">
-                        <div class="info">
-                            <p>01</p>
-                            <img src="assets/song-1.png">
-                            <div class="details">
-                                <h5>Sunrise</h5>
-                                <p>Lila Rivera</p>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <p>03:45</p>
-                            <div class="icon">
-                                <i class='bx bxs-right-arrow'></i>
-                            </div>
-                            <i class='bx bxs-plus-square'></i>
-                        </div>
+                <div>
+                    <div class="label-wrapper">
+                        <label for="email">Email:</label>
                     </div>
-                    <div class="item">
-                        <div class="info">
-                            <p>02</p>
-                            <img src="assets/song-2.png">
-                            <div class="details">
-                                <h5>Voyage</h5>
-                                <p>Tyde Brennnan</p>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <p>04:35</p>
-                            <div class="icon">
-                                <i class='bx bxs-right-arrow'></i>
-                            </div>
-                            <i class='bx bxs-plus-square'></i>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="info">
-                            <p>03</p>
-                            <img src="assets/song-3.png">
-                            <div class="details">
-                                <h5>Breeze</h5>
-                                <p>Sola Kim</p>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <p>04:22</p>
-                            <div class="icon">
-                                <i class='bx bxs-right-arrow'></i>
-                            </div>
-                            <i class='bx bxs-plus-square'></i>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="info">
-                            <p>04</p>
-                            <img src="assets/song-4.png">
-                            <div class="details">
-                                <h5>Twilight</h5>
-                                <p>Jett Lawsonn</p>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <p>03:17</p>
-                            <div class="icon">
-                                <i class='bx bxs-right-arrow'></i>
-                            </div>
-                            <i class='bx bxs-plus-square'></i>
-                        </div>
+                    <div class="inputBx">
+                        <input type="email" id="email" name="email" value="${user.email}">
                     </div>
                 </div>
-
-            </div>
+                <div>
+                    <div class="label-wrapper">
+                        <label for="firstName">First Name:</label>
+                    </div>
+                    <div class="inputBx">
+                        <input type="text" id="firstName" name="firstName" value="${user.firstName}">
+                    </div>
+                </div>
+                <div>
+                    <div class="label-wrapper">
+                        <label for="lastName">Last Name:</label>
+                    </div>
+                    <div class="inputBx">
+                        <input type="text" id="lastName" name="lastName" value="${user.lastName}">
+                    </div>
+                </div>
+                <div>
+                    <div class="label-wrapper">
+                        <label for="phoneNumber">Phone Number:</label>
+                    </div>
+                    <div class="inputBx">
+                        <input type="text" id="phoneNumber" name="phoneNumber" value="${user.phoneNumber}">
+                    </div>
+                </div>
+                <div>
+                    <div class="label-wrapper">
+                        <label for="profilePicture">Profile Picture:</label>
+                    </div>
+                    <div class="inputBx">
+                        <input type="file" id="profilePicture" name="profilePicture">
+                    </div>
+                </div>
+                <div>
+                    <button id="submitBtn" style="display: none;" type="submit">Update</button>
+                </div>
+            </form>
 
         </div>
 
@@ -270,9 +217,6 @@
                     <#if user.role == "ARTIST">
                         <a href="/artist/${user.username}">Artist Page</a>
                     </#if>
-                    <#if user.role == "LISTENER">
-                        <a href="/artists/${user.username}/register">Become an artist</a>
-                    </#if>
                     <a href="/logout">Logout</a>
                 </div>
             </div>
@@ -287,11 +231,8 @@
                 </a>
             </div>
         </div>
-
     </div>
-    </div>
-
-
+</div>
 
 <script src="/static/js/profile.js"></script>
 </body>

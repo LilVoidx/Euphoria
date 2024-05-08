@@ -14,6 +14,8 @@ body {
     min-height: 100vh;
     background: #1d1d1d;
     width: 100%;
+    background: url("/static/files/assets/background-dimmed.jpg") no-repeat center center;
+    background-size: cover;
     overflow: hidden;
 }
 
@@ -111,7 +113,33 @@ body {
     margin-bottom: 20px;
 }
 
-.inputBx input {
+.inputBx input{
+    position: relative;
+    width: 100%;
+    padding: 12px 40px 12px 20px;
+    background: transparent;
+    border: 2px solid #bbb;
+    border-radius: 40px;
+    font-size: 1.2em;
+    color: #fff;
+    box-shadow: none;
+    outline: none;
+    transition: border-color 0.3s;
+}
+.inputBx textarea{
+    position: relative;
+    width: 100%;
+    padding: 12px 40px 12px 20px;
+    background: transparent;
+    border: 2px solid #bbb;
+    border-radius: 40px;
+    font-size: 1.2em;
+    color: #fff;
+    box-shadow: none;
+    outline: none;
+    transition: border-color 0.3s;
+}
+.inputBx select{
     position: relative;
     width: 100%;
     padding: 12px 40px 12px 20px;
@@ -130,6 +158,22 @@ body {
 }
 
 .inputBx input::placeholder {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.inputBx textarea:focus {
+    border-color: #fff;
+}
+
+.inputBx textarea::placeholder {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.inputBx select:focus {
+    border-color: #fff;
+}
+
+.inputBx select::placeholder {
     color: rgba(255, 255, 255, 0.75);
 }
 

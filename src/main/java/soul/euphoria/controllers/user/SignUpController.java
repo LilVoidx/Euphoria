@@ -22,9 +22,6 @@ public class SignUpController {
     @Autowired
     private RegisterService registerService;
 
-    @Autowired
-    private UserService userService;
-
     @GetMapping("/signUp")
     public String showRegistrationForm(Model model) {
         model.addAttribute("userForm", new UserForm());

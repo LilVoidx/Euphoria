@@ -20,10 +20,13 @@ public class UserDTO {
     private Long userId;
     private String username;
     private String email;
+    private String firstName;
+    private String lastName;
     private String fullName;
     private String phoneNumber;
     private LocalDate registrationDate;
     private String profilePictureUrl;
+    private String role;
     private List<PlaylistDTO> playlists;
     private List<SongDTO> favoriteSongs;
 
@@ -45,10 +48,13 @@ public class UserDTO {
                 .userId(user.getUserId())
                 .username(user.getUsername())
                 .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
                 .fullName(user.getFirstName() + " " + user.getLastName())
                 .phoneNumber(user.getPhoneNumber())
                 .registrationDate(user.getRegistrationDate())
                 .profilePictureUrl(profilePictureUrl)
+                .role(String.valueOf(user.getRole()))
                 .playlists(user.getPlaylists().stream().map(PlaylistDTO::from).collect(Collectors.toList()))
                 .favoriteSongs(user.getFavoriteSongs().stream().map(SongDTO::from).collect(Collectors.toList()));
 

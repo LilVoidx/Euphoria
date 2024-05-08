@@ -1,0 +1,76 @@
+@import url(https://fonts.googleapis.com/css?family=Share+Tech+Mono);
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap");
+
+body {
+    height: 100vh;
+    align-items: center;
+    display: flex;
+    background: url("/static/files/assets/background.jpg") no-repeat center center;
+    background-size: cover;
+    font-family: "Quicksand", sans-serif;
+    overflow: hidden;
+}
+
+.decode-text {
+    width: 100%;
+    font-size: 150px;
+    text-align: center;
+    font-weight: bold;
+    font-family: "Share Tech Mono", monospace;
+    position: relative;
+}
+
+.slogan {
+    font-size: 20px;
+    color: #6600cc;
+    margin-top: 20px;
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 6px;
+    animation: fadeIn 4s ease forwards;
+}
+
+.text-animation {
+    display: inline-block;
+    position: relative;
+    color: transparent;
+    text-transform: uppercase;
+    &:before {
+        content: "";
+        color: #969696;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        background: #969696;
+        width: 0;
+        height: 1.2em;
+        -webkit-transform: translate(-50%, -55%);
+        -ms-transform: translate(-50%, -55%);
+        transform: translate(-50%, -55%);
+    }
+
+    &.state-1 {
+        &:before {
+            width: 1px;
+        }
+    }
+    &.state-2 {
+        &:before {
+            width: 0.9em;
+        }
+    }
+    &.state-3 {
+        color: #ffffff;
+        &:before {
+            width: 0;
+        }
+    }
+}
+
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    40% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+

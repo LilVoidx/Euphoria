@@ -7,6 +7,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="/static/css/home/home.css">
     <title>Home </title>
+    <link rel="icon" href="/static/files/assets/favicon.ico" type="image/x-icon">
 </head>
 
 <body>
@@ -259,14 +260,26 @@
 
         <div class="profile">
             <i class='bx bxs-bell'></i>
-            <i class='bx bxs-cog'></i>
+            <div class="dropdown">
+                <i class='bx bxs-cog' id="dropdownMenuButton"></i>
+                <div class="dropdown-content" id="dropdownContent">
+                    <a href="/profile/${user.username}/edit">Edit Profile</a>
+                    <a href="/password/forgot">Change Password</a>
+                    <#if user.role == "ARTIST">
+                        <a href="/artist/${user.username}">Artist Page</a>
+                    </#if>
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
             <div class="user">
-                <div class="left">
-                    <img src="/files/img/${user.getProfilePictureUrl()}" alt="Profile Image">
-                </div>
-                <div class="right">
-                    <a href = "/profile">${user.username}</a>
-                </div>
+                <a href="/profile/${user.username}" class="user">
+                    <div class="left">
+                        <img src="/files/img/${user.getProfilePictureUrl()}" alt="Profile Image">
+                    </div>
+                    <div class="right">
+                        <span>${user.username}</span>
+                    </div>
+                </a>
             </div>
         </div>
 
@@ -277,17 +290,17 @@
                     <i class='bx bxs-playlist'></i>
                 </div>
                 <div class="song-info">
-                    <img src="https://images.unsplash.com/photo-1707617961911-889e9ab306bb?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MTQ4NDA0MjR8&ixlib=rb-4.0.3&q=85">
+                    <img src="https://t2.genius.com/unsafe/340x340/https%3A%2F%2Fimages.genius.com%2F71df36f90de772fea25e1b5151bf7500.1000x1000x1.png">
                     <div class="description">
-                        <h3>Ripple Echoes</h3>
-                        <h5>Kael Fischer</h5>
+                        <h3>Fel Galeed</h3>
+                        <h5>Lege-Cy</h5>
                         <p>Best of 2024</p>
                     </div>
                     <div class="progress">
-                        <p>02:45</p>
+                        <p>02:12</p>
                         <div class="active-line"></div>
                         <div class="deactive-line"></div>
-                        <p>01:02</p>
+                        <p>01:08</p>
                     </div>
                 </div>
             </div>
@@ -313,7 +326,7 @@
 </div>
 
 
-<script src="/static/js/home.js"></script>
+<script src="/static/js/profile.js"></script>
 </body>
 
 </html>

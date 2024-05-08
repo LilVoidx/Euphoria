@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirm Account</title>
     <link rel="stylesheet" href="/static/css/auth/auth.css">
+    <link rel="icon" href="/static/files/assets/favicon.ico" type="image/x-icon">
 </head>
 <body>
 <#include "components/navbar.ftlh">

@@ -72,7 +72,7 @@ public class RegisterServiceImpl implements RegisterService {
 
         // Update the user
         usersRepository.save(user);
-    // Send confirmation email
+        // Send confirmation email
         emailSender.sendEmailForConfirm(user.getEmail(), user.getConfirmationCode());
     }
 }

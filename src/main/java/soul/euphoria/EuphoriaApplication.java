@@ -29,7 +29,7 @@ public class EuphoriaApplication implements ApplicationListener<ContextRefreshed
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
 		try {
-			Runtime.getRuntime().exec("xdg-open http://localhost:8069/signIn");
+			Runtime.getRuntime().exec("xdg-open http://localhost:8069/");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
