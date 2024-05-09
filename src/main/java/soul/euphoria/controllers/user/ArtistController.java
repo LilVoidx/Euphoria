@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import soul.euphoria.dto.forms.ArtistForm;
+import soul.euphoria.dto.infos.ArtistDTO;
 import soul.euphoria.dto.infos.UserDTO;
 import soul.euphoria.models.Enum.Genre;
 import soul.euphoria.models.user.User;
@@ -50,7 +51,7 @@ public class ArtistController {
         try {
             User user = userService.getUserById(userDetails.getUserId());
             userService.registerAsArtist(user, artistForm);
-            return "redirect:/";
+            return "redirect:/profile/" + user.getUsername();
         } catch (Exception e) {
             logger.error("Error registering artist: {}", e.getMessage());
             return "redirect:/error";
@@ -60,13 +61,16 @@ public class ArtistController {
     public String artistProfile(Model model, @PathVariable String username) {
         Optional<User> optionalUser = userService.findByUserName(username);
 
+        //TODO: CHECK WHY ARTIST PROFILE IS RETURNING ERROR 500 BECAUSE OF DTO AFTER SONG CREATION
+
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             UserDTO userDTO = UserDTO.from(user);
-
             // Check if the user is an artist
             if (user.getArtist() != null) {
+                ArtistDTO artistDTO = ArtistDTO.from(user.getArtist());
                 model.addAttribute("user", userDTO);
+                model.addAttribute("artist", artistDTO);
                 return "user_account/artist_page";
             } else {
                 model.addAttribute("errorMessage", "User is not an artist");
@@ -77,5 +81,4 @@ public class ArtistController {
             return "error/error_page";
         }
     }
-
 }

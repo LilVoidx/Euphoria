@@ -34,11 +34,11 @@ public class PlaylistDTO {
                 .description(playlist.getDescription())
                 .creationDate(playlist.getCreationDate())
                 .coverImageInfoUrl(coverImageInfoUrl)
-                .songs(playlist.getSongs().stream().map(SongDTO::from).collect(Collectors.toList()))
+                .songs(SongDTO.songList(playlist.getSongs()))
                 .build();
     }
 
-    public static List<PlaylistDTO> PlaylistList(List<Playlist> playlists) {
+    public static List<PlaylistDTO> playlistList(List<Playlist> playlists) {
         return playlists.stream()
                 .map(PlaylistDTO::from)
                 .collect(Collectors.toList());

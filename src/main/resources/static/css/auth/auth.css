@@ -14,7 +14,7 @@ body {
     min-height: 100vh;
     background: #1d1d1d;
     width: 100%;
-    background: url("/static/files/assets/background-dimmed.jpg") no-repeat center center;
+    background: url("/static/files/assets/background-auth.jpg") no-repeat center center;
     background-size: cover;
     overflow: hidden;
 }

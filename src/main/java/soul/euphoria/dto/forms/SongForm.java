@@ -15,14 +15,18 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class SongForm {
     @NotBlank
-    @Size(max = 8)
+    @Size(max = 30)
     private String title;
 
-    private String albumTitle;
+    @NotBlank
+    private String releaseDate;
 
+    @NotBlank
     private MultipartFile songFile;
 
+    @NotBlank
     private MultipartFile imageFile;
 
+    @NotBlank
     private String genre;
 }

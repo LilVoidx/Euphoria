@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class SongDTO {
     private Long songId;
     private String title;
-    private UserDTO artist;
+    private ArtistDTO artist;
     private AlbumDTO album;
     private Date releaseDate;
     private String duration;
@@ -41,7 +41,7 @@ public class SongDTO {
         return SongDTO.builder()
                 .songId(song.getSongId())
                 .title(song.getTitle())
-                .artist(UserDTO.from(song.getArtist()))
+                .artist(ArtistDTO.from(song.getArtist()))
                 .album(AlbumDTO.from(song.getAlbum()))
                 .releaseDate(song.getReleaseDate())
                 .duration(song.getDuration())
@@ -51,7 +51,7 @@ public class SongDTO {
                 .build();
     }
 
-    public static List<SongDTO> SongList(List<Song> songs) {
+    public static List<SongDTO> songList(List<Song> songs) {
         return songs.stream()
                 .map(SongDTO::from)
                 .collect(Collectors.toList());

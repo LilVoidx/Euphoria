@@ -37,11 +37,11 @@ public class AlbumDTO {
                 .releaseDate(album.getReleaseDate())
                 .coverImageInfoUrl(coverImageInfoUrl)
                 .genre(album.getGenre())
-                .songs(album.getSongs().stream().map(SongDTO::from).collect(Collectors.toList()))
+                .songs(SongDTO.songList(album.getSongs()))
                 .build();
     }
 
-    public static List<AlbumDTO> AlbumList (List<Album> albums) {
+    public static List<AlbumDTO> albumList (List<Album> albums) {
         return albums.stream()
                 .map(AlbumDTO::from)
                 .collect(Collectors.toList());

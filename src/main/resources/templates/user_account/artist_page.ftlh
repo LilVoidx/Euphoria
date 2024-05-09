@@ -130,7 +130,7 @@
             <div class="left">
                 <h5>User Account Info</h5>
                 <div class="info">
-                    <h2>${user.stageName}</h2>
+                    <h2>${artist.stageName}</h2>
                     <h4>@${user.username}</h4>
                     <h5>${user.email}</h5>
                     <div class="buttons">
@@ -269,6 +269,9 @@
                     <a href="/password/forgot">Change Password</a>
                     <#if user.role == "ARTIST">
                         <a href="/artist/${user.username}">Artist Page</a>
+                    </#if>
+                    <#if user.role == "ARTIST">
+                        <a href="/upload-song">Upload Song</a>
                     </#if>
                     <a href="/logout">Logout</a>
                 </div>

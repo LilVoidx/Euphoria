@@ -4,10 +4,10 @@ function togglePasswordVisibility() {
 
     if (passwordInput.type === "password") {
         passwordInput.type = "text";
-        passwordIcon.style.backgroundImage = "url('/static/files/icons8-closed-eye-50.png')";
+        passwordIcon.style.backgroundImage = "url('/static/files/assets/icons8-closed-eye-50.png')";
     } else {
         passwordInput.type = "password";
-        passwordIcon.style.backgroundImage = "url('/static/files/icons8-surprise-64.png')";
+        passwordIcon.style.backgroundImage = "url('/static/files/assets/icons8-surprise-64.png')";
     }
 }
 
@@ -17,9 +17,9 @@ function toggleConfirmPasswordVisibility() {
 
     if (passwordInput.type === "password") {
         passwordInput.type = "text";
-        passwordIcon.style.backgroundImage = "url('/static/files/icons8-closed-eye-50.png')";
+        passwordIcon.style.backgroundImage = "url('/static/files/assets/icons8-closed-eye-50.png')";
     } else {
         passwordInput.type = "password";
-        passwordIcon.style.backgroundImage = "url('/static/files/icons8-surprise-64.png')";
+        passwordIcon.style.backgroundImage = "url('/static/files/assets/icons8-surprise-64.png')";
     }
 }

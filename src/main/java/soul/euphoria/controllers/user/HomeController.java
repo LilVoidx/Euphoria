@@ -23,8 +23,14 @@ public class HomeController {
     @Autowired
     private FileStorageService fileStorageService;
 
+    @GetMapping("/")
+    public String showIndexPage() {
+        return "/index_page";
+    }
+
     @GetMapping("/home")
     public String home(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
         // Retrieve user by userId
         User user = userService.getUserById(userDetails.getUserId());
         if (user != null) {

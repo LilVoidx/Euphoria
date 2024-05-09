@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import soul.euphoria.models.Enum.Genre;
-import soul.euphoria.models.user.Artist;
 import soul.euphoria.models.user.User;
 
 import java.time.LocalDate;
@@ -39,12 +38,10 @@ public class UserDTO {
     private List<SongDTO> songs;
 
     public static UserDTO from(User user) {
-        String profilePictureUrl = null;
-        if (user.getProfilePicture() != null) {
-            profilePictureUrl = user.getProfilePicture().getStorageFileName();
-        }
 
-        UserDTO.UserDTOBuilder builder = UserDTO.builder()
+        String profilePictureUrl = user.getProfilePicture() != null ? user.getProfilePicture().getStorageFileName() : null;
+
+        return UserDTO.builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())
                 .email(user.getEmail())
@@ -55,21 +52,9 @@ public class UserDTO {
                 .registrationDate(user.getRegistrationDate())
                 .profilePictureUrl(profilePictureUrl)
                 .role(String.valueOf(user.getRole()))
-                .playlists(user.getPlaylists().stream().map(PlaylistDTO::from).collect(Collectors.toList()))
-                .favoriteSongs(user.getFavoriteSongs().stream().map(SongDTO::from).collect(Collectors.toList()));
-
-        Artist artist = user.getArtist();
-        if (artist != null) {
-            builder
-                    .artistId(artist.getArtistId())
-                    .stageName(artist.getStageName())
-                    .bio(artist.getBio())
-                    .genre(artist.getGenre())
-                    .albums(artist.getAlbums().stream().map(AlbumDTO::from).collect(Collectors.toList()))
-                    .songs(artist.getSongs().stream().map(SongDTO::from).collect(Collectors.toList()));
-        }
-
-        return builder.build();
+                .playlists(PlaylistDTO.playlistList(user.getPlaylists()))
+                .favoriteSongs(SongDTO.songList(user.getFavoriteSongs()))
+                .build();
     }
 
     public static List<UserDTO> userList(List<User> users) {

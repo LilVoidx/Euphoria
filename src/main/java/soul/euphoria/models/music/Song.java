@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import soul.euphoria.models.Enum.Genre;
 import soul.euphoria.models.FileInfo;
-import soul.euphoria.models.user.User;
+import soul.euphoria.models.user.Artist;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -29,8 +29,8 @@ public class Song {
     private String title;
 
     @ManyToOne
-    @JoinColumn(name = "artist_id", referencedColumnName = "userId")
-    private User artist;
+    @JoinColumn(name = "artist_id", referencedColumnName = "artistId")
+    private Artist artist;
 
     @ManyToOne
     @JoinColumn(name = "album_id", referencedColumnName = "albumId")
@@ -48,10 +48,7 @@ public class Song {
     @JoinColumn(name = "image_info_id", referencedColumnName = "fileInfoId")
     private FileInfo songImageInfo;
 
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Genre genre;
-
-
 }
