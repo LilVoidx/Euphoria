@@ -74,6 +74,8 @@ public class ProfileController {
             return "user_account/edit_profile_page";
         }
         try {
+
+            //TODO: PROFILE PICTURE TEMP SHOW
             // Update user info
             userService.updateUser(username, userForm, profilePicture);
             logger.debug("User info updated successfully");

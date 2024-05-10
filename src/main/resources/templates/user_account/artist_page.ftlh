@@ -128,14 +128,14 @@
 
         <div class="trending">
             <div class="left">
-                <h5>User Account Info</h5>
+                <h5>Artist Account Info</h5>
                 <div class="info">
                     <h2>${artist.stageName}</h2>
                     <h4>@${user.username}</h4>
                     <h5>${user.email}</h5>
                     <div class="buttons">
                         <a href="/profile/${user.username}/edit">
-                            <button>Edit user info</button>
+                            <button>Edit Artist info</button>
                         </a>
                         <i class='bx bxs-heart'></i>
                     </div>
@@ -147,7 +147,7 @@
         <div class="playlist">
             <div class="genres">
                 <div class="header">
-                    <h5>Your Playlists</h5>
+                    <h5>Your Albums</h5>
                     <a href="#">See all</a>
                 </div>
 
@@ -173,87 +173,39 @@
                 </div>
 
             </div>
-
             <div class="music-list">
                 <div class="header">
-                    <h5>Your Fav Songs</h5>
-                    <a href="#">See all</a>
+                    <h5>Your Songs</h5>
+                    <a href="/">See all</a>
                 </div>
-
                 <div class="items">
-                    <div class="item">
-                        <div class="info">
-                            <p>01</p>
-                            <img src="assets/song-1.png">
-                            <div class="details">
-                                <h5>Sunrise</h5>
-                                <p>Lila Rivera</p>
+                    <#assign counter = 0>
+                    <#list artistSongs as song>
+                        <#if counter < 4>
+                            <div class="item">
+                                <div class="info">
+                                    <p>${song.songId}</p>
+                                    <img src="/files/img/${song.songImageInfoUrl}">
+                                    <div class="details">
+                                        <h5>${song.title}</h5>
+                                        <p>${song.artistName}</p>
+                                    </div>
+                                </div>
+                                <div class="actions">
+                                    <p>${song.duration}</p>
+                                    <div class="icon">
+                                        <i class='bx bxs-right-arrow'></i>
+                                    </div>
+                                    <i class='bx bxs-plus-square'></i>
+                                </div>
                             </div>
-                        </div>
-                        <div class="actions">
-                            <p>03:45</p>
-                            <div class="icon">
-                                <i class='bx bxs-right-arrow'></i>
-                            </div>
-                            <i class='bx bxs-plus-square'></i>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="info">
-                            <p>02</p>
-                            <img src="assets/song-2.png">
-                            <div class="details">
-                                <h5>Voyage</h5>
-                                <p>Tyde Brennnan</p>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <p>04:35</p>
-                            <div class="icon">
-                                <i class='bx bxs-right-arrow'></i>
-                            </div>
-                            <i class='bx bxs-plus-square'></i>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="info">
-                            <p>03</p>
-                            <img src="assets/song-3.png">
-                            <div class="details">
-                                <h5>Breeze</h5>
-                                <p>Sola Kim</p>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <p>04:22</p>
-                            <div class="icon">
-                                <i class='bx bxs-right-arrow'></i>
-                            </div>
-                            <i class='bx bxs-plus-square'></i>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="info">
-                            <p>04</p>
-                            <img src="assets/song-4.png">
-                            <div class="details">
-                                <h5>Twilight</h5>
-                                <p>Jett Lawsonn</p>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <p>03:17</p>
-                            <div class="icon">
-                                <i class='bx bxs-right-arrow'></i>
-                            </div>
-                            <i class='bx bxs-plus-square'></i>
-                        </div>
-                    </div>
+                            <#assign counter = counter + 1>
+                        </#if>
+                    </#list>
                 </div>
-
             </div>
-
         </div>
+
 
 
     </main>

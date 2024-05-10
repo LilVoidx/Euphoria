@@ -1,4 +1,3 @@
-<#--
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,11 +7,14 @@
 </head>
 <body>
 <h1>${song.title}</h1>
-<p>Artist: ${song.artist.stageName}</p>
+<p>Artist: ${song.artistName}</p>
 <p>Genre: ${song.genre}</p>
+<img src="/files/img/${song.songImageInfoUrl}" alt="Song Image">
+<p>Release Date: ${song.releaseDate?string("yyyy-MM-dd")}</p>
+
 <audio controls>
-    <source src="/song/${song.songId}/stream" type="audio/mpeg">
+    <source src="/files/img/${song.songFileInfoUrl}" type="audio/mpeg">
+    Your browser does not support the audio element.
 </audio>
 </body>
 </html>
--->

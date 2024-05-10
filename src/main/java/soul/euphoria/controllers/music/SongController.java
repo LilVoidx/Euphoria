@@ -8,7 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import soul.euphoria.dto.forms.SongForm;
+import soul.euphoria.dto.infos.SongDTO;
 import soul.euphoria.models.Enum.Genre;
+import soul.euphoria.models.music.Song;
 import soul.euphoria.security.details.UserDetailsImpl;
 import soul.euphoria.services.music.SongService;
 
@@ -47,7 +49,18 @@ public class SongController {
         return "music/music_upload_page";
     }
 
-    //TODO : add song page here
+    @GetMapping("/song/{songId}")
+    public String showSongPage(@PathVariable("songId") Long songId, Model model) {
+        Song song = songService.findById(songId);
+        if (song == null) {
+            // Handle song not found
+            model.addAttribute("errorMessage", "Song not found");
+            return "error"; // Assuming you have an error page
+        }
+        SongDTO songDTO = SongDTO.from(song);
+        model.addAttribute("song", songDTO);
+        return "music/song_page";
+    }
 
     @GetMapping("/genres")
     public ResponseEntity<?> getAllGenres() {

@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import soul.euphoria.models.Enum.Genre;
+import soul.euphoria.models.music.Album;
+import soul.euphoria.models.music.Song;
 import soul.euphoria.models.user.Artist;
 
 import java.util.List;
@@ -19,8 +21,8 @@ public class ArtistDTO {
     private String stageName;
     private String bio;
     private Genre genre;
-    private List<AlbumDTO> albums;
-    private List<SongDTO> songs;
+    private List<Long> albumIds;
+    private List<Long> songIds;
 
     public static ArtistDTO from(Artist artist) {
         return ArtistDTO.builder()
@@ -28,8 +30,8 @@ public class ArtistDTO {
                 .stageName(artist.getStageName())
                 .bio(artist.getBio())
                 .genre(artist.getGenre())
-                .albums(AlbumDTO.albumList(artist.getAlbums()))
-                .songs(SongDTO.songList(artist.getSongs()))
+                .albumIds(artist.getAlbums().stream().map(Album::getAlbumId).collect(Collectors.toList()))
+                .songIds(artist.getSongs().stream().map(Song::getSongId).collect(Collectors.toList()))
                 .build();
     }
 

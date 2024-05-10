@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import soul.euphoria.models.Enum.Genre;
 import soul.euphoria.models.music.Song;
 
@@ -19,8 +18,10 @@ import java.util.stream.Collectors;
 public class SongDTO {
     private Long songId;
     private String title;
-    private ArtistDTO artist;
-    private AlbumDTO album;
+    private Long artistId;
+    private String artistName;
+    private String albumTitle;
+    private Long albumId;
     private Date releaseDate;
     private String duration;
     private String songFileInfoUrl;
@@ -36,13 +37,23 @@ public class SongDTO {
         String songImageInfoUrl = null;
         if (song.getSongImageInfo() != null) {
             songImageInfoUrl = song.getSongImageInfo().getStorageFileName();
+            System.out.println(songImageInfoUrl);
+        }
+
+        Long albumId = null;
+        String albumTitle = null;
+        if (song.getAlbum() != null) {
+            albumId = song.getAlbum().getAlbumId();
+            albumTitle = song.getAlbum().getTitle();
         }
 
         return SongDTO.builder()
                 .songId(song.getSongId())
                 .title(song.getTitle())
-                .artist(ArtistDTO.from(song.getArtist()))
-                .album(AlbumDTO.from(song.getAlbum()))
+                .artistId(song.getArtist().getArtistId())
+                .artistName(song.getArtist().getStageName())
+                .albumId(albumId)
+                .albumTitle(albumTitle)
                 .releaseDate(song.getReleaseDate())
                 .duration(song.getDuration())
                 .songFileInfoUrl(songFileInfoUrl)
@@ -50,6 +61,7 @@ public class SongDTO {
                 .genre(song.getGenre())
                 .build();
     }
+
 
     public static List<SongDTO> songList(List<Song> songs) {
         return songs.stream()

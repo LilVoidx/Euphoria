@@ -9,12 +9,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import soul.euphoria.dto.forms.ArtistForm;
 import soul.euphoria.dto.infos.ArtistDTO;
+import soul.euphoria.dto.infos.SongDTO;
 import soul.euphoria.dto.infos.UserDTO;
 import soul.euphoria.models.Enum.Genre;
+import soul.euphoria.models.music.Song;
 import soul.euphoria.models.user.User;
 import soul.euphoria.security.details.UserDetailsImpl;
+import soul.euphoria.services.music.SongService;
 import soul.euphoria.services.user.UserService;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -25,6 +29,9 @@ public class ArtistController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private SongService songService;
 
     @GetMapping("/artists/{username}/register")
     public String showArtistRegistrationForm(Model model, @PathVariable String username) {
@@ -60,17 +67,20 @@ public class ArtistController {
     @GetMapping("/artist/{username}")
     public String artistProfile(Model model, @PathVariable String username) {
         Optional<User> optionalUser = userService.findByUserName(username);
-
-        //TODO: CHECK WHY ARTIST PROFILE IS RETURNING ERROR 500 BECAUSE OF DTO AFTER SONG CREATION
-
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             UserDTO userDTO = UserDTO.from(user);
             // Check if the user is an artist
             if (user.getArtist() != null) {
                 ArtistDTO artistDTO = ArtistDTO.from(user.getArtist());
+
+                // Fetch artist-related songs
+                List<Song> artistSongs = songService.getSongsByArtist(user.getArtist());
+                List<SongDTO> artistSongDTOs = SongDTO.songList(artistSongs);
+
                 model.addAttribute("user", userDTO);
                 model.addAttribute("artist", artistDTO);
+                model.addAttribute("artistSongs", artistSongDTOs);
                 return "user_account/artist_page";
             } else {
                 model.addAttribute("errorMessage", "User is not an artist");

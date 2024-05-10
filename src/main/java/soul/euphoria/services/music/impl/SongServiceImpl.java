@@ -20,6 +20,7 @@ import soul.euphoria.services.music.SongService;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -80,6 +81,11 @@ public class SongServiceImpl implements SongService {
         return songRepository.findById(songId).orElse(null);
     }
 
+    @Override
+    public List<Song> getSongsByArtist(Artist artist) {
+        return songRepository.findAllByArtist(artist);
+    }
+
     //TODO: THIS METHOD IS NOT WORKING
     private String getSongDuration(MultipartFile songFile) {
         try {
@@ -88,10 +94,14 @@ public class SongServiceImpl implements SongService {
             Metadata metadata = new Metadata();
             ParseContext context = new ParseContext();
             BodyContentHandler handler = new BodyContentHandler();
+
             parser.parse(stream, handler, metadata, context);
-            String duration = metadata.get("xmpDM:duration");
+
+            // Get the duration from the metadata
+            String duration = metadata.get("Duration");
             if (duration != null) {
-                int seconds = (int) (Double.parseDouble(duration) / 1000);
+                // Parse the duration to minutes and seconds
+                int seconds = (int) Double.parseDouble(duration);
                 int minutes = seconds / 60;
                 seconds %= 60;
                 return String.format("%02d:%02d", minutes, seconds);
@@ -101,4 +111,5 @@ public class SongServiceImpl implements SongService {
         }
         return "00:00";
     }
+
 }

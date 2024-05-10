@@ -29,14 +29,6 @@ public class UserDTO {
     private List<PlaylistDTO> playlists;
     private List<SongDTO> favoriteSongs;
 
-    // Properties specific to Artist
-    private Long artistId;
-    private String stageName;
-    private String bio;
-    private Genre genre;
-    private List<AlbumDTO> albums;
-    private List<SongDTO> songs;
-
     public static UserDTO from(User user) {
 
         String profilePictureUrl = user.getProfilePicture() != null ? user.getProfilePicture().getStorageFileName() : null;

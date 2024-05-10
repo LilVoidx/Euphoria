@@ -3,6 +3,7 @@ package soul.euphoria.models.music;
 import lombok.*;
 import soul.euphoria.models.Enum.Genre;
 import soul.euphoria.models.FileInfo;
+import soul.euphoria.models.user.Artist;
 import soul.euphoria.models.user.User;
 
 import javax.persistence.*;
@@ -26,8 +27,8 @@ public class Album {
     private String title;
 
     @ManyToOne
-    @JoinColumn(name = "artist_id", referencedColumnName = "userId")
-    private User artist;
+    @JoinColumn(name = "artist_id", referencedColumnName = "artistId")
+    private Artist artist;
 
     private LocalDate releaseDate;
 

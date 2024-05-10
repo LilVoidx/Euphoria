@@ -18,7 +18,8 @@ import java.util.stream.Collectors;
 public class AlbumDTO {
     private Long albumId;
     private String title;
-    private UserDTO artist;
+    private Long artistId;
+    private String artistName;
     private LocalDate releaseDate;
     private String coverImageInfoUrl;
     private Genre genre;
@@ -33,7 +34,8 @@ public class AlbumDTO {
         return AlbumDTO.builder()
                 .albumId(album.getAlbumId())
                 .title(album.getTitle())
-                .artist(UserDTO.from(album.getArtist()))
+                .artistId(album.getArtist().getArtistId())
+                .artistName(album.getArtist().getStageName())
                 .releaseDate(album.getReleaseDate())
                 .coverImageInfoUrl(coverImageInfoUrl)
                 .genre(album.getGenre())
