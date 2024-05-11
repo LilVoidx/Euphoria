@@ -8,7 +8,6 @@ import soul.euphoria.models.user.User;
 import java.util.Optional;
 
 public interface UserService {
-    void registerAsArtist(User user, ArtistForm artistForm);
 
     void resetPassword(String email);
 
@@ -24,4 +23,5 @@ public interface UserService {
 
 
     Optional<User> findByUserName(String userName);
+
 }

@@ -37,13 +37,12 @@ public class ProfileController {
             return "user_account/profile_page";
         } else {
             model.addAttribute("errorMessage", "User not found");
-            return "error/error_page";
+            return "redirect:/error";
         }
     }
 
     @GetMapping("/profile/{username}/edit")
     public String editProfile(Model model, @PathVariable String username) {
-        logger.debug("GET request received for profile edit page for username: {}", username);
         Optional<User> optionalUser = userService.findByUserName(username);
 
         if (optionalUser.isPresent()) {
@@ -58,7 +57,7 @@ public class ProfileController {
             return "user_account/edit_profile_page";
         } else {
             model.addAttribute("errorMessage", "User not found");
-            return "error/error_page";
+            return "redirect:/error";
         }
     }
 
@@ -74,9 +73,6 @@ public class ProfileController {
             return "user_account/edit_profile_page";
         }
         try {
-
-            //TODO: PROFILE PICTURE TEMP SHOW
-            // Update user info
             userService.updateUser(username, userForm, profilePicture);
             logger.debug("User info updated successfully");
             // Redirect to the updated profile page using the new username

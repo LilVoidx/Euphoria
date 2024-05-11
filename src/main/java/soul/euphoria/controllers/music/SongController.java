@@ -55,7 +55,7 @@ public class SongController {
         if (song == null) {
             // Handle song not found
             model.addAttribute("errorMessage", "Song not found");
-            return "error"; // Assuming you have an error page
+            return "/error"; // Assuming you have an error page
         }
         SongDTO songDTO = SongDTO.from(song);
         model.addAttribute("song", songDTO);

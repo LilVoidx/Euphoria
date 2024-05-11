@@ -129,78 +129,62 @@
 
         <div class="trending">
             <div class="left">
-                <h5>User Account Info</h5>
+                <h5>Artist Account Info</h5>
                 <div class="info">
-                    <h2>${user.fullName}</h2>
+                    <h2>${artist.stageName}</h2>
                     <h4>@${user.username}</h4>
                     <h5>${user.email}</h5>
                     <div class="buttons">
-                        <a href="/profile/${user.username}/edit">
+                        <a href="/artist/${user.username}/edit">
                             <button id="changeInfoBtn">Change info</button>
                         </a>
                         <i class='bx bxs-heart'></i>
                     </div>
                 </div>
             </div>
-            <img src="/files/img/${user.getProfilePictureUrl()}" id="preview" alt="Profile Image">
+            <img src="/files/img/${user.getProfilePictureUrl()}" alt="Profile Image">
         </div>
 
         <div class="playlist">
-            <form method="post" action="/profile/${user.username}/edit" enctype="multipart/form-data">
+            <form method="post" action="/artist/${user.username}/edit" enctype="multipart/form-data">
                 <div>
                     <div class="label-wrapper">
-                        <label for="username">Username:</label>
+                        <label for="stageName">Stage Name:</label>
                     </div>
                     <div class="inputBx">
-                        <input type="text" id="username" name="username" value="${user.username}">
+                        <input type="text" id="stageName" name="stageName" value="${artist.stageName}" required>
                     </div>
                 </div>
                 <div>
                     <div class="label-wrapper">
-                        <label for="email">Email:</label>
+                        <label for="bio">Bio:</label>
                     </div>
                     <div class="inputBx">
-                        <input type="email" id="email" name="email" value="${user.email}">
+                        <textarea id="bio" name="bio" rows="4" cols="40" required>${artist.bio}</textarea>
                     </div>
                 </div>
                 <div>
                     <div class="label-wrapper">
-                        <label for="firstName">First Name:</label>
+                        <label for="genre">Genre:</label>
                     </div>
                     <div class="inputBx">
-                        <input type="text" id="firstName" name="firstName" value="${user.firstName}">
-                    </div>
-                </div>
-                <div>
-                    <div class="label-wrapper">
-                        <label for="lastName">Last Name:</label>
-                    </div>
-                    <div class="inputBx">
-                        <input type="text" id="lastName" name="lastName" value="${user.lastName}">
-                    </div>
-                </div>
-                <div>
-                    <div class="label-wrapper">
-                        <label for="phoneNumber">Phone Number:</label>
-                    </div>
-                    <div class="inputBx">
-                        <input type="text" id="phoneNumber" name="phoneNumber" value="${user.phoneNumber}">
-                    </div>
-                </div>
-                <div>
-                    <div class="label-wrapper">
-                        <label for="profilePicture">Profile Picture:</label>
-                    </div>
-                    <div class="inputBx">
-                        <input type="file" id="profilePicture" name="profilePicture" onchange="previewImage(this)">
+                        <select name="genre" placeholder="Genre">
+                            <option>Genre</option>
+                            <#list genres as genre>
+                                <option value="${genre}" style="color: white; background-color: #1d1d1d;"
+                                        <#if genre == artist.genre?lower_case> selected</#if>>
+                                    ${genre}
+                                </option>
+                            </#list>
+                        </select>
                     </div>
                 </div>
                 <div>
                     <button id="submitBtn" style="display: none;" type="submit">Update</button>
                 </div>
             </form>
-
         </div>
+
 
 
     </main>

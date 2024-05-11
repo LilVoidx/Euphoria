@@ -134,7 +134,7 @@
                     <h4>@${user.username}</h4>
                     <h5>${user.email}</h5>
                     <div class="buttons">
-                        <a href="/profile/${user.username}/edit">
+                        <a href="/artist/${user.username}/edit">
                             <button>Edit Artist info</button>
                         </a>
                         <i class='bx bxs-heart'></i>
@@ -179,13 +179,13 @@
                     <a href="/">See all</a>
                 </div>
                 <div class="items">
-                    <#assign counter = 0>
+                    <#assign counter = 1>
                     <#list artistSongs as song>
-                        <#if counter < 4>
+                        <#if counter <= 4>
                             <div class="item">
                                 <div class="info">
-                                    <p>${song.songId}</p>
-                                    <img src="/files/img/${song.songImageInfoUrl}">
+                                    <p><#if counter <= 4>0</#if>${counter}</p>
+                                    <img src="/files/img/${song.songImageInfoUrl}" alt="song image">
                                     <div class="details">
                                         <h5>${song.title}</h5>
                                         <p>${song.artistName}</p>

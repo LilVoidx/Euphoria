@@ -7,18 +7,8 @@ menuOpen.addEventListener('click', () => sidebar.style.left = '0');
 menuClose.addEventListener('click', () => sidebar.style.left = '-100%');
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('changeInfoBtn').addEventListener('click', function(event) {
-        // Prevent default button click behavior
-        event.preventDefault();
 
-        // Trigger hidden submit button click
-        document.getElementById('submitBtn').click();
-    });
-});
-
-
-
+// This is for the dropdown menu
 document.addEventListener("DOMContentLoaded", function(){
     var dropdownContent = document.getElementById("dropdownContent");
     var dropdownMenuButton = document.getElementById("dropdownMenuButton");
@@ -44,5 +34,28 @@ document.addEventListener("DOMContentLoaded", function(){
     });
 });
 
+// this is for the preview image when editing the profile
+function previewImage(input) {
+    var preview = document.getElementById('preview');
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            preview.src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+
+// This is for the change info button in the edit profile page
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('changeInfoBtn').addEventListener('click', function(event) {
+        // Prevent default button click behavior
+        event.preventDefault();
+
+        // Trigger hidden submit button click
+        document.getElementById('submitBtn').click();
+    });
+});
 
 
