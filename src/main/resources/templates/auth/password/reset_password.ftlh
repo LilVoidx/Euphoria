@@ -56,6 +56,6 @@
     }
 </script>
 
-<#include "../components/footer.ftlh"> <!-- Include Footer Component -->
+<#include "../components/footer.ftlh">
 </body>
 </html>

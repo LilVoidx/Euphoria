@@ -2,15 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error Page</title>
+    <meta name="robots" content="noindex, follow">
+    <title>Error</title>
+    <link rel="icon" href="/static/files/assets/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/error/error.css">
 </head>
 <body>
-<h1>Error</h1>
-<div>
-    <p>Error Code: ${statusCode}</p>
-    <p>Error Message: ${errorMessage}</p>
+<#include "components/navbar.ftlh">
+
+<div id="notfound">
+    <div class="notfound">
+        <div class="notfound-404"></div>
+        <h1>${statusCode}</h1>
+        <h2>${errorMessage}</h2>
+        <p>${errorDescription}</p>
+        <a href="/home">Back to homepage</a>
+    </div>
 </div>
+
+
 </body>
 </html>

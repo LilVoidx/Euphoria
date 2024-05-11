@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import soul.euphoria.services.mail.ConfirmationService;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 public class ConfirmController {
 
@@ -18,15 +21,16 @@ public class ConfirmController {
     private ConfirmationService confirmationService;
 
     @GetMapping("/confirm/{code}")
-    public String confirmUser(@PathVariable("code") String code, Model model) {
+    public String confirmUser(@PathVariable("code") String code, HttpServletRequest request) {
         boolean isConfirmed = confirmationService.confirmUser(code);
 
         if (isConfirmed) {
             return "redirect:/confirmation-success";
         } else {
             logger.error("Failed to confirm account with code: {}", code);
-            model.addAttribute("errorMessage", "Failed to confirm account. Please try again.");
-            return "redirect:/error";
+            // Forward the request to the error controller
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 500);
+            return "forward:/error";
         }
     }
 

@@ -258,4 +258,12 @@ body {
     color: white;
 }
 
+.iziToast-title {
+    color: #fff;
+    font-size: 25px;
+}
+.iziToast-message {
+    font-size: 20px;
+}
+
 

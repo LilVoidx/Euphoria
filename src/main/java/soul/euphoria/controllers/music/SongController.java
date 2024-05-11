@@ -14,6 +14,9 @@ import soul.euphoria.models.music.Song;
 import soul.euphoria.security.details.UserDetailsImpl;
 import soul.euphoria.services.music.SongService;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 public class SongController {
 
@@ -50,12 +53,12 @@ public class SongController {
     }
 
     @GetMapping("/song/{songId}")
-    public String showSongPage(@PathVariable("songId") Long songId, Model model) {
+    public String showSongPage(@PathVariable("songId") Long songId, Model model, HttpServletRequest request) {
         Song song = songService.findById(songId);
         if (song == null) {
-            // Handle song not found
-            model.addAttribute("errorMessage", "Song not found");
-            return "/error"; // Assuming you have an error page
+            // Forward the request to the error controller
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+            return "forward:/error";
         }
         SongDTO songDTO = SongDTO.from(song);
         model.addAttribute("song", songDTO);

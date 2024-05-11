@@ -39,13 +39,13 @@ public class HomeController {
             model.addAttribute("user", userDTO);
             return "user_account/home_page";
         } else {
-            // User not found, handle error
-            model.addAttribute("errorMessage", "User not found");
-            return "error/error_page";
+            // Redirect to error page
+            return "redirect:/error";
         }
     }
+
     @GetMapping("/files/img/{file-name:.+}")
-    public void getFile(@PathVariable("file-name") String fileName, HttpServletResponse response){
+    public void getFile(@PathVariable("file-name") String fileName, HttpServletResponse response) {
         fileStorageService.writeFileToResponse(fileName, response);
     }
 }

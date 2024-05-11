@@ -13,6 +13,9 @@ import soul.euphoria.dto.infos.UserDTO;
 import soul.euphoria.models.user.User;
 import soul.euphoria.services.user.UserService;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -26,7 +29,7 @@ public class ProfileController {
 
 
     @GetMapping("/profile/{username}")
-    public String userProfile(Model model, @PathVariable String username) {
+    public String userProfile(Model model, @PathVariable String username, HttpServletRequest request) {
         Optional<User> optionalUser = userService.findByUserName(username);
 
         if (optionalUser.isPresent()) {
@@ -36,13 +39,14 @@ public class ProfileController {
             model.addAttribute("user", userDTO);
             return "user_account/profile_page";
         } else {
-            model.addAttribute("errorMessage", "User not found");
-            return "redirect:/error";
+            // Forward the request to the error controller if user is not found
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+            return "forward:/error";
         }
     }
 
     @GetMapping("/profile/{username}/edit")
-    public String editProfile(Model model, @PathVariable String username) {
+    public String editProfile(Model model, @PathVariable String username, HttpServletRequest request) {
         Optional<User> optionalUser = userService.findByUserName(username);
 
         if (optionalUser.isPresent()) {
@@ -56,8 +60,8 @@ public class ProfileController {
             model.addAttribute("userForm", userForm);
             return "user_account/edit_profile_page";
         } else {
-            model.addAttribute("errorMessage", "User not found");
-            return "redirect:/error";
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+            return "forward:/error";
         }
     }
 
@@ -79,6 +83,7 @@ public class ProfileController {
             return "redirect:/profile/" + userForm.getUsername();
         } catch (Exception e) {
             logger.error("Error updating user info", e);
+            // Redirect to the error page
             return "redirect:/error";
         }
     }

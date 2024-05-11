@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In</title>
     <link rel="stylesheet" href="/static/css/auth/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+
     <link rel="icon" href="/static/files/assets/favicon.ico" type="image/x-icon">
 </head>
 <body>
@@ -36,6 +39,24 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+<script>
+    // Get error message from model attribute
+    var errorMessage = "${errorMessage}";
+
+    // If there's an error message, display it using Izitoast
+    if (errorMessage) {
+        iziToast.error({
+            title: 'Error',
+            message: errorMessage,
+            position: 'topCenter',
+            backgroundColor: '#ff8181',
+            timeout: 3000,
+            layout: 2,
+        });
+    }
+</script>
+
 <script src="/static/js/passVisibility.js"></script>
 </body>
 </html>

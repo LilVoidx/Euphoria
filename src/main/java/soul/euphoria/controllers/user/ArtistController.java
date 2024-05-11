@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import soul.euphoria.dto.forms.ArtistForm;
 import soul.euphoria.dto.infos.ArtistDTO;
@@ -20,10 +21,11 @@ import soul.euphoria.services.music.SongService;
 import soul.euphoria.services.user.ArtistService;
 import soul.euphoria.services.user.UserService;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-
 
 @Controller
 public class ArtistController {
@@ -40,7 +42,7 @@ public class ArtistController {
     private SongService songService;
 
     @GetMapping("/artists/{username}/register")
-    public String showArtistRegistrationForm(Model model, @PathVariable String username) {
+    public String showArtistRegistrationForm(Model model, @PathVariable String username, HttpServletRequest request) {
         Optional<User> optionalUser = userService.findByUserName(username);
 
         if (optionalUser.isPresent()) {
@@ -52,26 +54,29 @@ public class ArtistController {
             logger.info("User: {}", userDTO);
             return "user_account/artist-registration";
         } else {
-            model.addAttribute("errorMessage", "User not found");
-            return "404";
+            // Forward the request to the error controller
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+            return "forward:/error";
         }
     }
 
-
-
     @PostMapping("/artists/register")
-    public String registerAsArtist(@AuthenticationPrincipal UserDetailsImpl userDetails, @ModelAttribute ArtistForm artistForm) {
+    public String registerAsArtist(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                   @ModelAttribute ArtistForm artistForm, HttpServletRequest request) {
         try {
             User user = userService.getUserById(userDetails.getUserId());
             artistService.registerAsArtist(user, artistForm);
             return "redirect:/profile/" + user.getUsername();
         } catch (Exception e) {
             logger.error("Error registering artist: {}", e.getMessage());
-            return "redirect:/error";
+            // Forward the request to the error controller
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 500);
+            return "forward:/error";
         }
     }
+
     @GetMapping("/artist/{username}")
-    public String artistProfile(Model model, @PathVariable String username) {
+    public String artistProfile(Model model, @PathVariable String username, HttpServletRequest request) {
         Optional<User> optionalUser = userService.findByUserName(username);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
@@ -79,28 +84,28 @@ public class ArtistController {
             // Check if the user is an artist
             if (user.getArtist() != null) {
                 ArtistDTO artistDTO = ArtistDTO.from(user.getArtist());
-
                 // Fetch artist-related songs
                 List<Song> artistSongs = songService.getSongsByArtist(user.getArtist());
                 List<SongDTO> artistSongDTOs = SongDTO.songList(artistSongs);
-
                 model.addAttribute("user", userDTO);
                 model.addAttribute("artist", artistDTO);
                 model.addAttribute("artistSongs", artistSongDTOs);
                 return "user_account/artist_page";
             } else {
-                model.addAttribute("errorMessage", "User is not an artist");
-                return "404";
+                // Forward the request to the error controller
+                request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+                return "forward:/error";
             }
         } else {
-            model.addAttribute("errorMessage", "User not found");
-            return "404";
+            // Forward the request to the error controller
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+            return "forward:/error";
         }
     }
 
     //TODO: Add edit artist page
     @GetMapping("/artist/{username}/edit")
-    public String editArtist(Model model, @PathVariable String username) {
+    public String editArtist(Model model, @PathVariable String username, HttpServletRequest request) {
         Optional<User> optionalUser = userService.findByUserName(username);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
@@ -116,17 +121,19 @@ public class ArtistController {
                 model.addAttribute("artistForm", artistForm);
                 return "user_account/edit_artist_page";
             } else {
-                model.addAttribute("errorMessage", "User is not an artist");
-                return "404";
+                // Forward the request to the error controller
+                request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+                return "forward:/error";
             }
         } else {
-            model.addAttribute("errorMessage", "User not found");
-            return "404";
+            // Forward the request to the error controller
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+            return "forward:/error";
         }
     }
 
     @PostMapping("/artist/{username}/edit")
-    public String updateArtist(@PathVariable String username,@Valid @ModelAttribute ArtistForm artistForm) {
+    public String updateArtist(@PathVariable String username, @Valid @ModelAttribute ArtistForm artistForm, HttpServletRequest request) {
         Optional<User> optionalUser = userService.findByUserName(username);
         if (optionalUser.isPresent()) {
             try {
@@ -135,12 +142,14 @@ public class ArtistController {
                 return "redirect:/artist/" + username;
             } catch (Exception e) {
                 logger.error("Error updating artist: {}", e.getMessage());
-                return "redirect:/error";
+                // Forward the request to the error controller
+                request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 500);
+                return "forward:/error";
             }
         } else {
-            return "404";
+            // Forward the request to the error controller
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+            return "forward:/error";
         }
     }
-
-
 }

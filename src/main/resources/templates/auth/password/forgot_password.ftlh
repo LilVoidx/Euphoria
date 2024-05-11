@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Forgot Password</title>
-    <link rel="stylesheet" href="/static/css/auth/auth.css"> <!-- Use auth.css -->
+    <link rel="stylesheet" href="/static/css/auth/auth.css">
 </head>
 <body>
 <#include "../components/navbar.ftlh">
@@ -46,6 +46,6 @@
     }
 </script>
 
-<#include "../components/footer.ftlh"> <!-- Include Footer Component -->
+<#include "../components/footer.ftlh">
 </body>
 </html>

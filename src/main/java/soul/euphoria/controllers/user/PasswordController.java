@@ -13,6 +13,8 @@ import soul.euphoria.models.user.User;
 import soul.euphoria.services.mail.ConfirmationService;
 import soul.euphoria.services.user.UserService;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Controller
@@ -35,7 +37,7 @@ public class PasswordController {
     }
 
     @PostMapping("/forgot")
-    public String submitForgotPasswordForm(@RequestParam("email") String email, Model model) {
+    public String submitForgotPasswordForm(@RequestParam("email") String email, Model model, HttpServletRequest request) {
         try {
             // Check if email exists in the database
             Optional<User> user = userService.findByEmail(email);
@@ -50,8 +52,9 @@ public class PasswordController {
             }
         } catch (Exception e) {
             logger.error("Error processing forgot password form: {}", e.getMessage());
-            model.addAttribute("forgotPasswordErrorMessage", "An error occurred while processing your request. Please try again later.");
-            model.addAttribute("forgotPasswordMessage", "");
+            // Forward the request to the error controller
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 500);
+            return "forward:/error";
         }
         return "auth/password/forgot_password";
     }
@@ -67,7 +70,7 @@ public class PasswordController {
     }
 
     @PostMapping("/reset")
-    public String submitResetPasswordForm(@RequestParam("code") String code, @RequestParam("password") String password, Model model) {
+    public String submitResetPasswordForm(@RequestParam("code") String code, @RequestParam("password") String password, Model model, HttpServletRequest request) {
         try {
             confirmationService.resetPassword(code, password);
             model.addAttribute("resetPasswordMessage", "Your password has been reset successfully.");
@@ -75,8 +78,9 @@ public class PasswordController {
             model.addAttribute("code", "");
         } catch (Exception e) {
             logger.error("Error processing reset password form: {}", e.getMessage());
-            model.addAttribute("resetPasswordErrorMessage", "An error occurred while processing your request. Please try again later.");
-            model.addAttribute("resetPasswordMessage", "");
+            // Forward the request to the error controller
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 500);
+            return "forward:/error";
         }
         return "/auth/password/reset_password";
     }
