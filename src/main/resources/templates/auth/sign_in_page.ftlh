@@ -39,6 +39,7 @@
         </div>
     </div>
 </div>
+<script src="/static/js/passVisibility.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
 <script>
     // Get error message from model attribute
@@ -51,12 +52,10 @@
             message: errorMessage,
             position: 'topCenter',
             backgroundColor: '#ff8181',
-            timeout: 3000,
+            timeout: 5000,
             layout: 2,
         });
     }
 </script>
-
-<script src="/static/js/passVisibility.js"></script>
 </body>
 </html>

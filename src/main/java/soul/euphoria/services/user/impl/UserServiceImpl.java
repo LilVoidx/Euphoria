@@ -5,12 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import soul.euphoria.dto.forms.ArtistForm;
 import soul.euphoria.dto.forms.UserForm;
-import soul.euphoria.models.Enum.Role;
-import soul.euphoria.models.user.Artist;
 import soul.euphoria.models.user.User;
-import soul.euphoria.repositories.user.ArtistRepository;
 import soul.euphoria.repositories.user.UsersRepository;
 import soul.euphoria.services.file.FileStorageService;
 import soul.euphoria.services.mail.EmailSender;
@@ -24,9 +20,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UsersRepository userRepository;
-
-    @Autowired
-    private ArtistRepository artistRepository;
 
     @Autowired
     private EmailSender emailSender;

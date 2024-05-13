@@ -9,6 +9,7 @@ import soul.euphoria.models.user.User;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -30,7 +31,7 @@ public class Album {
     @JoinColumn(name = "artist_id", referencedColumnName = "artistId")
     private Artist artist;
 
-    private LocalDate releaseDate;
+    private Date releaseDate;
 
     @OneToOne
     @JoinColumn(name = "cover_image_id", referencedColumnName = "fileInfoId")

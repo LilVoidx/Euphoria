@@ -8,6 +8,7 @@ import soul.euphoria.models.music.Album;
 import soul.euphoria.models.Enum.Genre;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,7 @@ public class AlbumDTO {
     private String title;
     private Long artistId;
     private String artistName;
-    private LocalDate releaseDate;
+    private Date releaseDate;
     private String coverImageInfoUrl;
     private Genre genre;
     private List<SongDTO> songs;

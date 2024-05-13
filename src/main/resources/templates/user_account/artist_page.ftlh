@@ -225,6 +225,9 @@
                     <#if user.role == "ARTIST">
                         <a href="/upload-song">Upload Song</a>
                     </#if>
+                    <#if user.role == "ARTIST">
+                        <a href="/albums/create">Create Album</a>
+                    </#if>
                     <a href="/logout">Logout</a>
                 </div>
             </div>

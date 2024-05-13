@@ -31,7 +31,7 @@ public class SignUpController {
 
     @PostMapping("/signUp")
     public String registerUser(@Valid @ModelAttribute("userForm") UserForm userForm,
-                               BindingResult bindingResult, HttpServletRequest request) {
+                               BindingResult bindingResult,Model model, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             return "auth/sign_up_page";
         }
@@ -45,6 +45,7 @@ public class SignUpController {
             return "redirect:/signUp/ProfilePicture?userId=" + registeredUserId;
         } catch (IllegalArgumentException e) {
             bindingResult.rejectValue("confirmPassword", "error.userForm", e.getMessage());
+            model.addAttribute("errorMessage", "Password mismatch");
             return "auth/sign_up_page";
         } catch (Exception e) {
             logger.error("Error occurred during user registration", e);

@@ -6,6 +6,7 @@
     <title>SignUp</title>
     <link rel="stylesheet" href="/static/css/auth/auth.css">
     <link rel="icon" href="/static/files/assets/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
 </head>
 <body>
 <#include "components/navbar.ftlh">
@@ -63,5 +64,22 @@
     </div>
 </div>
 <script src="/static/js/passVisibility.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+<script>
+    // Get error message from model attribute
+    var errorMessage = "${errorMessage}";
+
+    // If there's an error message, display it using Izitoast
+    if (errorMessage) {
+        iziToast.error({
+            title: 'Error',
+            message: errorMessage,
+            position: 'topCenter',
+            backgroundColor: '#ff8181',
+            timeout: 3000,
+            layout: 2,
+        });
+    }
+</script>
 </body>
 </html>

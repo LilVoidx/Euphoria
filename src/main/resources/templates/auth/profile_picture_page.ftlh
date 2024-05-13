@@ -33,6 +33,6 @@
         </div>
     </div>
 </div>
-<#include "components/footer.ftlh">
+
 </body>
 </html>
