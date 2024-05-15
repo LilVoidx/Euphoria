@@ -29,4 +29,7 @@ public class SongForm {
 
     @NotBlank
     private String genre;
+
+    @NotBlank
+    private String Duration;
 }

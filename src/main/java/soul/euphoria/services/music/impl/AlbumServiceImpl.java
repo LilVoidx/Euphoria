@@ -73,6 +73,26 @@ public class AlbumServiceImpl implements AlbumService {
         return null;
     }
 
+    @Override
+    public void addSongToAlbum(Long songId, Long albumId) {
+        // Retrieve the song and album entities
+        Optional<Song> songOptional = songRepository.findById(songId);
+        Optional<Album> albumOptional = albumRepository.findById(albumId);
+
+        if (songOptional.isPresent() && albumOptional.isPresent()) {
+            Song song = songOptional.get();
+            Album album = albumOptional.get();
+
+            // Set the album for the song
+            song.setAlbum(album);
+
+            // Save the updated song
+            songRepository.save(song);
+        } else {
+            throw new IllegalArgumentException("Song or Album not found");
+        }
+    }
+
 
     @Override
     public AlbumDTO getAlbumDetails(Long albumId) {

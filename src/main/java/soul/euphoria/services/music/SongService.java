@@ -14,4 +14,6 @@ public interface SongService {
     Song findById(Long songId);
 
     List<Song> getSongsByArtist(Artist artist);
+
+    List<Song> getAllSongs();
 }

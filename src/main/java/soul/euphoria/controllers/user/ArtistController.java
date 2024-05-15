@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import soul.euphoria.dto.forms.ArtistForm;
 import soul.euphoria.dto.infos.ArtistDTO;
@@ -102,8 +101,6 @@ public class ArtistController {
             return "forward:/error";
         }
     }
-
-    //TODO: Add edit artist page
     @GetMapping("/artist/{username}/edit")
     public String editArtist(Model model, @PathVariable String username, HttpServletRequest request) {
         Optional<User> optionalUser = userService.findByUserName(username);

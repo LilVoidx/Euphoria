@@ -14,4 +14,7 @@ public interface AlbumService {
     AlbumDTO getAlbumDetails(Long albumId);
 
     List<SongDTO> getAlbumSongs(Long albumId);
+
+    void addSongToAlbum(Long songId, Long albumId);
+
 }

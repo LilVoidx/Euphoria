@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="/static/css/home/profile.css">
+    <link rel="stylesheet" href="/static/css/home/artist_page.css">
     <title>Profile</title>
     <link rel="icon" href="/static/files/assets/favicon.ico" type="image/x-icon">
 </head>
@@ -72,15 +72,15 @@
         </div>
 
         <div class="menu">
-            <h5>Playlist</h5>
+            <h5>Actions</h5>
             <ul>
                 <li>
-                    <i class='bx bxs-plus-square'></i>
-                    <a href="#">Create New</a>
+                    <i class='bx bx-music'></i>
+                    <a href="/song/upload">Upload a Song</a>
                 </li>
                 <li>
-                    <i class='bx bxs-caret-right-circle'></i>
-                    <a href="#">Best of 2023</a>
+                    <i class='bx bx-folder-plus'></i>
+                    <a href="/albums/create">Create an album</a>
                 </li>
                 <li>
                     <i class='bx bxs-caret-right-circle'></i>
@@ -96,12 +96,18 @@
 
         <div class="playing">
             <div class="top">
-                <img src="assets/current.png">
-                <h4>Apple<br>Homepod</h4>
+                <img id="mini-song-image" src="/files/assets/song.png">
+
+                <div class="song-info">
+                    <h4 id="mini-song-name">Song name</h4>
+                    <p id="mini-artist-name">artist name</p>
+                </div>
+                    <div class="icon">
+                    <i id="mini-play-button" class='bx bx-play bx-xs'></i>
+                </div>
             </div>
             <div class="bottom">
-                <i class='bx bx-podcast'></i>
-                <p>Playing On Device</p>
+                <p id="mini-player-status">Paused</p>
             </div>
         </div>
 
@@ -132,12 +138,11 @@
                 <div class="info">
                     <h2>${artist.stageName}</h2>
                     <h4>@${user.username}</h4>
-                    <h5>${user.email}</h5>
+                    <h5>☑️ Verified Artist</h5>
                     <div class="buttons">
                         <a href="/artist/${user.username}/edit">
                             <button>Edit Artist info</button>
                         </a>
-                        <i class='bx bxs-heart'></i>
                     </div>
                 </div>
             </div>
@@ -145,34 +150,6 @@
         </div>
 
         <div class="playlist">
-            <div class="genres">
-                <div class="header">
-                    <h5>Your Albums</h5>
-                    <a href="#">See all</a>
-                </div>
-
-                <div class="items">
-                    <div class="item">
-                        <p>Electro<br>Pop</p>
-                    </div>
-                    <div class="item">
-                        <p>Dance<br>Beeat</p>
-                    </div>
-                    <div class="item">
-                        <p>Clubhouse<br>Remix</p>
-                    </div>
-                    <div class="item">
-                        <p>Hip Hop<br>Rap</p>
-                    </div>
-                    <div class="item">
-                        <p>Alternative<br>Indie</p>
-                    </div>
-                    <div class="item">
-                        <p>Classical<br>Period</p>
-                    </div>
-                </div>
-
-            </div>
             <div class="music-list">
                 <div class="header">
                     <h5>Your Songs</h5>
@@ -181,10 +158,10 @@
                 <div class="items">
                     <#assign counter = 1>
                     <#list artistSongs as song>
-                        <#if counter <= 4>
+                        <#if counter <= 9>
                             <div class="item">
                                 <div class="info">
-                                    <p><#if counter <= 4>0</#if>${counter}</p>
+                                    <p><#if counter <= 9>0</#if>${counter}</p>
                                     <img src="/files/img/${song.songImageInfoUrl}" alt="song image">
                                     <div class="details">
                                         <h5>${song.title}</h5>
@@ -193,7 +170,7 @@
                                 </div>
                                 <div class="actions">
                                     <p>${song.duration}</p>
-                                    <div class="icon">
+                                    <div class="icon play-song" data-song-id="${song.songId}">
                                         <i class='bx bxs-right-arrow'></i>
                                     </div>
                                     <i class='bx bxs-plus-square'></i>
@@ -222,12 +199,6 @@
                     <#if user.role == "ARTIST">
                         <a href="/artist/${user.username}">Artist Page</a>
                     </#if>
-                    <#if user.role == "ARTIST">
-                        <a href="/upload-song">Upload Song</a>
-                    </#if>
-                    <#if user.role == "ARTIST">
-                        <a href="/albums/create">Create Album</a>
-                    </#if>
                     <a href="/logout">Logout</a>
                 </div>
             </div>
@@ -244,10 +215,9 @@
         </div>
 
     </div>
-    </div>
-
-
-
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/js/miniPlayer.js"></script>
 <script src="/static/js/profile.js"></script>
 </body>
 </html>

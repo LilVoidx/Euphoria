@@ -245,12 +245,7 @@ body{
     height: 250px;
     border-radius: 10%;
 }
-.container main .playlist{
-    margin-right: -500px;
-    margin-left: 10px;
-    margin-top: 40px;
-    padding: 30px;
-}
+
 
 .container .sidebar .playing .top .icon {
     display: flex;
@@ -267,14 +262,66 @@ body{
     color: #6600cc;
 }
 
+.container main .playlist {
+    width: 150%;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+}
+
+.container main .playlist .song-card-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.container main .playlist .card {
+    background-color: #32323d;
+    border-radius: 8px;
+    padding: 40px;
+    width: 370px;
+    height: 370px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.container main .playlist .card img {
+    width: 150px;
+    height: 150px;
+    border-radius: 6%;
+}
+
+.container main .playlist .song-details h3 {
+    color: #fff;
+    text-align: center;
+    margin: 10px;
+}
+.container main .playlist .song-details h4 {
+    color: #989898;
+    text-align: center;
+    margin: 10px;
+}
+
+.container main .playlist .song-details p {
+    color: #989898;
+    text-align: center;
+    margin: 10px;
+}
+
 .container main .playlist form {
     display: flex;
+    justify-content: space-between;
     flex-wrap: wrap;
-    gap: 90px;
+    gap: 35px;
+    padding-left: 50px ;
 }
 
 .container main .playlist form div {
-    flex: 1 1 300px;
+    flex: 1 1 calc(50% - 20px);
 }
 
 .container main .playlist form label {
@@ -286,6 +333,7 @@ body{
 .container main .playlist form .label-wrapper {
     margin-bottom: 20px;
 }
+
 
 .container .right-section{
     padding: 20px 36px 20px 0;

@@ -97,12 +97,18 @@
 
         <div class="playing">
             <div class="top">
-                <img src="assets/current.png">
-                <h4>Apple<br>Homepod</h4>
+                <img id="mini-song-image" src="/files/assets/song.png">
+
+                <div class="song-info">
+                    <h4 id="mini-song-name">Song name</h4>
+                    <p id="mini-artist-name">artist name</p>
+                </div>
+                <div class="icon">
+                    <i id="mini-play-button" class='bx bx-play bx-xs'></i>
+                </div>
             </div>
             <div class="bottom">
-                <i class='bx bx-podcast'></i>
-                <p>Playing On Device</p>
+                <p id="mini-player-status">Paused</p>
             </div>
         </div>
 
@@ -133,12 +139,11 @@
                 <div class="info">
                     <h2>${artist.stageName}</h2>
                     <h4>@${user.username}</h4>
-                    <h5>${user.email}</h5>
+                    <h5>☑️ Verified Artist</h5>
                     <div class="buttons">
                         <a href="/artist/${user.username}/edit">
                             <button id="changeInfoBtn">Change info</button>
                         </a>
-                        <i class='bx bxs-heart'></i>
                     </div>
                 </div>
             </div>

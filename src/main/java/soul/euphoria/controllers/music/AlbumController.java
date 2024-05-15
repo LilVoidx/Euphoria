@@ -18,14 +18,12 @@ import soul.euphoria.models.user.User;
 import soul.euphoria.security.details.UserDetailsImpl;
 import soul.euphoria.services.music.AlbumService;
 import soul.euphoria.services.music.SongService;
-import soul.euphoria.services.user.ArtistService;
 import soul.euphoria.services.user.UserService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -36,6 +34,9 @@ public class AlbumController {
 
     @Autowired
     private AlbumService albumService;
+
+    @Autowired
+    private SongService songService;
 
     private static final Logger logger = LoggerFactory.getLogger(AlbumController.class);
 
@@ -72,10 +73,8 @@ public class AlbumController {
                               Model model) {
         try {
             System.out.println("USER" + userId.toString() );
-            System.out.println("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
             Album album = albumService.createAlbum(albumForm, coverImage, userId);
             model.addAttribute("userId", userId);
-            System.out.println("HELPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
             System.out.println("Album Id: " + album.getAlbumId());
             return "redirect:/albums/" + album.getAlbumId();
         } catch (Exception e) {
@@ -84,11 +83,28 @@ public class AlbumController {
     }
 
     @GetMapping("/albums/{albumId}")
-    public String showAlbumDetails(@PathVariable Long albumId, Model model) {
+    public String showAlbumDetails(@PathVariable Long albumId, Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         AlbumDTO album = albumService.getAlbumDetails(albumId);
-        List<SongDTO> songs = albumService.getAlbumSongs(albumId);
-        model.addAttribute("album", album);
-        model.addAttribute("songs", Objects.requireNonNullElse(songs, ""));
-        return "music/album_page";
+
+        User user = userService.getUserById(userDetails.getUserId());
+        if (user.getArtist() != null) {
+            List<Song> artistSongs = songService.getSongsByArtist(user.getArtist());
+            List<SongDTO> artistSongDTOs = SongDTO.songList(artistSongs);
+            model.addAttribute("album", album);
+            model.addAttribute("artistSongDTOs", artistSongDTOs);
+            return "music/album_page";
+        }
+        return "redirect: /error";
+    }
+
+    @PostMapping("/albums/{albumId}/addSong")
+    public String addSongToAlbum(@RequestParam("songId") Long songId,
+                                 @PathVariable Long albumId) {
+        try {
+            albumService.addSongToAlbum(songId, albumId);
+            return "redirect:/albums/" + albumId;
+        } catch (Exception e) {
+            return "redirect:/error";
+        }
     }
 }

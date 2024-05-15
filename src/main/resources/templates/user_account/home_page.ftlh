@@ -96,12 +96,18 @@
 
         <div class="playing">
             <div class="top">
-                <img src="assets/current.png">
-                <h4>Apple<br>Homepod</h4>
+                <img id="mini-song-image" src="/files/assets/song.png">
+
+                <div class="song-info">
+                    <h4 id="mini-song-name">Song name</h4>
+                    <p id="mini-artist-name">artist name</p>
+                </div>
+                <div class="icon">
+                    <i id="mini-play-button" class='bx bx-play bx-xs'></i>
+                </div>
             </div>
             <div class="bottom">
-                <i class='bx bx-podcast'></i>
-                <p>Playing On Device</p>
+                <p id="mini-player-status">Paused</p>
             </div>
         </div>
 
@@ -129,17 +135,17 @@
         <div class="trending">
             <div class="left">
                 <h5>Trending New Song</h5>
-                <div class="info">
-                    <h2>Lost Emotions</h2>
-                    <h4>Rion Clarke</h4>
+                <div class="info trending-song-info" data-song-id="${rndSong.songId}">
+                    <h2>${rndSong.title}</h2>
+                    <h4>${rndSong.artistName}</h4>
                     <h5>63 Million Plays</h5>
                     <div class="buttons">
-                        <button>Listen Now</button>
+                        <button class="play-song">Listen Now</button>
                         <i class='bx bxs-heart'></i>
                     </div>
                 </div>
             </div>
-            <img src="https://images.unsplash.com/photo-1712004257253-90705c255214?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MTQ4NDA0MjR8&ixlib=rb-4.0.3&q=85">
+            <img src="/files/img/${rndSong.songImageInfoUrl}" alt="${rndSong.songImageInfoUrl}">
         </div>
 
         <div class="playlist">
@@ -179,75 +185,32 @@
                 </div>
 
                 <div class="items">
-                    <div class="item">
-                        <div class="info">
-                            <p>01</p>
-                            <img src="assets/song-1.png">
-                            <div class="details">
-                                <h5>Sunrise</h5>
-                                <p>Lila Rivera</p>
+                    <#assign counter = 1>
+                    <#list allSongs as song>
+                        <#if counter <= 4>
+                            <div class="item song-item" data-song-id="${song.songId}">
+                                <div class="info">
+                                    <p><#if counter <= 4>0</#if>${counter}</p>
+                                    <img src="/files/img/${song.songImageInfoUrl}" alt="${song.title}">
+                                    <div class="details">
+                                        <h5>${song.title}</h5>
+                                        <p>${song.artistName}</p>
+                                    </div>
+                                </div>
+                                <div class="actions">
+                                    <p>${song.duration}</p>
+                                    <div class="icon">
+                                        <i class='bx bxs-right-arrow play-song'></i>
+                                    </div>
+                                    <i class='bx bxs-plus-square'></i>
+                                </div>
                             </div>
-                        </div>
-                        <div class="actions">
-                            <p>03:45</p>
-                            <div class="icon">
-                                <i class='bx bxs-right-arrow'></i>
-                            </div>
-                            <i class='bx bxs-plus-square'></i>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="info">
-                            <p>02</p>
-                            <img src="assets/song-2.png">
-                            <div class="details">
-                                <h5>Voyage</h5>
-                                <p>Tyde Brennnan</p>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <p>04:35</p>
-                            <div class="icon">
-                                <i class='bx bxs-right-arrow'></i>
-                            </div>
-                            <i class='bx bxs-plus-square'></i>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="info">
-                            <p>03</p>
-                            <img src="assets/song-3.png">
-                            <div class="details">
-                                <h5>Breeze</h5>
-                                <p>Sola Kim</p>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <p>04:22</p>
-                            <div class="icon">
-                                <i class='bx bxs-right-arrow'></i>
-                            </div>
-                            <i class='bx bxs-plus-square'></i>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="info">
-                            <p>04</p>
-                            <img src="assets/song-4.png">
-                            <div class="details">
-                                <h5>Twilight</h5>
-                                <p>Jett Lawsonn</p>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <p>03:17</p>
-                            <div class="icon">
-                                <i class='bx bxs-right-arrow'></i>
-                            </div>
-                            <i class='bx bxs-plus-square'></i>
-                        </div>
-                    </div>
+                            <#assign counter = counter + 1>
+                        </#if>
+                    </#list>
                 </div>
+
+
 
             </div>
 
@@ -290,17 +253,24 @@
                     <i class='bx bxs-playlist'></i>
                 </div>
                 <div class="song-info">
-                    <img src="https://t2.genius.com/unsafe/340x340/https%3A%2F%2Fimages.genius.com%2F71df36f90de772fea25e1b5151bf7500.1000x1000x1.png">
+                    <img id="song-image" src="">
                     <div class="description">
-                        <h3>Fel Galeed</h3>
-                        <h5>Lege-Cy</h5>
-                        <p>Best of 2024</p>
+                        <h3 id="song-name"></h3>
+                        <h5 id="artist-name"></h5>
+                        <p id="album-name"></p>
                     </div>
                     <div class="progress">
-                        <p>02:12</p>
-                        <div class="active-line"></div>
-                        <div class="deactive-line"></div>
-                        <p>01:08</p>
+                        <p class="current-time">00:00</p>
+                        <div class="progress-bar">
+                            <div class="active-line"></div>
+                            <div class="progress-ball"></div>
+                        </div>
+                        <p class="duration">03:08</p>
+                    </div>
+                    <div class="sound-box">
+                        <i class='bx bx-minus volume-down'></i>
+                        <input type="range" min="0" max="100" value="100" class="volume-slider">
+                        <i class='bx bx-plus volume-up'></i>
                     </div>
                 </div>
             </div>
@@ -309,23 +279,24 @@
                 <div class="buttons">
                     <i class='bx bx-repeat'></i>
                     <i class='bx bx-first-page'></i>
-                    <i class='bx bxs-right-arrow play-button'></i>
+                    <i class='play-button bx bxs-right-arrow'></i>
                     <i class='bx bx-last-page'></i>
-                    <i class='bx bx-transfer-alt'></i>
+                    <i class='bx bx-volume-full'></i>
                 </div>
                 <div class="lyrics">
                     <i class='bx bx-chevron-up'></i>
                     <h5>LYRICS</h5>
                 </div>
             </div>
-
         </div>
+
 
     </div>
 
 </div>
-
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/js/player.js"></script>
+<script src="/static/js/miniPlayer.js"></script>
 <script src="/static/js/profile.js"></script>
 </body>
 

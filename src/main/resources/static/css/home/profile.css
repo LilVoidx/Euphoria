@@ -105,6 +105,24 @@ body{
     font-size: 13px;
 }
 
+.container .sidebar .playing .top .song-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.container .sidebar .playing .top h4{
+    width: 90px;
+    cursor: pointer;
+}
+
+#mini-artist-name {
+    font-size: 10px;
+    padding-top: 2px;
+    color: #aaa;
+}
+
+
+
 .container .sidebar .playing .top img{
     width: 36px;
     height: 36px;
@@ -345,6 +363,7 @@ body{
     font-weight: bold;
 }
 
+.container .sidebar .playing .top .icon,
 .container main .playlist .music-list .items .item .actions .icon{
     display: flex;
     align-items: center;
@@ -355,6 +374,7 @@ body{
     border-radius: 6px;
 }
 
+.container .sidebar .playing .top .icon i,
 .container main .playlist .music-list .items .item .actions .icon i{
     font-size: 10px;
     color: #6600cc;
@@ -366,6 +386,7 @@ body{
 
 .container .right-section{
     padding: 20px 36px 20px 0;
+    margin-bottom: 950px;
 }
 
 .container .right-section .profile{

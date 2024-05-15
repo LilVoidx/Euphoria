@@ -1,10 +1,5 @@
 package soul.euphoria.services.music.impl;
 
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.AutoDetectParser;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.Parser;
-import org.apache.tika.sax.BodyContentHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +12,6 @@ import soul.euphoria.services.file.FileStorageService;
 import soul.euphoria.dto.forms.SongForm;
 import soul.euphoria.services.music.SongService;
 
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -59,14 +53,11 @@ public class SongServiceImpl implements SongService {
                 throw new IllegalArgumentException("Invalid release date format");
             }
 
-            // Get song duration from file metadata
-            String songDuration = getSongDuration(songFile);
-
             // Create and save the song
             Song song = Song.builder()
                     .title(songForm.getTitle())
                     .releaseDate(releaseDate)
-                    .duration(songDuration)
+                    .duration(songForm.getDuration())
                     .songFileInfo(fileStorageService.findByStorageName(songFileName))
                     .songImageInfo(fileStorageService.findByStorageName(imageFileName))
                     .genre(Genre.valueOf(songForm.getGenre()))
@@ -86,30 +77,9 @@ public class SongServiceImpl implements SongService {
         return songRepository.findAllByArtist(artist);
     }
 
-    //TODO: THIS METHOD IS NOT WORKING
-    private String getSongDuration(MultipartFile songFile) {
-        try {
-            InputStream stream = songFile.getInputStream();
-            Parser parser = new AutoDetectParser();
-            Metadata metadata = new Metadata();
-            ParseContext context = new ParseContext();
-            BodyContentHandler handler = new BodyContentHandler();
-
-            parser.parse(stream, handler, metadata, context);
-
-            // Get the duration from the metadata
-            String duration = metadata.get("Duration");
-            if (duration != null) {
-                // Parse the duration to minutes and seconds
-                int seconds = (int) Double.parseDouble(duration);
-                int minutes = seconds / 60;
-                seconds %= 60;
-                return String.format("%02d:%02d", minutes, seconds);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "00:00";
+    @Override
+    public List<Song> getAllSongs() {
+        return songRepository.findAll();
     }
 
 }
