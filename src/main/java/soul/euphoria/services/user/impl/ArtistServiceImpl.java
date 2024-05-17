@@ -3,9 +3,12 @@ package soul.euphoria.services.user.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import soul.euphoria.dto.forms.ArtistForm;
+import soul.euphoria.dto.infos.ArtistDTO;
 import soul.euphoria.models.Enum.Role;
+import soul.euphoria.models.music.Song;
 import soul.euphoria.models.user.Artist;
 import soul.euphoria.models.user.User;
+import soul.euphoria.repositories.music.SongRepository;
 import soul.euphoria.repositories.user.ArtistRepository;
 import soul.euphoria.repositories.user.UsersRepository;
 import soul.euphoria.services.user.ArtistService;
@@ -23,6 +26,8 @@ public class ArtistServiceImpl implements ArtistService {
     @Autowired
     private ArtistRepository artistRepository;
 
+    @Autowired
+    private SongRepository songRepository;
 
     @Override
     public void registerAsArtist(User user, ArtistForm artistForm) {
@@ -73,5 +78,14 @@ public class ArtistServiceImpl implements ArtistService {
                 .bio(artist.getBio())
                 .genre(artist.getGenre())
                 .build();
+    }
+    @Override
+    public ArtistDTO getArtistBySongId(Long songId) {
+        Song song = songRepository.findById(songId).orElse(null);
+        if (song != null) {
+            Artist artist = song.getArtist();
+            return ArtistDTO.from(artist);
+        }
+        return null;
     }
 }

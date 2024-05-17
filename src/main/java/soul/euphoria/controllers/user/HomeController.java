@@ -6,11 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import soul.euphoria.dto.infos.SongDTO;
 import soul.euphoria.dto.infos.UserDTO;
-import soul.euphoria.models.music.Song;
-import soul.euphoria.models.user.User;
 import soul.euphoria.security.details.UserDetailsImpl;
 import soul.euphoria.services.file.FileStorageService;
 import soul.euphoria.services.music.SongService;
@@ -18,7 +17,6 @@ import soul.euphoria.services.user.UserService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Random;
 
 @Controller
 public class HomeController {
@@ -39,51 +37,31 @@ public class HomeController {
 
     @GetMapping("/home")
     public String home(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        // Retrieve user by userId
-        User user = userService.getUserById(userDetails.getUserId());
-        if (user != null) {
+        UserDTO userDTO = userService.getUserById(userDetails.getUserId());
+        if (userDTO != null) {
             // Convert User entity to UserDTO
-            UserDTO userDTO = UserDTO.from(user);
             model.addAttribute("user", userDTO);
 
             // Fetch all songs
-            List<Song> allSongs = songService.getAllSongs();
-            List<SongDTO> allSongDTOs = SongDTO.songList(allSongs);
-            model.addAttribute("allSongs", allSongDTOs);
+            List<SongDTO> allSongs = songService.getAllSongs();
+            model.addAttribute("allSongs", allSongs);
 
-            //Fetch random song for Trending new song
-            Random random = new Random();
-            int index = random.nextInt(allSongs.size());
-            Song randomSong = songService.findById((long) index);
-            model.addAttribute("rndSong",SongDTO.from(randomSong));
+            // Fetch trending song
+            SongDTO trendingSong = songService.getTrendingSong();
+            model.addAttribute("trendingSong", trendingSong);
             return "user_account/home_page";
+
         } else {
             // Redirect to error page
             return "redirect:/error";
         }
     }
-
-    @GetMapping("/songData/{songId}")
+    
+    @GetMapping("/search")
     @ResponseBody
-    public SongDTO getSongData(@PathVariable Long songId) {
-        Song song = songService.findById(songId);
-        return SongDTO.from(song);
+    public List<SongDTO> searchSongs(@RequestParam("query") String query) {
+        return songService.search(query);
     }
-
-    @GetMapping("/randomSong")
-    @ResponseBody
-    public SongDTO getRandomSong() {
-        List<Song> allSongs = songService.getAllSongs();
-
-        Random random = new Random();
-        int index = random.nextInt(allSongs.size());
-
-        Song randomSong = allSongs.get(index);
-
-        return SongDTO.from(randomSong);
-    }
-
-
 
     @GetMapping("/files/img/{file-name:.+}")
     public void getFile(@PathVariable("file-name") String fileName, HttpServletResponse response) {

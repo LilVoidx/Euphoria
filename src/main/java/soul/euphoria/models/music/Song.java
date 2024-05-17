@@ -7,11 +7,13 @@ import lombok.NoArgsConstructor;
 import soul.euphoria.models.Enum.Genre;
 import soul.euphoria.models.FileInfo;
 import soul.euphoria.models.user.Artist;
+import soul.euphoria.models.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
@@ -51,4 +53,8 @@ public class Song {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Genre genre;
+
+    @ManyToMany(mappedBy = "favoriteSongs")
+    private List<User> favorites;
+
 }

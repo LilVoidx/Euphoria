@@ -12,7 +12,6 @@ import soul.euphoria.dto.infos.ArtistDTO;
 import soul.euphoria.dto.infos.SongDTO;
 import soul.euphoria.dto.infos.UserDTO;
 import soul.euphoria.models.Enum.Genre;
-import soul.euphoria.models.music.Song;
 import soul.euphoria.models.user.Artist;
 import soul.euphoria.models.user.User;
 import soul.euphoria.security.details.UserDetailsImpl;
@@ -42,11 +41,10 @@ public class ArtistController {
 
     @GetMapping("/artists/{username}/register")
     public String showArtistRegistrationForm(Model model, @PathVariable String username, HttpServletRequest request) {
-        Optional<User> optionalUser = userService.findByUserName(username);
+        Optional<UserDTO> optionalUser = userService.findByUserName(username);
 
         if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            UserDTO userDTO = UserDTO.from(user);
+            UserDTO userDTO = optionalUser.get();
             model.addAttribute("user", userDTO);
             model.addAttribute("artistForm", new ArtistForm());
             model.addAttribute("genres", Genre.values());
@@ -63,7 +61,7 @@ public class ArtistController {
     public String registerAsArtist(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                    @ModelAttribute ArtistForm artistForm, HttpServletRequest request) {
         try {
-            User user = userService.getUserById(userDetails.getUserId());
+            User user = userService.getCurrentUser(userDetails.getUserId());
             artistService.registerAsArtist(user, artistForm);
             return "redirect:/profile/" + user.getUsername();
         } catch (Exception e) {
@@ -75,17 +73,16 @@ public class ArtistController {
     }
 
     @GetMapping("/artist/{username}")
-    public String artistProfile(Model model, @PathVariable String username, HttpServletRequest request) {
-        Optional<User> optionalUser = userService.findByUserName(username);
+    public String artistProfile(Model model, @PathVariable String username, HttpServletRequest request,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Optional<UserDTO> optionalUser = userService.findByUserName(username);
         if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            UserDTO userDTO = UserDTO.from(user);
+            User user = userService.getCurrentUser(userDetails.getUserId());
+            UserDTO userDTO = optionalUser.get();
             // Check if the user is an artist
             if (user.getArtist() != null) {
                 ArtistDTO artistDTO = ArtistDTO.from(user.getArtist());
                 // Fetch artist-related songs
-                List<Song> artistSongs = songService.getSongsByArtist(user.getArtist());
-                List<SongDTO> artistSongDTOs = SongDTO.songList(artistSongs);
+                List<SongDTO> artistSongDTOs = songService.getSongsByArtist(user.getArtist());
                 model.addAttribute("user", userDTO);
                 model.addAttribute("artist", artistDTO);
                 model.addAttribute("artistSongs", artistSongDTOs);
@@ -102,11 +99,11 @@ public class ArtistController {
         }
     }
     @GetMapping("/artist/{username}/edit")
-    public String editArtist(Model model, @PathVariable String username, HttpServletRequest request) {
-        Optional<User> optionalUser = userService.findByUserName(username);
+    public String editArtist(Model model, @PathVariable String username, HttpServletRequest request,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Optional<UserDTO> optionalUser = userService.findByUserName(username);
         if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            UserDTO userDTO = UserDTO.from(user);
+            UserDTO userDTO = optionalUser.get();
+            User user = userService.getCurrentUser(userDetails.getUserId());
             // Check if the user is an artist
             if (user.getArtist() != null) {
                 ArtistDTO artistDTO = ArtistDTO.from(user.getArtist());
@@ -131,10 +128,9 @@ public class ArtistController {
 
     @PostMapping("/artist/{username}/edit")
     public String updateArtist(@PathVariable String username, @Valid @ModelAttribute ArtistForm artistForm, HttpServletRequest request) {
-        Optional<User> optionalUser = userService.findByUserName(username);
+        Optional<UserDTO> optionalUser = userService.findByUserName(username);
         if (optionalUser.isPresent()) {
             try {
-                User user = optionalUser.get();
                 artistService.updateArtist(username, artistForm);
                 return "redirect:/artist/" + username;
             } catch (Exception e) {

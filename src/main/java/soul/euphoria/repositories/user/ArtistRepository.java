@@ -3,6 +3,7 @@ package soul.euphoria.repositories.user;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import soul.euphoria.dto.infos.ArtistDTO;
 import soul.euphoria.models.user.Artist;
 
 import java.util.Optional;

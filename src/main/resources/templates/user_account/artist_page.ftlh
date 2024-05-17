@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/static/css/home/artist_page.css">
     <title>Profile</title>
     <link rel="icon" href="/static/files/assets/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izimodal/1.6.0/css/iziModal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
 </head>
 
 <body>
@@ -127,7 +129,8 @@
 
             <div class="search">
                 <i class='bx bx-search'></i>
-                <input type="text" placeholder="Type here to search">
+                <input type="text" id="searchInput" placeholder="Type here to search">
+                <div id="searchResults" class="search-results"></div>
             </div>
 
         </header>
@@ -173,7 +176,7 @@
                                     <div class="icon play-song" data-song-id="${song.songId}">
                                         <i class='bx bxs-right-arrow'></i>
                                     </div>
-                                    <i class='bx bxs-plus-square'></i>
+                                    <i class='bx bxs-checkbox-minus delete-song' data-song-id="${song.songId}"></i>
                                 </div>
                             </div>
                             <#assign counter = counter + 1>
@@ -213,10 +216,20 @@
                 </a>
             </div>
         </div>
-
     </div>
 </div>
+
+<div id="deleteSongModal">
+    <p>Are you sure you want to delete this song?</p>
+    <button id="confirmDelete">Yes</button>
+    <button id="cancelDelete">No</button>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izimodal/1.6.0/js/iziModal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+<script src="/static/js/song_delete.js"></script>
+<script src="/static/js/search.js"></script>
 <script src="/static/js/miniPlayer.js"></script>
 <script src="/static/js/profile.js"></script>
 </body>

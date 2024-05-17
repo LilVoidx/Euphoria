@@ -127,7 +127,8 @@
 
             <div class="search">
                 <i class='bx bx-search'></i>
-                <input type="text" placeholder="Type here to search">
+                <input type="text" id="searchInput" placeholder="Type here to search">
+                <div id="searchResults" class="search-results"></div>
             </div>
 
         </header>
@@ -135,17 +136,17 @@
         <div class="trending">
             <div class="left">
                 <h5>Trending New Song</h5>
-                <div class="info trending-song-info" data-song-id="${rndSong.songId}">
-                    <h2>${rndSong.title}</h2>
-                    <h4>${rndSong.artistName}</h4>
-                    <h5>63 Million Plays</h5>
+                <div class="info trending-song-info" data-song-id="${trendingSong.songId}">
+                    <h2>${trendingSong.title}</h2>
+                    <h4>${trendingSong.artistName}</h4>
+                    <h5>${trendingSong.likeCount} Million Favourites</h5>
                     <div class="buttons">
                         <button class="play-song">Listen Now</button>
-                        <i class='bx bxs-heart'></i>
+                        <i class='bx bxs-heart' id="likeButton" data-song-id="${trendingSong.songId}"></i>
                     </div>
                 </div>
             </div>
-            <img src="/files/img/${rndSong.songImageInfoUrl}" alt="${rndSong.songImageInfoUrl}">
+            <img src="/files/img/${trendingSong.songImageInfoUrl}" alt="${trendingSong.songImageInfoUrl}">
         </div>
 
         <div class="playlist">
@@ -295,6 +296,8 @@
 
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/js/favorite.js"></script>
+<script src="/static/js/search.js"></script>
 <script src="/static/js/player.js"></script>
 <script src="/static/js/miniPlayer.js"></script>
 <script src="/static/js/profile.js"></script>

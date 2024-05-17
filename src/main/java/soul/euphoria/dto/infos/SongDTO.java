@@ -27,6 +27,7 @@ public class SongDTO {
     private String songFileInfoUrl;
     private String songImageInfoUrl;
     private Genre genre;
+    private Integer likeCount;
 
     public static SongDTO from(Song song) {
         String songFileInfoUrl = null;
@@ -47,19 +48,38 @@ public class SongDTO {
             albumTitle = song.getAlbum().getTitle();
         }
 
-        return SongDTO.builder()
-                .songId(song.getSongId())
-                .title(song.getTitle())
-                .artistId(song.getArtist().getArtistId())
-                .artistName(song.getArtist().getStageName())
-                .albumId(albumId)
-                .albumTitle(albumTitle)
-                .releaseDate(song.getReleaseDate())
-                .duration(song.getDuration())
-                .songFileInfoUrl(songFileInfoUrl)
-                .songImageInfoUrl(songImageInfoUrl)
-                .genre(song.getGenre())
-                .build();
+
+        if (song.getFavorites() != null) {
+            return SongDTO.builder()
+                    .songId(song.getSongId())
+                    .title(song.getTitle())
+                    .artistId(song.getArtist().getArtistId())
+                    .artistName(song.getArtist().getStageName())
+                    .albumId(albumId)
+                    .albumTitle(albumTitle)
+                    .releaseDate(song.getReleaseDate())
+                    .duration(song.getDuration())
+                    .songFileInfoUrl(songFileInfoUrl)
+                    .songImageInfoUrl(songImageInfoUrl)
+                    .genre(song.getGenre())
+                    .likeCount(song.getFavorites().size())
+                    .build();
+        } else {
+            return SongDTO.builder()
+                    .songId(song.getSongId())
+                    .title(song.getTitle())
+                    .artistId(song.getArtist().getArtistId())
+                    .artistName(song.getArtist().getStageName())
+                    .albumId(albumId)
+                    .albumTitle(albumTitle)
+                    .releaseDate(song.getReleaseDate())
+                    .duration(song.getDuration())
+                    .songFileInfoUrl(songFileInfoUrl)
+                    .songImageInfoUrl(songImageInfoUrl)
+                    .genre(song.getGenre())
+                    .likeCount(0)
+                    .build();
+        }
     }
 
 

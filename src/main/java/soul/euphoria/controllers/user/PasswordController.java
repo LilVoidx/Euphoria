@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import soul.euphoria.models.user.User;
+import soul.euphoria.dto.infos.UserDTO;
 import soul.euphoria.services.mail.ConfirmationService;
 import soul.euphoria.services.user.UserService;
 
@@ -40,7 +40,7 @@ public class PasswordController {
     public String submitForgotPasswordForm(@RequestParam("email") String email, Model model, HttpServletRequest request) {
         try {
             // Check if email exists in the database
-            Optional<User> user = userService.findByEmail(email);
+            Optional<UserDTO> user = userService.findByEmail(email);
             if (user.isEmpty()) {
                 model.addAttribute("forgotPasswordErrorMessage", "Email not found. Please enter a valid email address.");
                 model.addAttribute("forgotPasswordMessage", "");

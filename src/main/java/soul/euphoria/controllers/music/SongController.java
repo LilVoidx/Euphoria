@@ -1,5 +1,6 @@
 package soul.euphoria.controllers.music;
 
+import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,13 @@ import soul.euphoria.models.music.Song;
 import soul.euphoria.models.user.User;
 import soul.euphoria.security.details.UserDetailsImpl;
 import soul.euphoria.services.music.SongService;
+import soul.euphoria.services.user.ArtistService;
 import soul.euphoria.services.user.UserService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class SongController {
@@ -33,12 +37,17 @@ public class SongController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ArtistService artistService;
+
     private static final Logger logger = LoggerFactory.getLogger(AlbumController.class);
 
     @GetMapping("/song/upload")
-    public String showUploadSongForm(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        User user = userService.getUserById(userDetails.getUserId());
-        UserDTO userDTO = UserDTO.from(user);
+    public String showUploadSongForm(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails,HttpServletRequest request) {
+        Optional<UserDTO> optionalUser = Optional.ofNullable(userService.getUserById(userDetails.getUserId()));
+        if (optionalUser.isPresent()){
+            UserDTO userDTO = optionalUser.get();
+            User user = userService.getCurrentUser(userDetails.getUserId());
         if (user.getArtist() != null) {
             ArtistDTO artistDTO = ArtistDTO.from(user.getArtist());
             model.addAttribute("user", userDTO);
@@ -47,8 +56,18 @@ public class SongController {
             model.addAttribute("userId", userDetails.getUserId());
             model.addAttribute("genres", Genre.values());
             model.addAttribute("songForm", new SongForm());
+            return "music/music_upload_page";
+
+        } else {
+            // Forward the request to the error controller
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+            return "forward:/error";
         }
-        return "music/music_upload_page";
+        } else {
+            // Forward the request to the error controller
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+            return "forward:/error";
+        }
     }
 
 
@@ -69,18 +88,99 @@ public class SongController {
     }
 
     @GetMapping("/song/{songId}")
-    public String showSongPage(@PathVariable("songId") Long songId, Model model, HttpServletRequest request) {
-        Song song = songService.findById(songId);
-        if (song != null) {
-            SongDTO songDTO = SongDTO.from(song);
-            model.addAttribute("song", songDTO);
-            return "music/song_page";
-        }else {
-            // Forward the request to the error controller
+    public String showSongPage(@PathVariable("songId") Long songId,
+                               Model model,
+                               @AuthenticationPrincipal UserDetailsImpl userDetails,
+                               HttpServletRequest request) {
+        try {
+            // Get current user
+            Optional<UserDTO> optionalUser = Optional.ofNullable(userService.getUserById(userDetails.getUserId()));
+            if (optionalUser.isPresent()) {
+                UserDTO userDTO = optionalUser.get();
+
+                // Get current song
+                Song song = songService.getCurrentSong(songId);
+                if (song == null) {
+                    throw new NotFoundException("Song not found with ID: " + songId);
+                }
+                SongDTO songDTO = songService.findById(songId);
+
+                // Get current song's artist
+                ArtistDTO artistDTO = artistService.getArtistBySongId(songId);
+                if (artistDTO == null) {
+                    throw new NotFoundException("Artist not found for song with ID: " + songId);
+                }
+
+                // Get current song's artist's user info
+                UserDTO artistUserDTO = userService.getUserDTOByArtistId(artistDTO.getArtistId());
+                if (artistUserDTO == null) {
+                    throw new NotFoundException("User not found for artist with ID: " + artistDTO.getArtistId());
+                }
+
+                // Get artist's songs
+                List<SongDTO> artistSongDTOs = songService.getSongsByArtist(song.getArtist());
+
+                // Add attributes to the model
+                model.addAttribute("userArtist", artistUserDTO);
+                model.addAttribute("songsArtist", artistSongDTOs);
+                model.addAttribute("songArtist", artistDTO);
+                model.addAttribute("song", songDTO);
+                model.addAttribute("user", userDTO);
+                return "music/song_page";
+            }
+        } catch (NotFoundException e) {
+            logger.error("Error while fetching song data: " + e.getMessage());
             request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
             return "forward:/error";
+        } catch (Exception e) {
+            logger.error("Error while processing request: " + e.getMessage());
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 500);
+            return "forward:/error";
+        }
+        return "forward:/error";
+    }
+
+    @PostMapping("/song/{songId}/delete")
+    public ResponseEntity<String> deleteSong(@PathVariable Long songId) {
+        try {
+            songService.deleteSong(songId);
+            return ResponseEntity.ok("Song deleted successfully!");
+        } catch (NotFoundException e) {
+            logger.error("Song not found with ID: " + songId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Song not found!");
+        } catch (Exception e) {
+            logger.error("Failed to delete song with ID: " + songId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete song!");
         }
     }
+
+
+    @PostMapping("/song/{song-id}/favorite")
+    @ResponseBody
+    public ResponseEntity<Object> favorite(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                           @PathVariable("song-id") Long songId) {
+        Long userId = userDetails.getUserId();
+        SongDTO result = songService.favorite(userId, songId);
+        if (result != null) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to favorite/unfavorite the song.");
+        }
+    }
+
+    @GetMapping("/song/data/{songId}")
+    @ResponseBody
+    public SongDTO getSongData(@PathVariable Long songId) {
+        return songService.findById(songId);
+    }
+
+    @GetMapping("/song/trending")
+    @ResponseBody
+    public SongDTO getTrendingSong() {
+        return songService.getTrendingSong();
+    }
+
+
 
     @GetMapping("/genres")
     public ResponseEntity<?> getAllGenres() {

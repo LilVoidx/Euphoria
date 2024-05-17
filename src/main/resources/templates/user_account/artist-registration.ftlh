@@ -128,7 +128,8 @@
 
             <div class="search">
                 <i class='bx bx-search'></i>
-                <input type="text" placeholder="Type here to search">
+                <input type="text" id="searchInput" placeholder="Type here to search">
+                <div id="searchResults" class="search-results"></div>
             </div>
 
         </header>
@@ -219,7 +220,8 @@
         </div>
     </div>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/js/search.js"></script>
 <script src="/static/js/profile.js"></script>
 </body>
 </html>

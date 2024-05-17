@@ -73,15 +73,15 @@
         </div>
 
         <div class="menu">
-            <h5>Playlist</h5>
+            <h5>Actions</h5>
             <ul>
                 <li>
-                    <i class='bx bxs-plus-square'></i>
-                    <a href="#">Create New</a>
+                    <i class='bx bx-music'></i>
+                    <a href="/song/upload">Upload a Song</a>
                 </li>
                 <li>
-                    <i class='bx bxs-caret-right-circle'></i>
-                    <a href="#">Best of 2023</a>
+                    <i class='bx bx-folder-plus'></i>
+                    <a href="/albums/create">Create an album</a>
                 </li>
                 <li>
                     <i class='bx bxs-caret-right-circle'></i>
@@ -128,7 +128,8 @@
 
             <div class="search">
                 <i class='bx bx-search'></i>
-                <input type="text" placeholder="Type here to search">
+                <input type="text" id="searchInput" placeholder="Type here to search">
+                <div id="searchResults" class="search-results"></div>
             </div>
 
         </header>
@@ -222,7 +223,8 @@
         </div>
     </div>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="/static/js/search.js"></script>
 <script src="/static/js/profile.js"></script>
 </body>
 </html>

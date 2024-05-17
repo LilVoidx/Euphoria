@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const audio = new Audio();
     let isPlaying = false;
+    audio.volume = 0.5;
 
     // Play and Pause
     miniPlayButton.addEventListener('click', function () {
@@ -36,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Fetch song data from the server
     function fetchSongData(songId) {
         $.ajax({
-            url: "/songData/" + songId,
+            url: "/song/data/" + songId,
             type: "GET",
             dataType: "json",
             success: function (songData) {

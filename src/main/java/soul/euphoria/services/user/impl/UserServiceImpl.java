@@ -6,14 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import soul.euphoria.dto.forms.UserForm;
+import soul.euphoria.dto.infos.UserDTO;
+import soul.euphoria.models.user.Artist;
 import soul.euphoria.models.user.User;
+import soul.euphoria.repositories.user.ArtistRepository;
 import soul.euphoria.repositories.user.UsersRepository;
 import soul.euphoria.services.file.FileStorageService;
 import soul.euphoria.services.mail.EmailSender;
 import soul.euphoria.services.user.UserService;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static soul.euphoria.dto.infos.UserDTO.userList;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -22,14 +28,15 @@ public class UserServiceImpl implements UserService {
     private UsersRepository userRepository;
 
     @Autowired
+    private ArtistRepository artistRepository;
+
+    @Autowired
     private EmailSender emailSender;
 
     @Autowired
     private FileStorageService fileStorageService;
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-
-
 
     @Override
     public void resetPassword(String email) {
@@ -55,15 +62,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserForm convertUserToForm(User user) {
+    public UserForm convertUserToForm(UserDTO userDto) {
         return UserForm.builder()
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .confirmPassword(user.getPassword())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .phoneNumber(user.getPhoneNumber())
+                .username(userDto.getUsername())
+                .email(userDto.getEmail())
+                .firstName(userDto.getFirstName())
+                .lastName(userDto.getLastName())
+                .phoneNumber(userDto.getPhoneNumber())
                 .profilePicture(null)
                 .build();
     }
@@ -105,9 +110,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Long userId) {
-        return userRepository.findById(userId)
+    public UserDTO getUserById(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return UserDTO.from(user);
     }
 
     @Override
@@ -117,14 +123,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
-
+    public Optional<UserDTO> findByEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        return user.map(UserDTO::from);
     }
 
     @Override
-    public Optional<User> findByUserName(String userName) {
-        return userRepository.findByUsername(userName);
+    public Optional<UserDTO> findByUserName(String userName) {
+        Optional<User> user = userRepository.findByUsername(userName);
+        return user.map(UserDTO::from);
     }
 
+    @Override
+    public UserDTO getUserDTOByArtistId(Long artistId) {
+        Artist artist = artistRepository.getOne(artistId);
+        User user = artist.getUser();
+        return UserDTO.from(user);
+    }
+
+    @Override
+    public List<UserDTO> getAllUsers() {
+        return userList(userRepository.findAll());
+    }
+
+    @Override
+    public User getCurrentUser(Long userId) {
+        return userRepository.getOne(userId);
+    }
 }

@@ -13,7 +13,6 @@ import soul.euphoria.dto.infos.AlbumDTO;
 import soul.euphoria.dto.infos.SongDTO;
 import soul.euphoria.dto.infos.UserDTO;
 import soul.euphoria.models.music.Album;
-import soul.euphoria.models.music.Song;
 import soul.euphoria.models.user.User;
 import soul.euphoria.security.details.UserDetailsImpl;
 import soul.euphoria.services.music.AlbumService;
@@ -42,11 +41,11 @@ public class AlbumController {
 
     @GetMapping("/albums/create")
     public String showAlbumCreationPage(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletRequest request) {
-        Optional<User> optionalUser = userService.findByUserName(userDetails.getUsername());
+        Optional<UserDTO> optionalUser = userService.findByUserName(userDetails.getUsername());
         logger.info("User: " + userDetails.getUsername());
         if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            UserDTO userDTO = UserDTO.from(user);
+            User user = userService.getCurrentUser(userDetails.getUserId());
+            UserDTO userDTO = optionalUser.get();
             // Check if the user is an artist
             if (user.getArtist() != null) {
                 //ArtistDTO artistDTO = ArtistDTO.from(user.getArtist());
@@ -86,10 +85,9 @@ public class AlbumController {
     public String showAlbumDetails(@PathVariable Long albumId, Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         AlbumDTO album = albumService.getAlbumDetails(albumId);
 
-        User user = userService.getUserById(userDetails.getUserId());
+        User user = userService.getCurrentUser(userDetails.getUserId());
         if (user.getArtist() != null) {
-            List<Song> artistSongs = songService.getSongsByArtist(user.getArtist());
-            List<SongDTO> artistSongDTOs = SongDTO.songList(artistSongs);
+            List<SongDTO> artistSongDTOs = songService.getSongsByArtist(user.getArtist());
             model.addAttribute("album", album);
             model.addAttribute("artistSongDTOs", artistSongDTOs);
             return "music/album_page";

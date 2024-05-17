@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let isPlaying = false;
     let isSeeking = false;
     let isSoundBoxOpen = false;
+    audio.volume = 0.5;
 
     // Update song information
     function updateSongInfo(song, autoplay = true) {
@@ -35,10 +36,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Fetch song data from the server
+    // Function to fetch song data from the server
     function fetchSongData(songId) {
         $.ajax({
-            url: "/songData/" + songId,
+            url: "/song/data/" + songId,
             type: "GET",
             dataType: "json",
             success: function(songData) {
@@ -50,25 +51,41 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Fetch song data when the page loads
+    $(document).ready(function() {
+        const url = window.location.pathname;
+        const songIdFromUrl = url.split('/').pop();
 
-    // Fetch random song data from the server
-    function fetchRandomSong() {
-        $.ajax({
-            url: "/randomSong",
-            type: "GET",
-            dataType: "json",
-            success: function(songData) {
-                updateSongInfo(songData, false);
-            },
-            error: function(xhr, status, error) {
-                console.error('Error fetching random song data:', error);
-            }
-        });
+        // If there is a song ID in the URL, fetch the song data by that ID
+        if (songIdFromUrl && !isNaN(songIdFromUrl)) {
+            fetchSongData(songIdFromUrl);
+        }
+    });
+
+
+    // Fetch random song data from the server only if on the home page
+    function fetchTrendingSong() {
+        // Check if the current URL is the home page
+        if (window.location.pathname === "/home") {
+            $.ajax({
+                url: "/song/trending",
+                type: "GET",
+                dataType: "json",
+                success: function(songData) {
+                    updateSongInfo(songData, false);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching trending song data:', error);
+                }
+            });
+        }
     }
 
+    // Call fetchRandomSong() when the document is ready
+    $(document).ready(function() {
+        fetchTrendingSong();
+    });
 
-    // Fetch song data from the server
-    fetchRandomSong();
 
 
     // Fetch song data when "Listen Now" button is clicked
@@ -167,7 +184,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     volumeSlider.addEventListener('input', function () {
-        audio.volume = volumeSlider.value / 100;
+        audio.volume = volumeSlider.value / 200;
     });
 
     // Toggle sound box visibility and highlight volume button
