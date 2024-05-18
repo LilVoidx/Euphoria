@@ -79,11 +79,11 @@ public class AlbumController {
                               @RequestParam("userId") Long userId,
                               Model model) {
         try {
-            System.out.println("USER" + userId.toString() );
             Album album = albumService.createAlbum(albumForm, coverImage, userId);
+            UserDTO userDTO = userService.getUserById(userId);
             model.addAttribute("userId", userId);
             System.out.println("Album Id: " + album.getAlbumId());
-            return "redirect:/albums/" + album.getAlbumId();
+            return "redirect:/albums/" + userDTO.getUsername();
         } catch (Exception e) {
             return "redirect:/error";
         }
@@ -144,19 +144,20 @@ public class AlbumController {
         }
     }
 
-    @PostMapping("/albums/{albumId}/delete")
-    public ResponseEntity<String> deleteAlbum(@PathVariable Long albumId) {
+    @DeleteMapping("/albums/{albumId}/delete")
+    public ResponseEntity<?> deleteAlbum(@PathVariable Long albumId) {
         try {
             albumService.deleteAlbum(albumId);
-            return ResponseEntity.ok("Album deleted successfully!");
+            return ResponseEntity.ok().build();
         } catch (NotFoundException e) {
             logger.error("Album not found with ID: " + albumId);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Album not found!");
         } catch (Exception e) {
-            logger.error("Failed to delete song with ID: " + albumId, e);
+            logger.error("Failed to delete album with ID: " + albumId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete Album!");
         }
     }
+
 
     @GetMapping("/albums/{username}")
     public String showAllAlbumsByUser(@PathVariable String username, @AuthenticationPrincipal UserDetailsImpl userDetails, Model model, HttpServletRequest request) {

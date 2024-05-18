@@ -32,17 +32,18 @@ public class PusherServiceImpl implements  PusherService {
     @PostConstruct
     public void initialize() {
         pusher = new Pusher(appId, key, secret);
-        pusher.setCluster(cluster);
+        pusher.setCluster(cluster); //region
         pusher.setEncrypted(true);
     }
     @Override
-    public void sendNotification(String channel, String event, String message, String songTitle) {
+    public void sendNotification(String channel, String event, String message, String songTitle, Long songID) {
+        // Create hashmap with data needed for the response
         Map<String, String> data = new HashMap<>();
         data.put("message", message);
         data.put("songTitle", songTitle);
+        data.put("songId", String.valueOf(songID));
         pusher.trigger(channel, event, data);
 
-        // Logging example
-        logger.info("Notification sent for channel: {}, event: {}, message: {}, songTitle: {}", channel, event, message, songTitle);
+        logger.info("Notification sent for channel: {}, event: {}, message: {}, songTitle: {}, songID: {}", channel, event, message, songTitle, songID);
     }
 }

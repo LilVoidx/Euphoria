@@ -142,19 +142,16 @@ public class SongController {
         return "forward:/error";
     }
 
-    @PostMapping("/song/{songId}/delete")
-    public ResponseEntity<String> deleteSong(@PathVariable Long songId) {
+    @DeleteMapping("/song/{songId}/delete")
+    public ResponseEntity<?> deleteSong(@PathVariable Long songId) {
         try {
             songService.deleteSong(songId);
-            return ResponseEntity.ok("Song deleted successfully!");
-        } catch (NotFoundException e) {
-            logger.error("Song not found with ID: " + songId);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Song not found!");
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             logger.error("Failed to delete song with ID: " + songId, e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete song!");
-        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete Song with Id: " + songId);        }
     }
+
 
 
     @PostMapping("/song/{song-id}/favorite")
@@ -179,6 +176,20 @@ public class SongController {
         }
     }
 
+    @GetMapping("/song/all")
+    public String showAllSongPage(Model model,HttpServletRequest request,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        try {
+            List<SongDTO> songs = songService.getAllSongs();
+            UserDTO userDTO = userService.getUserById(userDetails.getUserId());
+            model.addAttribute("user", userDTO);
+            model.addAttribute("songs", songs);
+            return "music/all_songs_page";
+        } catch (Exception e) {
+            logger.error("Failed to fetch songs", e);
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+            return "forward: /error";
+        }
+    }
     @GetMapping("/song/data/{songId}")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getSongData(@PathVariable Long songId,

@@ -123,7 +123,11 @@
                 </button>
                 <a href="/home">Music</a>
                 <a href="#">Live</a>
-                <a href="#">Podcast</a>
+                <#if user.role == "ADMIN">
+                    <a href="/admin/users">Admin</a>
+                <#elseif user.role == "LISTENER" || user.role == "ARTIST">
+                    <a href="/users/profile/${user.username}">Profile</a>
+                </#if>
             </div>
 
             <div class="search">
@@ -198,7 +202,11 @@
     <div class="right-section">
 
         <div class="profile">
-            <i class='bx bxs-bell'></i>
+            <div class="dropdown" id="notificationDropdown">
+                <i class='bx bxs-bell'></i>
+                <div class="dropdown-content" id="notificationContent">
+                </div>
+            </div>
             <div class="dropdown">
                 <i class='bx bxs-cog' id="dropdownMenuButton"></i>
                 <div class="dropdown-content" id="dropdownContent">
@@ -223,7 +231,12 @@
         </div>
     </div>
 </div>
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="/static/js/pusher.js"></script>
 <script src="/static/js/search.js"></script>
 <script src="/static/js/profile.js"></script>
 </body>

@@ -1,5 +1,6 @@
 package soul.euphoria.controllers.admin;
 
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -9,8 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import soul.euphoria.dto.forms.UserForm;
+import soul.euphoria.dto.infos.SongDTO;
 import soul.euphoria.dto.infos.UserDTO;
 import soul.euphoria.security.details.UserDetailsImpl;
+import soul.euphoria.services.music.SongService;
 import soul.euphoria.services.user.UserService;
 
 import javax.servlet.RequestDispatcher;
@@ -23,6 +26,9 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private SongService songService;
 
     @GetMapping("/users")
     public String getAllUsers(@RequestParam(defaultValue = "") String query,
@@ -80,14 +86,47 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/users/{username}/delete")
-    public ResponseEntity<String> deleteUser(@PathVariable String username) {
-        boolean deleted = userService.deleteUserByUsername(username);
-        if (deleted) {
-            return ResponseEntity.ok("User deleted successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    @DeleteMapping("/users/{username}/delete")
+    public ResponseEntity<?> deleteUser(@PathVariable String username) {
+        try {
+            userService.deleteUserByUsername(username);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete user");
         }
     }
 
+    @GetMapping("/songs")
+    public String getAllSongs(@RequestParam(defaultValue = "") String query,
+                              @RequestParam(defaultValue = "0") int page,
+                              @RequestParam(defaultValue = "5") int size,
+                              @AuthenticationPrincipal UserDetailsImpl userDetails,
+                              Model model) {
+        UserDTO userDTO = userService.getUserById(userDetails.getUserId());
+        Page<SongDTO> songsPage = songService.searchSongs(query, page, size);
+        model.addAttribute("user", userDTO);
+        model.addAttribute("songsPage", songsPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("size", size);
+        model.addAttribute("totalPages", songsPage.getTotalPages());
+        model.addAttribute("query", query);
+        return "admin/songs_dashboard_page";
+    }
+
+    @GetMapping("/songs/{songId}")
+    public String getSongById(@PathVariable Long songId, Model model) {
+        SongDTO songDTO = songService.findById(songId);
+        model.addAttribute("song", songDTO);
+        return "admin/song_details_page";
+    }
+
+    @GetMapping("/songs/{songId}/delete")
+    public ResponseEntity<String> deleteSong(@PathVariable Long songId) {
+        try {
+            songService.deleteSong(songId);
+            return ResponseEntity.ok("Song deleted successfully");
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Song not found");
+        }
+    }
 }

@@ -5,10 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="/static/css/home/profile_edit.css">
-    <title>Edit Profile</title>
+    <link rel="stylesheet" href="/static/css/music/song.css">
+    <title>All Songs</title>
     <link rel="icon" href="/static/files/assets/favicon.ico" type="image/x-icon">
-
 </head>
 
 <body>
@@ -102,18 +101,18 @@
 
         <div class="playing">
             <div class="top">
-                <img id="mini-song-image" src="/files/assets/song.png">
+                <img id="" src="/files/assets/song.png">
 
                 <div class="song-info">
-                    <h4 id="mini-song-name">Song name</h4>
-                    <p id="mini-artist-name">artist name</p>
+                    <h4 id="">Song name</h4>
+                    <p id="">artist name</p>
                 </div>
                 <div class="icon">
-                    <i id="mini-play-button" class='bx bx-play bx-xs'></i>
+                    <i id="" class='bx bx-play bx-xs'></i>
                 </div>
             </div>
             <div class="bottom">
-                <p id="mini-player-status">Paused</p>
+                <p id="">Paused</p>
             </div>
         </div>
 
@@ -143,77 +142,38 @@
 
         </header>
 
-        <div class="trending">
-            <div class="left">
-                <h5>User Account Info</h5>
-                <div class="info">
-                    <h2>${user.fullName}</h2>
-                    <h4>@${user.username}</h4>
-                    <h5>${user.email}</h5>
-                    <div class="buttons">
-                        <a href="/users/profile/${user.username}/edit">
-                            <button id="changeInfoBtn">Change info</button>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <img src="/files/img/${user.getProfilePictureUrl()}" id="preview" alt="Profile Image">
-        </div>
-
         <div class="playlist">
-            <form method="post" action="/users/profile/${user.username}/edit" enctype="multipart/form-data">
-                <div>
-                    <div class="label-wrapper">
-                        <label for="username">Username:</label>
-                    </div>
-                    <div class="inputBx">
-                        <input type="text" id="username" name="username" value="${user.username}">
-                    </div>
+            <div class="music-list">
+                <div class="header">
+                    <h5>All Songs</h5>
+                    <a href="/home">back home</a>
                 </div>
-                <div>
-                    <div class="label-wrapper">
-                        <label for="email">Email:</label>
-                    </div>
-                    <div class="inputBx">
-                        <input type="email" id="email" name="email" value="${user.email}">
-                    </div>
+
+                <div class="items">
+                    <#assign counter = 1>
+                    <#list songs as song>
+                        <div class="item song-item" data-song-id="${song.songId}">
+                            <div class="info">
+                                <p><#if counter <= 9>0</#if>${counter}</p>
+                                <img src="/files/img/${song.songImageInfoUrl}" alt="${song.title}">
+                                <div class="details">
+                                    <h5>${song.title}</h5>
+                                    <p>${song.artistName}</p>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <p>${song.duration}</p>
+                                <div class="icon">
+                                    <i class='bx bxs-right-arrow play-song' data-song-id="${song.songId}"></i>
+                                </div>
+                                <i class='bx bxs-plus-square'></i>
+                            </div>
+                        </div>
+                        <#assign counter = counter + 1>
+                    </#list>
                 </div>
-                <div>
-                    <div class="label-wrapper">
-                        <label for="firstName">First Name:</label>
-                    </div>
-                    <div class="inputBx">
-                        <input type="text" id="firstName" name="firstName" value="${user.firstName}">
-                    </div>
-                </div>
-                <div>
-                    <div class="label-wrapper">
-                        <label for="lastName">Last Name:</label>
-                    </div>
-                    <div class="inputBx">
-                        <input type="text" id="lastName" name="lastName" value="${user.lastName}">
-                    </div>
-                </div>
-                <div>
-                    <div class="label-wrapper">
-                        <label for="phoneNumber">Phone Number:</label>
-                    </div>
-                    <div class="inputBx">
-                        <input type="text" id="phoneNumber" name="phoneNumber" value="${user.phoneNumber}">
-                    </div>
-                </div>
-                <div>
-                    <div class="label-wrapper">
-                        <label for="profilePicture">Profile Picture:</label>
-                    </div>
-                    <div class="inputBx">
-                        <input type="file" id="profilePicture" name="profilePicture" onchange="previewImage(this)">
-                    </div>
-                </div>
-                <div>
-                    <button id="submitBtn" style="display: none;" type="submit">Update</button>
-                </div>
-            </form>
+
+            </div>
 
         </div>
 
@@ -250,7 +210,54 @@
                 </a>
             </div>
         </div>
+
+        <div class="music-player">
+            <div class="top-section">
+                <div class="header">
+                    <h5>Player</h5>
+                    <i class='bx bxs-playlist'></i>
+                </div>
+                <div class="song-info">
+                    <img id="song-image" src="/files/assets/song.png">
+                    <div class="description">
+                        <h3 id="song-name">Title</h3>
+                        <h5 id="artist-name">artist</h5>
+                        <p id="album-name">album</p>
+                    </div>
+                    <div class="progress">
+                        <p class="current-time">00:00</p>
+                        <div class="progress-bar">
+                            <div class="active-line"></div>
+                            <div class="progress-ball"></div>
+                        </div>
+                        <p class="duration">00:00</p>
+                    </div>
+                    <div class="sound-box">
+                        <i class='bx bx-minus volume-down'></i>
+                        <input type="range" min="0" max="100" value="100" class="volume-slider">
+                        <i class='bx bx-plus volume-up'></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="player-actions">
+                <div class="buttons">
+                    <i class='bx bx-heart' id="playLikeButton" data-song-id=""></i>
+                    <i class='bx bx-first-page'></i>
+                    <i class='play-button bx bxs-right-arrow'></i>
+                    <i class='bx bx-last-page'></i>
+                    <i class='bx bx-volume-full'></i>
+                </div>
+                <div class="lyrics">
+                    <i class='bx bx-chevron-up'></i>
+                    <h5>LYRICS</h5>
+                </div>
+            </div>
+        </div>
+
+
     </div>
+
 </div>
 <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -258,7 +265,11 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script src="/static/js/pusher.js"></script>
+<script src="/static/js/favorite.js"></script>
 <script src="/static/js/search.js"></script>
+<script src="/static/js/player.js"></script>
+<script src="/static/js/miniPlayer.js"></script>
 <script src="/static/js/profile.js"></script>
 </body>
+
 </html>

@@ -42,6 +42,6 @@ public class Album {
     private Genre genre;
 
 
-    @OneToMany(mappedBy = "album")
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Song> songs;
 }

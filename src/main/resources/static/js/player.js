@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateSongInfo(song, isFavorite, autoplay = true) {
         songName.textContent = song.title;
         artistName.textContent = song.artistName;
-        albumName.textContent = song.albumTitle;
+        albumName.textContent = song.albumTitle? song.albumTitle: "Single";
         audio.src = "/files/img/" + song.songFileInfoUrl;
         songImage.src = "/files/img/" + song.songImageInfoUrl;
 

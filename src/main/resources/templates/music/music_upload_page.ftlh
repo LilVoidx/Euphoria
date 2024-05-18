@@ -124,7 +124,11 @@
                 </button>
                 <a href="/home">Music</a>
                 <a href="#">Live</a>
-                <a href="#">Podcast</a>
+                <#if user.role == "ADMIN">
+                    <a href="/admin/users">Admin</a>
+                <#elseif user.role == "LISTENER" || user.role == "ARTIST">
+                    <a href="/users/profile/${user.username}">Profile</a>
+                </#if>
             </div>
 
             <div class="search">
@@ -265,34 +269,12 @@
     </div>
 </div>
 <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
-<script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
-<script>
-    var pusher = new Pusher('9cbfe7f81e5fcfe7fceb', {
-        cluster: 'eu'
-    });
-
-    var channel = pusher.subscribe('music-channel');
-    channel.bind('new-song', function(data) {
-        // Handle the new song notification
-        var notification = '<a href="#" class="notification">' + data.message + ": " + data.songTitle + '</a>';
-        $('#notificationContent').append(notification);
-        // Change the bell icon class
-        $('#notificationDropdown i').removeClass('bxs-bell').addClass('bxs-bell-ring');
-    });
-
-    // Handle clicking on a notification
-    $(document).on('click', '.notification', function() {
-        $(this).remove();
-        // Change the bell icon class if there are no more notifications
-        if ($('#notificationContent').children().length === 0) {
-            $('#notificationDropdown i').removeClass('bxs-bell-ring').addClass('bxs-bell');
-        }
-    });
-</script>
-
-
-<script src="/static/js/genre.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="/static/js/pusher.js"></script>
+<script src="/static/js/genre.js"></script>
 <script src="/static/js/search.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/izimodal/1.6.0/js/iziModal.min.js"></script>
 <script src="/static/js/song_upload.js"></script>

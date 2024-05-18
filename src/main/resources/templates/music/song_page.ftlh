@@ -127,7 +127,11 @@
                 </button>
                 <a href="/home">Music</a>
                 <a href="#">Live</a>
-                <a href="#">Podcast</a>
+                <#if user.role == "ADMIN">
+                    <a href="/admin/users">Admin</a>
+                <#elseif user.role == "LISTENER" || user.role == "ARTIST">
+                    <a href="/users/profile/${user.username}">Profile</a>
+                </#if>
             </div>
 
             <div class="search">
@@ -201,7 +205,11 @@
     <div class="right-section">
 
         <div class="profile">
-            <i class='bx bxs-bell'></i>
+            <div class="dropdown" id="notificationDropdown">
+                <i class='bx bxs-bell'></i>
+                <div class="dropdown-content" id="notificationContent">
+                </div>
+            </div>
             <div class="dropdown">
                 <i class='bx bxs-cog' id="dropdownMenuButton"></i>
                 <div class="dropdown-content" id="dropdownContent">
@@ -236,7 +244,7 @@
                     <div class="description">
                         <h3 id="song-name">${song.title}</h3>
                         <h5 id="artist-name">${song.artistName}</h5>
-                        <p id="album-name">${song.albumTitle}</p>
+                        <p id="album-name">${song.albumTitle! "Single"}</p>
                     </div>
                     <div class="progress">
                         <p class="current-time">00:00</p>
@@ -273,7 +281,12 @@
     </div>
 
 </div>
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="/static/js/pusher.js"></script>
 <script src="/static/js/favorite.js"></script>
 <script src="/static/js/search.js"></script>
 <script src="/static/js/player.js"></script>

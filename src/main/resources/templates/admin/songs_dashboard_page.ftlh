@@ -17,9 +17,9 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <header class="d-flex w-100">
             <div class="nav-links d-flex flex-grow-1">
-                <a href="/admin/songs">Music</a>
-                <a href="/admin/users">Users</a>
-                <a href="/home">Home</a>
+                <a href="/home">Music</a>
+                <a href="#">Live</a>
+                <a href="#">Podcast</a>
             </div>
 
             <div class="search d-flex flex-grow-1 justify-content-center">
@@ -57,12 +57,12 @@
                 <h5>Menu</h5>
                 <ul>
                     <li>
-                        <i class='bx bxs-bolt-circle'></i>
-                        <a href="#">Explore</a>
+                        <i class='bx bxs-user' ></i>
+                        <a href="/admin/users">Users</a>
                     </li>
                     <li>
-                        <i class='bx bxs-volume-full'></i>
-                        <a href="#">Genres</a>
+                        <i class='bx bxs-music' ></i>
+                        <a href="/admin/songs">Songs</a>
                     </li>
                     <li>
                         <i class='bx bxs-album'></i>
@@ -71,10 +71,6 @@
                     <li>
                         <i class='bx bxs-microphone'></i>
                         <a href="#">Artists</a>
-                    </li>
-                    <li>
-                        <i class='bx bxs-radio'></i>
-                        <a href="#">Podcasts</a>
                     </li>
                 </ul>
             </div>
@@ -136,39 +132,36 @@
                 <table class="table table-hover table-striped">
                     <thead>
                     <tr style="border: none;">
-                        <th style="border: none;">UserID</th>
-                        <th style="border: none;">Profile Picture</th>
-                        <th style="border: none;">Username</th>
-                        <th style="border: none;">Email</th>
-                        <th style="border: none;">Full Name</th>
-                        <th style="border: none;">Phone Number</th>
-                        <th style="border: none;">Registration Date</th>
-                        <th style="border: none;">Role</th>
-                        <th style="border: none;">Actions</th>
+                        <th style="border: none;">SongID</th>
+                        <th style="border: none;">Song Cover</th>
+                        <th style="border: none;">Title</th>
+                        <th style="border: none;">Artist</th>
+                        <th style="border: none;">Album</th>
+                        <th style="border: none;">Genre</th>
+                        <th style="border: none;">Release Date</th>
+                        <th style="border: none;">Like Count</th>
+                        <th style="border: none;">Duration</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <#list usersPage.content as user>
-                        <tr id="user-${user.userId}">
-                            <td>${user.userId}</td>
-                            <td><img src="/files/img/${user.profilePictureUrl}" alt="Profile Picture" style="width: 50px; height: 50px;"></td>
-                            <td>${user.username}</td>
-                            <td>${user.email}</td>
-                            <td>${user.fullName}</td>
-                            <td>${user.phoneNumber}</td>
-                            <td>${user.registrationDate}</td>
-                            <td>
-                                <#if user.getRole() == "ADMIN">
-                                    <span class="badge badge-outline badge-danger">ADMIN</span>
-                                <#elseif user.getRole() == "ARTIST">
-                                    <span class="badge badge-outline badge-info">ARTIST</span>
-                                <#elseif user.getRole() == "LISTENER">
-                                    <span class="badge badge-outline badge-success">LISTENER</span>
+                    <#list songsPage.content as song>
+                        <tr>
+                            <td>${song.songId}</td>
+                            <td><img src="/files/img/${song.songImageInfoUrl}" alt="Profile Picture" style="width: 50px; height: 50px;"></td>
+                            <td>${song.title}</td>
+                            <td>${song.artistName}</td>
+                            <td><#if song.albumTitle?has_content>
+                                    ${song.albumTitle}
+                                <#else>
+                                    Single
                                 </#if>
                             </td>
+                            <td>${song.genre}</td>
+                            <td>${song.releaseDate}</td>
+                            <td>${song.likeCount}</td>
+                            <td>${song.duration}</td>
                             <td>
-                                <button class="btn btn-outline-warning btn-sm" onclick="editUser('${user.username}')">Edit</button>
-                                <button class="btn btn-outline-danger btn-sm" onclick="deleteUser('${user.username}', ${user.userId})">Delete</button>
+                                <button class="btn btn-outline-danger btn-sm" onclick="deleteSong(${song.songId})">Delete</button>
                             </td>
                         </tr>
                     </#list>
@@ -182,12 +175,12 @@
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
-                        <#list 0..usersPage.totalPages - 1 as i>
+                        <#list 0..songsPage.totalPages - 1 as i>
                             <li class="page-item <#if currentPage == i>active</#if>">
                                 <a class="page-link" href="?query=${query}&page=${i}&size=${size}">${i + 1}</a>
                             </li>
                         </#list>
-                        <li class="page-item <#if currentPage == usersPage.totalPages - 1>disabled</#if>">
+                        <li class="page-item <#if currentPage == songsPage.totalPages - 1>disabled</#if>">
                             <a class="page-link" href="?query=${query}&page=${currentPage + 1}&size=${size}" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
@@ -199,18 +192,19 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-    function deleteUser(username, userId) {
-        if (confirm('Are you sure you want to delete this user?')) {
+    function deleteSong(songId) {
+        if (confirm('Are you sure you want to delete this song?')) {
             $.ajax({
-                url: `/admin/users/`+ username +`/delete`,
+                url: `/song/` + songId + `/delete`,
                 type: 'DELETE',
                 success: function(result) {
-                    alert('User deleted successfully.');
-                    $('#user-' + userId).remove();
+                    alert('Song deleted successfully.');
+                    $('#song-' + songId).remove();
+                    location.reload();
                 },
                 error: function(err) {
                     alert('Failed to delete user.');

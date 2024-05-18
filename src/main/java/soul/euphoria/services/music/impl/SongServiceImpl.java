@@ -4,9 +4,12 @@ import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import soul.euphoria.dto.infos.SongDTO;
+import soul.euphoria.dto.infos.UserDTO;
 import soul.euphoria.models.Enum.Genre;
 import soul.euphoria.models.music.Song;
 import soul.euphoria.models.user.Artist;
@@ -83,7 +86,7 @@ public class SongServiceImpl implements SongService {
 
             // Notify all users about the new song upload
             String message = "A new song has been uploaded by " + artist.getStageName();
-            pusherService.sendNotification("music-channel", "new-song", message, song.getTitle());
+            pusherService.sendNotification("music-channel", "new-song", message, song.getTitle(), song.getSongId());
         }
     }
 
@@ -94,8 +97,15 @@ public class SongServiceImpl implements SongService {
             Song song = optionalSong.get();
             songRepository.delete(song);
         } else {
+            logger.error("error finding song with ID: " + songId);
             throw new NotFoundException("Song not found with ID: " + songId);
         }
+    }
+
+    @Override
+    public Page<SongDTO> searchSongs(String query, int page, int size) {
+        Page<Song> songsPage = songRepository.searchSongsQuery(query, PageRequest.of(page, size));
+        return songsPage.map(SongDTO::from);
     }
 
     @Override

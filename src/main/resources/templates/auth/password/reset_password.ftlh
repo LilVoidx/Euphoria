@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Reset Password</title>
     <link rel="stylesheet" href="/static/css/auth/auth.css">
+    <!-- Include iziToast CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
 </head>
 <body>
 <#include "../components/navbar.ftlh">
@@ -25,26 +27,27 @@
                     <input type="submit" value="Submit" id="submitButton">
                 </div>
             </form>
-            <div id="resetPasswordMessage" class="form-messages form-success">${resetPasswordMessage}</div>
-            <div id="resetPasswordErrorMessage" class="form-messages form-error">${resetPasswordErrorMessage}</div>
             <div class="links" id="loginButtonContainer"></div>
         </div>
     </div>
 </div>
+<!-- Include iziToast JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
 <script src="/static/js/message.js"></script>
 <script>
     // Display messages if any
-    showMessage("resetPasswordMessage", "${resetPasswordMessage}");
-    showMessage("resetPasswordErrorMessage", "${resetPasswordErrorMessage}");
+    var resetPasswordMessage = "${resetPasswordMessage}";
+    var resetPasswordErrorMessage = "${resetPasswordErrorMessage}";
 
-    // Disable form elements after successful submission
-    var successMessage = "${resetPasswordMessage}";
-    var submitButton = document.getElementById("submitButton");
-    var passwordInput = document.getElementById("password");
-
-    if (successMessage && successMessage.trim() !== "") {
-        submitButton.disabled = true;
-        passwordInput.disabled = true;
+    if (resetPasswordMessage && resetPasswordMessage.trim() !== "") {
+        iziToast.success({
+            title: 'Success',
+            message: resetPasswordMessage,
+            position: 'topRight'
+        });
+        // Disable the submit button and password input
+        document.getElementById("submitButton").disabled = true;
+        document.getElementById("password").disabled = true;
 
         // Create login link
         var loginButtonContainer = document.getElementById("loginButtonContainer");
@@ -53,6 +56,14 @@
         loginLink.href = "/signIn";
         loginLink.classList.add("link");
         loginButtonContainer.appendChild(loginLink);
+    }
+
+    if (resetPasswordErrorMessage && resetPasswordErrorMessage.trim() !== "") {
+        iziToast.error({
+            title: 'Error',
+            message: resetPasswordErrorMessage,
+            position: 'topRight'
+        });
     }
 </script>
 

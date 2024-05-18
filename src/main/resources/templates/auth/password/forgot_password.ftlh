@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Forgot Password</title>
     <link rel="stylesheet" href="/static/css/auth/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
 </head>
 <body>
 <#include "../components/navbar.ftlh">
@@ -22,29 +23,36 @@
                     <input type="submit" value="Submit" id="submitButton">
                 </div>
             </form>
-            <div id="forgotPasswordMessage" class="form-messages form-success">${forgotPasswordMessage}</div>
-            <div id="forgotPasswordErrorMessage" class="form-messages form-error">${forgotPasswordErrorMessage}</div>
         </div>
     </div>
 </div>
 
-<script src="/static/js/message.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
 <script>
     // Display messages if any
-    showMessage("forgotPasswordMessage", "${forgotPasswordMessage}");
-    showMessage("forgotPasswordErrorMessage", "${forgotPasswordErrorMessage}");
-</script>
-<script>
-    // Disable form elements after successful submission
-    var successMessage = "${forgotPasswordMessage}";
-    var submitButton = document.getElementById("submitButton");
-    var emailInput = document.getElementById("email");
+    var forgotPasswordMessage = "${forgotPasswordMessage}";
+    var forgotPasswordErrorMessage = "${forgotPasswordErrorMessage}";
 
-    if (successMessage && successMessage.trim() !== "") {
-        submitButton.disabled = true;
-        emailInput.disabled = true;
+    if (forgotPasswordMessage && forgotPasswordMessage.trim() !== "") {
+        iziToast.success({
+            title: 'Success',
+            message: forgotPasswordMessage,
+            position: 'topRight'
+        });
+        // Disable the submit button
+        document.getElementById("submitButton").disabled = true;
+        document.getElementById("email").disabled = true;
+    }
+
+    if (forgotPasswordErrorMessage && forgotPasswordErrorMessage.trim() !== "") {
+        iziToast.error({
+            title: 'Error',
+            message: forgotPasswordErrorMessage,
+            position: 'topRight'
+        });
     }
 </script>
+
 
 <#include "../components/footer.ftlh">
 </body>

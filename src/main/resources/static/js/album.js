@@ -54,60 +54,38 @@ $(document).ready(function () {
 
 //delete
 $(document).ready(function() {
-    // Initialize modal
-    $('#deleteAlbumModal').iziModal({
-        headerColor: '#f00',
-        overlayColor: 'rgba(0, 0, 0, 0.5)',
-        zindex: 1050
-    });
-
     // Open modal when delete button is clicked
     $('.delete-album').on('click', function() {
         var albumId = $(this).data('album-id');
         console.log('Delete button clicked for album ID:', albumId);
-        $('#deleteAlbumModal').iziModal('open');
-        // Store albumId in confirm button
-        $('#confirmDelete').data('album-id', albumId);
-    });
-
-    // Delete album when confirm button in modal is clicked
-    $('#confirmDelete').on('click', function() {
-        var albumId = $(this).data('album-id');
-        console.log('Confirm delete for album ID:', albumId);
-        $.ajax({
-            url: '/albums/' + albumId + '/delete',
-            type: 'POST',
-            success: function(response) {
-                console.log('Album deleted successfully');
-                iziToast.success({
-                    title: 'Success',
-                    message: 'Album deleted successfully!',
-                    position: 'topRight'
-                });
-                $('#deleteAlbumModal').iziModal('close');
-                // Remove the album item from the DOM
-                $('#album-' + albumId).remove();
-                location.reload();
-            },
-            error: function(xhr, status, error) {
-                console.log('Error deleting album:', error);
-                iziToast.error({
-                    title: 'Error',
-                    message: 'Failed to delete album',
-                    position: 'topRight'
-                });
-                $('#deleteAlbumModal').iziModal('close');
-            }
-        });
-    });
-
-    // Close modal when cancel button in modal is clicked
-    $('#cancelDelete').on('click', function() {
-        console.log('Cancel delete');
-        $('#deleteAlbumModal').iziModal('close');
+        var confirmDelete = confirm("Are you sure you want to delete this album?");
+        if (confirmDelete) {
+            $.ajax({
+                url: '/albums/' + albumId + '/delete',
+                type: 'DELETE',
+                success: function(response) {
+                    console.log('Album deleted successfully');
+                    iziToast.success({
+                        title: 'Success',
+                        message: 'Album deleted successfully!',
+                        position: 'topRight'
+                    });
+                    // Remove the album item from the DOM
+                    $('#album-' + albumId).remove();
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error deleting album:', error);
+                    iziToast.error({
+                        title: 'Error',
+                        message: 'Failed to delete album',
+                        position: 'topRight'
+                    });
+                }
+            });
+        }
     });
 });
-
 
 //add song
 

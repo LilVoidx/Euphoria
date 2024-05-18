@@ -1,6 +1,7 @@
 package soul.euphoria.services.music;
 
 import javassist.NotFoundException;
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 import soul.euphoria.dto.forms.SongForm;
 import soul.euphoria.dto.infos.SongDTO;
@@ -35,4 +36,5 @@ public interface SongService {
 
     void deleteSong(Long songId) throws NotFoundException;
 
+    Page<SongDTO> searchSongs(String query, int page, int size);
 }

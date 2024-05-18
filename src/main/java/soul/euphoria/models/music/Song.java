@@ -54,7 +54,7 @@ public class Song {
     @Enumerated(EnumType.STRING)
     private Genre genre;
 
-    @ManyToMany(mappedBy = "favoriteSongs")
+    @ManyToMany(mappedBy = "favoriteSongs", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<User> favorites;
 
 }
