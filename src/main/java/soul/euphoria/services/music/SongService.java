@@ -8,7 +8,6 @@ import soul.euphoria.models.music.Song;
 import soul.euphoria.models.user.Artist;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface SongService {
 
@@ -16,17 +15,24 @@ public interface SongService {
 
     SongDTO favorite(Long userId, Long songId);
 
+    boolean isSongFavoritedByCurrentUser(Long songId, String currentUsername);
+
     SongDTO findById(Long songId);
 
     List<SongDTO> getSongsByArtist(Artist artist);
 
+    List<SongDTO> getSongsByArtistAlbumNull(Artist artist);
+
     List<SongDTO> getAllSongs();
 
     List<SongDTO> search(String query);
+
+    List<SongDTO> getAllUserFavorites(String username);
 
     Song getCurrentSong(Long songId);
 
     SongDTO getTrendingSong();
 
     void deleteSong(Long songId) throws NotFoundException;
+
 }

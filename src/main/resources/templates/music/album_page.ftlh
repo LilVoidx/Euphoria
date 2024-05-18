@@ -1,85 +1,264 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Album Details</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/static/css/music/album.css">
+    <title>${album.title}</title>
+    <link rel="icon" href="/static/files/assets/favicon.ico" type="image/x-icon">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/izimodal/1.6.0/css/iziModal.min.css" rel="stylesheet">
 </head>
+
 <body>
+
 <div class="container">
-    <h1>Album Details</h1>
-    <h2>${album.title}</h2>
-    <p>Artist: ${album.artistName}</p>
-    <p>Release Date: ${album.releaseDate?string["yyyy-MM-dd"]}</p>
-    <img src="/files/img/${album.coverImageInfoUrl}" alt="Album Cover" class="img-fluid"/>
+    <aside class="sidebar">
+        <div class="logo">
+            <button class="menu-btn" id="menu-close">
+                <i class='bx bx-log-out-circle'></i>
+            </button>
+            <i class='bx bx-pulse'></i>
+            <a href="/">EUPHORIA</a>
+        </div>
 
-    <h3>Songs by ${album.artistName}</h3>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Title</th>
-            <th>Genre</th>
-            <th>Duration</th>
-            <th>Release Date</th>
-            <th>Image</th>
-            <th>Add to Album</th>
-        </tr>
-        </thead>
-        <tbody>
-        <#list artistSongDTOs as song>
-            <tr>
-                <td>${song.title}</td>
-                <td>${song.genre}</td>
-                <td>${song.duration}</td>
-                <td><span class="badge badge-secondary">${song.releaseDate?string["yyyy-MM-dd"]}</span></td>
-                <td><img src="/files/img/${song.songImageInfoUrl}" alt="${song.title}" class="img-thumbnail" style="max-width: 100px;"></td>
-                <td>
-                    <button class="btn btn-primary add-song" data-song-id="${song.songId}" data-album-id="${album.albumId}">Add to Album</button>
-                </td>
-            </tr>
-        </#list>
-        </tbody>
-    </table>
-</div>
+        <div class="menu">
+            <h5>Menu</h5>
+            <ul>
+                <li>
+                    <i class='bx bxs-bolt-circle'></i>
+                    <a href="#">Explore</a>
+                </li>
+                <li>
+                    <i class='bx bxs-volume-full'></i>
+                    <a href="#">Genres</a>
+                </li>
+                <li>
+                    <i class='bx bxs-album'></i>
+                    <a href="#">Albums</a>
+                </li>
+                <li>
+                    <i class='bx bxs-microphone'></i>
+                    <a href="#">Artists</a>
+                </li>
+                <li>
+                    <i class='bx bxs-radio'></i>
+                    <a href="#">Poddcasts</a>
+                </li>
+            </ul>
+        </div>
 
-<div id="successModal" data-izimodal-transitionin="fadeInDown" data-izimodal-group="alerts">
+        <div class="menu">
+            <h5>Library</h5>
+            <ul>
+                <li>
+                    <i class='bx bx-undo'></i>
+                    <a href="#">Recent</a>
+                </li>
+                <li>
+                    <i class='bx bxs-photo-album'></i>
+                    <a href="#">Albums</a>
+                </li>
+                <li>
+                    <i class='bx bxs-heart'></i>
+                    <a href="/users/favorites/${user.username}">Favourites</a>
+                </li>
+                <li>
+                    <i class='bx bxs-folder'></i>
+                    <a href="#">Local</a>
+                </li>
+
+            </ul>
+        </div>
+
+        <div class="menu">
+            <h5>Actions</h5>
+            <ul>
+                <li>
+                    <i class='bx bx-music'></i>
+                    <a href="/song/upload">Upload a Song</a>
+                </li>
+                <li>
+                    <i class='bx bx-folder-plus'></i>
+                    <a href="/albums/create">Create an album</a>
+                </li>
+                <li>
+                    <i class='bx bxs-album'></i>
+                    <a href="/albums/${user.username}">Your Albums</a>
+                </li>
+                <li>
+                    <i class='bx bxl-deezer'></i>
+                    <a href="/artist/${user.username}">Your songs</a>
+                </li>
+
+            </ul>
+        </div>
+
+        <div class="playing">
+            <div class="top">
+                <img id="mini-song-image" src="/files/assets/song.png">
+
+                <div class="song-info">
+                    <h4 id="mini-song-name">Song name</h4>
+                    <p id="mini-artist-name">artist name</p>
+                </div>
+                <div class="icon">
+                    <i id="mini-play-button" class='bx bx-play bx-xs'></i>
+                </div>
+            </div>
+            <div class="bottom">
+                <p id="mini-player-status">Paused</p>
+            </div>
+        </div>
+
+
+    </aside>
+
+    <main>
+        <header>
+            <div class="nav-links">
+                <button class="menu-btn" id="menu-open">
+                    <i class='bx bx-menu'></i>
+                </button>
+                <a href="/home">Music</a>
+                <a href="#">Live</a>
+                <a href="#">Podcast</a>
+            </div>
+
+            <div class="search">
+                <i class='bx bx-search'></i>
+                <input type="text" id="searchInput" placeholder="Type here to search">
+                <div id="searchResults" class="search-results"></div>
+            </div>
+
+        </header>
+
+        <div class="trending">
+            <div class="left">
+                <h5>Album Details</h5>
+                <div class="info">
+                    <h2>${album.title}</h2>
+                    <h4>${album.artistName}</h4>
+                    <h5>${album.genre}</h5>
+                    <div class="buttons">
+                        <a href="/home">
+                            <button>Back home</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <img src="/files/img/${album.getCoverImageInfoUrl()}" alt="album cover">
+        </div>
+
+        <div class="playlist">
+            <div class="music-list">
+                <div class="header">
+                    <h5>Album songs</h5>
+                    <a href="/">See all</a>
+                </div>
+                <div class="items">
+                    <#assign counter = 1>
+                    <#list albumSongs as song>
+                        <div class="item">
+                            <div class="info">
+                                <p><#if counter <= 9>0</#if>${counter}</p>
+                                <img src="/files/img/${song.songImageInfoUrl}" alt="${song.title}">
+                                <div class="details">
+                                    <h5>${song.title}</h5>
+                                    <p>${song.artistName}</p>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <p>${song.duration}</p>
+                                <div class="icon">
+                                    <a href="/song/${song.songId}">
+                                        <i class='bx bxs-right-arrow-square'></i>
+                                    </a>
+                                </div>
+                                    <i class='bx bxs-checkbox-minus remove-song' data-song-id="${song.songId}" data-album-id="${album.albumId}" data-user-id="${user.username}"></i>
+                            </div>
+
+                        </div>
+                        <#assign counter = counter + 1>
+                    </#list>
+                </div>
+            </div>
+
+            <div class="music-list">
+                <div class="header">
+                    <h5>Your songs</h5>
+                    <a href="/">See all</a>
+                </div>
+                <div class="items">
+                    <#assign counter = 1>
+                    <#list artistSongDTOs as song>
+                        <div class="item">
+                            <div class="info">
+                                <p><#if counter <= 9>0</#if>${counter}</p>
+                                <img src="/files/img/${song.songImageInfoUrl}" alt="${song.title}">
+                                <div class="details">
+                                    <h5>${song.title}</h5>
+                                    <p>${song.artistName}</p>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <p>${song.duration}</p>
+                                <div class="icon">
+                                    <a href="/song/${song.songId}">
+                                        <i class='bx bxs-right-arrow-square'></i>
+                                    </a>
+                                </div>
+                                <i class='bx bxs-plus-square add-song' data-song-id="${song.songId}" data-album-id="${album.albumId}" data-user-id="${user.username}"></i>
+                            </div>
+
+                        </div>
+                        <#assign counter = counter + 1>
+                    </#list>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </main>
+
+    <div class="right-section">
+
+        <div class="profile">
+            <i class='bx bxs-bell'></i>
+            <div class="dropdown">
+                <i class='bx bxs-cog' id="dropdownMenuButton"></i>
+                <div class="dropdown-content" id="dropdownContent">
+                    <a href="/users/profile/${user.username}/edit">Edit Profile</a>
+                    <a href="/password/forgot">Change Password</a>
+                    <#if user.role == "ARTIST">
+                        <a href="/artist/${user.username}">Artist Page</a>
+                    </#if>
+                    <a href="/logout">Logout</a>
+                </div>
+            </div>
+            <div class="user">
+                <a href="/users/profile/${user.username}" class="user">
+                    <div class="left">
+                        <img src="/files/img/${user.getProfilePictureUrl()}" alt="Profile Image">
+                    </div>
+                    <div class="right">
+                        <span>${user.username}</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div id="successModal" data-izimodal-transitionin="fadeInDown" data-izimodal-group="alerts">
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/izimodal/1.6.0/js/iziModal.min.js"></script>
-<script>
-    // Initialize iziModal for success alert
-    $('#successModal').iziModal({
-        icon: 'icon-check',
-        headerColor: '#00af66',
-        backdrop : '',
-        width: 600,
-        timeout: 15000,
-        timeoutProgressbar: true,
-        transitionIn: 'fadeInDown',
-        transitionOut: 'fadeOutDown',
-        pauseOnHover: true,
-    });
-
-    $(document).ready(function() {
-        $('.add-song').click(function() {
-            var songId = $(this).data('song-id');
-            var albumId = $(this).data('album-id');
-            $.ajax({
-                type: 'POST',
-                url: '/albums/' + albumId + '/addSong',
-                data: { songId: songId },
-                success: function() {
-                    $('#successModal').iziModal('setTitle', 'Song Added');
-                    $('#successModal').iziModal('setSubtitle', 'Song has been added to the album successfully!');
-                    $('#successModal').iziModal('open');
-                },
-                error: function() {
-                    alert('Error adding song to the album!');
-                }
-            });
-        });
-    });
-</script>
+<script src="/static/js/album.js"></script>
+<script src="/static/js/search.js"></script>
+<script src="/static/js/profile.js"></script>
 </body>
 </html>

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="/static/css/home/profile_edit.css">
-    <title>Profile</title>
+    <title>Edit Profile</title>
     <link rel="icon" href="/static/files/assets/favicon.ico" type="image/x-icon">
 
 </head>
@@ -20,7 +20,7 @@
                 <i class='bx bx-log-out-circle'></i>
             </button>
             <i class='bx bx-pulse'></i>
-            <a href="#">EUPHORIA</a>
+            <a href="/">EUPHORIA</a>
         </div>
 
         <div class="menu">
@@ -62,7 +62,7 @@
                 </li>
                 <li>
                     <i class='bx bxs-heart'></i>
-                    <a href="#">Favourites</a>
+                    <a href="/users/favorites/${user.username}">Favourites</a>
                 </li>
                 <li>
                     <i class='bx bxs-folder'></i>
@@ -73,23 +73,23 @@
         </div>
 
         <div class="menu">
-            <h5>Playlist</h5>
+            <h5>Actions</h5>
             <ul>
                 <li>
-                    <i class='bx bxs-plus-square'></i>
-                    <a href="#">Create New</a>
+                    <i class='bx bxs-home'></i>
+                    <a href="/home">Home Page</a>
                 </li>
                 <li>
-                    <i class='bx bxs-caret-right-circle'></i>
-                    <a href="#">Best of 2023</a>
+                    <i class='bx bxs-edit' ></i>
+                    <a href="/users/profile/${user.username}/edit">Edit Profile</a>
                 </li>
                 <li>
-                    <i class='bx bxs-caret-right-circle'></i>
-                    <a href="#">Best of 2022</a>
+                    <i class='bx bxs-microphone' ></i>
+                    <a href="/artists/register">Become an Artist</a>
                 </li>
                 <li>
-                    <i class='bx bxs-caret-right-circle'></i>
-                    <a href="#">Kael Fischer</a>
+                    <i class='bx bx-refresh' ></i>
+                    <a href="/password/forgot">Password Reset</a>
                 </li>
 
             </ul>
@@ -142,7 +142,7 @@
                     <h4>@${user.username}</h4>
                     <h5>${user.email}</h5>
                     <div class="buttons">
-                        <a href="/profile/${user.username}/edit">
+                        <a href="/users/profile/${user.username}/edit">
                             <button id="changeInfoBtn">Change info</button>
                         </a>
                     </div>
@@ -152,7 +152,7 @@
         </div>
 
         <div class="playlist">
-            <form method="post" action="/profile/${user.username}/edit" enctype="multipart/form-data">
+            <form method="post" action="/users/profile/${user.username}/edit" enctype="multipart/form-data">
                 <div>
                     <div class="label-wrapper">
                         <label for="username">Username:</label>
@@ -218,7 +218,7 @@
             <div class="dropdown">
                 <i class='bx bxs-cog' id="dropdownMenuButton"></i>
                 <div class="dropdown-content" id="dropdownContent">
-                    <a href="/profile/${user.username}/edit">Edit Profile</a>
+                    <a href="/users/profile/${user.username}/edit">Edit Profile</a>
                     <a href="/password/forgot">Change Password</a>
                     <#if user.role == "ARTIST">
                         <a href="/artist/${user.username}">Artist Page</a>
@@ -227,7 +227,7 @@
                 </div>
             </div>
             <div class="user">
-                <a href="/profile/${user.username}" class="user">
+                <a href="/users/profile/${user.username}" class="user">
                     <div class="left">
                         <img src="/files/img/${user.getProfilePictureUrl()}" alt="Profile Image">
                     </div>

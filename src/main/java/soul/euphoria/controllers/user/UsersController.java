@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import soul.euphoria.dto.forms.UserForm;
+import soul.euphoria.dto.infos.SongDTO;
 import soul.euphoria.dto.infos.UserDTO;
 import soul.euphoria.security.details.UserDetailsImpl;
 import soul.euphoria.services.music.SongService;
@@ -18,10 +19,12 @@ import soul.euphoria.services.user.UserService;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class ProfileController {
+@RequestMapping("/users")
+public class UsersController {
 
     @Autowired
     private UserService userService;
@@ -29,7 +32,7 @@ public class ProfileController {
     @Autowired
     private SongService songService;
 
-    private static final Logger logger = LoggerFactory.getLogger(ProfileController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UsersController.class);
 
 
     @GetMapping("/profile/{username}")
@@ -38,6 +41,8 @@ public class ProfileController {
 
         if (optionalUser.isPresent()) {
             UserDTO userDTO = optionalUser.get();
+            List<SongDTO> songDTO = songService.getAllUserFavorites(username);
+            model.addAttribute("songs",songDTO);
             model.addAttribute("user", userDTO);
             return "user_account/profile_page";
         } else {
@@ -81,7 +86,7 @@ public class ProfileController {
             userService.updateUser(username, userForm, profilePicture);
             logger.debug("User info updated successfully");
             // Redirect to the updated profile page using the new username
-            return "redirect:/profile/" + userForm.getUsername();
+            return "redirect:/users/profile/" + userForm.getUsername();
         } catch (Exception e) {
             logger.error("Error updating user info", e);
             // Redirect to the error page
@@ -90,4 +95,20 @@ public class ProfileController {
         }
     }
 
+    @GetMapping("/favorites/{username}")
+    public String userFavorites(Model model, @PathVariable String username, HttpServletRequest request) {
+        Optional<UserDTO> optionalUser = userService.findByUserName(username);
+
+        if (optionalUser.isPresent()) {
+            UserDTO userDTO = optionalUser.get();
+            List<SongDTO> songDTO = songService.getAllUserFavorites(username);
+            model.addAttribute("songs",songDTO);
+            model.addAttribute("user", userDTO);
+            return "music/user_favorites_page";
+        } else {
+            // Forward the request to the error controller if user is not found
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+            return "forward:/error";
+        }
+    }
 }

@@ -1,8 +1,8 @@
-package soul.euphoria.models.user;
+package soul.euphoria.models.music;
 
 import lombok.*;
 import soul.euphoria.models.FileInfo;
-import soul.euphoria.models.music.Song;
+ import soul.euphoria.models.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

@@ -282,6 +282,10 @@ body{
     border-radius: 50%;
 }
 
+.container main .trending .left .info .buttons i.highlighted {
+    background-color: #ffffff;
+}
+
 .container main .trending img{
     width: 230px;
     height: 230px;
@@ -508,6 +512,10 @@ body{
 }
 
 .container .right-section .music-player .bx-volume-full.highlighted {
+    color: #b182ff;
+}
+
+.container .right-section .music-player .bx-heart.highlighted {
     color: #b182ff;
 }
 

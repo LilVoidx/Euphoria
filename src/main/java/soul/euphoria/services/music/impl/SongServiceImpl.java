@@ -1,6 +1,8 @@
 package soul.euphoria.services.music.impl;
 
 import javassist.NotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +39,9 @@ public class SongServiceImpl implements SongService {
 
     @Autowired
     private UsersRepository usersRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(SongService.class);
+
 
     @Override
     public void uploadSong(SongForm songForm, MultipartFile songFile, MultipartFile imageFile, Long userId) {
@@ -88,15 +93,24 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
+    public List<SongDTO> getAllUserFavorites(String username) {
+        List<SongDTO> favoriteSongs =songList(songRepository.findAllFavoritesByUsername(username));
+        logger.info("Found {} favorite songs for user: {}", favoriteSongs.size(), username);
+
+        return favoriteSongs;
+    }
+
+    @Override
     public SongDTO favorite(Long userId, Long songId) {
         Optional<User> optionalUser = usersRepository.findById(userId);
         Optional<Song> optionalSong = songRepository.findById(songId);
 
         if (optionalUser.isPresent() && optionalSong.isPresent()) {
             User user = optionalUser.get();
+            String username = user.getUsername();
             Song song = optionalSong.get();
 
-            if (songRepository.existsBySongIdAndFavoritesContaining(songId, user)) {
+            if (isSongFavoritedByCurrentUser(songId, username)) {
                 user.getFavoriteSongs().remove(song);
             } else {
                 user.getFavoriteSongs().add(song);
@@ -111,6 +125,14 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
+    public boolean isSongFavoritedByCurrentUser(Long songId, String currentUsername) {
+        Optional<User> optionalCurrentUser = usersRepository.findByUsername(currentUsername);
+        User currentUser = optionalCurrentUser.orElseThrow(() -> new IllegalArgumentException("Current user not found"));
+
+        return songRepository.existsBySongIdAndFavoritesContaining(songId, currentUser);
+    }
+
+    @Override
     public SongDTO findById(Long songId) {
         Song song = songRepository.findById(songId).orElse(null);
         assert song != null;
@@ -120,6 +142,11 @@ public class SongServiceImpl implements SongService {
     @Override
     public List<SongDTO> getSongsByArtist(Artist artist) {
         return songList(songRepository.findAllByArtist(artist));
+    }
+
+    @Override
+    public List<SongDTO> getSongsByArtistAlbumNull(Artist artist) {
+        return songList(songRepository.findAllByArtistAndAlbumIsNull(artist));
     }
 
     @Override
@@ -139,7 +166,7 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public SongDTO getTrendingSong() {
-        Song trending = songRepository.findTopByOrderByFavoritesAsc();
+        Song trending = songRepository.findTrending();
         return SongDTO.from(trending);
     }
 

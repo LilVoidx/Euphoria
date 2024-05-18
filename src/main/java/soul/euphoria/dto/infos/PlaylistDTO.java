@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import soul.euphoria.models.user.Playlist;
+import soul.euphoria.models.music.Playlist;
 
 import java.time.LocalDate;
 import java.util.List;

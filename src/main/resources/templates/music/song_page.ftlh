@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="/static/css/music/song.css">
-    <title>Home </title>
+    <title>${song.title}</title>
     <link rel="icon" href="/static/files/assets/favicon.ico" type="image/x-icon">
 </head>
 
@@ -19,7 +19,7 @@
                 <i class='bx bx-log-out-circle'></i>
             </button>
             <i class='bx bx-pulse'></i>
-            <a href="#">EUPHORIA</a>
+            <a href="/">EUPHORIA</a>
         </div>
 
         <div class="menu">
@@ -61,7 +61,7 @@
                 </li>
                 <li>
                     <i class='bx bxs-heart'></i>
-                    <a href="#">Favourites</a>
+                    <a href="/users/favorites/${user.username}">Favourites</a>
                 </li>
                 <li>
                     <i class='bx bxs-folder'></i>
@@ -139,10 +139,12 @@
                 <div class="info">
                     <h2>${songArtist.stageName}</h2>
                     <h4>${songArtist.genre}</h4>
-                    <h5 id="likeCount">${song.likeCount}</h5>
+                    <h5 id="likeCount">${song.title} - ${song.likeCount} Million Favorites</h5>
                     <div class="buttons">
-                        <button href="/home">Back Home</button>
-                        <i class='bx bxs-heart' id="likeButton"></i>
+                        <a href="/home">
+                        <button>Back Home</button>
+                            </a>
+                        <i class='bx bxs-heart' id="likeButton" data-song-id="${song.songId}"></i>
                     </div>
                 </div>
             </div>
@@ -198,7 +200,7 @@
             <div class="dropdown">
                 <i class='bx bxs-cog' id="dropdownMenuButton"></i>
                 <div class="dropdown-content" id="dropdownContent">
-                    <a href="/profile/${user.username}/edit">Edit Profile</a>
+                    <a href="/users/profile/${user.username}/edit">Edit Profile</a>
                     <a href="/password/forgot">Change Password</a>
                     <#if user.role == "ARTIST">
                         <a href="/artist/${user.username}">Artist Page</a>
@@ -207,7 +209,7 @@
                 </div>
             </div>
             <div class="user">
-                <a href="/profile/${user.username}" class="user">
+                <a href="/users/profile/${user.username}" class="user">
                     <div class="left">
                         <img src="/files/img/${user.getProfilePictureUrl()}" alt="Profile Image">
                     </div>
@@ -249,7 +251,7 @@
 
             <div class="player-actions">
                 <div class="buttons">
-                    <i class='bx bx-repeat'></i>
+                    <i class='bx bx-heart' id="playLikeButton" data-song-id="${song.songId}"></i>
                     <i class='bx bx-first-page'></i>
                     <i class='play-button bx bxs-right-arrow'></i>
                     <i class='bx bx-last-page'></i>

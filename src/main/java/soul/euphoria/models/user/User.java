@@ -2,10 +2,9 @@ package soul.euphoria.models.user;
 
 import lombok.*;
 import soul.euphoria.models.*;
-import soul.euphoria.models.Enum.Genre;
 import soul.euphoria.models.Enum.Role;
 import soul.euphoria.models.Enum.State;
-import soul.euphoria.models.music.Album;
+import soul.euphoria.models.music.Playlist;
 import soul.euphoria.models.music.Song;
 
 import javax.persistence.*;

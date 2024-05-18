@@ -12,6 +12,8 @@ import java.util.List;
 public interface SongRepository extends JpaRepository<Song, Long> {
     List<Song> findAllByArtist(Artist artist);
 
+    List<Song> findAllByArtistAndAlbumIsNull(Artist artist);
+
     @Query("SELECT s FROM Song s WHERE s.songId IN :ids")
     List<Song> getSongsByIds(List<Long> ids);
 
@@ -22,7 +24,11 @@ public interface SongRepository extends JpaRepository<Song, Long> {
 
     boolean existsBySongIdAndFavoritesContaining(Long songId, User user);
 
-    Song findTopByOrderByFavoritesAsc();
+    @Query("SELECT s FROM Song s JOIN s.favorites u WHERE u.username = :username")
+    List<Song> findAllFavoritesByUsername(String username);
+
+    @Query(value = "SELECT s.* FROM Song s LEFT JOIN user_favorite_songs ufs ON s.song_id = ufs.song_id GROUP BY s.song_id ORDER BY COUNT(ufs.user_id) DESC LIMIT 1", nativeQuery = true)
+    Song findTrending();
 }
 
 

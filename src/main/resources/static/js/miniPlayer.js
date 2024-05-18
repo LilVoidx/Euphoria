@@ -27,11 +27,18 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Update song information
-    function updateSongInfo(song) {
+    function updateSongInfo(song, isFavorite, autoplay = true) {
         miniSongName.textContent = song.title;
         miniArtistName.textContent = song.artistName;
         miniSongImage.src = "/files/img/" + song.songImageInfoUrl;
         audio.src = "/files/img/" + song.songFileInfoUrl;
+
+        if (autoplay) {
+            audio.play();
+            isPlaying = true;
+            miniPlayButton.classList.remove('bx-play');
+            miniPlayButton.classList.add('bx-pause');
+        }
     }
 
     // Fetch song data from the server
@@ -40,15 +47,13 @@ document.addEventListener("DOMContentLoaded", function () {
             url: "/song/data/" + songId,
             type: "GET",
             dataType: "json",
-            success: function (songData) {
-                updateSongInfo(songData);
-                audio.play();
-                isPlaying = true;
-                miniPlayButton.classList.remove('bx-play');
-                miniPlayButton.classList.add('bx-pause');
-                miniPlayerStatus.textContent = "Playing";
+            success: function(response) {
+                const songData = response.song;
+                const isFavorite = response.isFavorite;
+                updateSongInfo(songData, isFavorite);
+                console.log('Clicked song ID:', songId);
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 console.error('Error fetching song data:', error);
             }
         });

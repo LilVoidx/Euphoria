@@ -48,38 +48,20 @@ public class SongDTO {
             albumTitle = song.getAlbum().getTitle();
         }
 
-
-        if (song.getFavorites() != null) {
-            return SongDTO.builder()
-                    .songId(song.getSongId())
-                    .title(song.getTitle())
-                    .artistId(song.getArtist().getArtistId())
-                    .artistName(song.getArtist().getStageName())
-                    .albumId(albumId)
-                    .albumTitle(albumTitle)
-                    .releaseDate(song.getReleaseDate())
-                    .duration(song.getDuration())
-                    .songFileInfoUrl(songFileInfoUrl)
-                    .songImageInfoUrl(songImageInfoUrl)
-                    .genre(song.getGenre())
-                    .likeCount(song.getFavorites().size())
-                    .build();
-        } else {
-            return SongDTO.builder()
-                    .songId(song.getSongId())
-                    .title(song.getTitle())
-                    .artistId(song.getArtist().getArtistId())
-                    .artistName(song.getArtist().getStageName())
-                    .albumId(albumId)
-                    .albumTitle(albumTitle)
-                    .releaseDate(song.getReleaseDate())
-                    .duration(song.getDuration())
-                    .songFileInfoUrl(songFileInfoUrl)
-                    .songImageInfoUrl(songImageInfoUrl)
-                    .genre(song.getGenre())
-                    .likeCount(0)
-                    .build();
-        }
+        return SongDTO.builder()
+                .songId(song.getSongId())
+                .title(song.getTitle())
+                .artistId(song.getArtist().getArtistId())
+                .artistName(song.getArtist().getStageName())
+                .albumId(albumId)
+                .albumTitle(albumTitle)
+                .releaseDate(song.getReleaseDate())
+                .duration(song.getDuration())
+                .songFileInfoUrl(songFileInfoUrl)
+                .songImageInfoUrl(songImageInfoUrl)
+                .genre(song.getGenre())
+                .likeCount(song.getFavorites() != null ? song.getFavorites().size() : 0)
+                .build();
     }
 
 

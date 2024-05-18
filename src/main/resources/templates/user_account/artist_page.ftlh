@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="/static/css/home/artist_page.css">
-    <title>Profile</title>
+    <title>Artist Profile</title>
     <link rel="icon" href="/static/files/assets/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izimodal/1.6.0/css/iziModal.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
@@ -21,7 +21,7 @@
                 <i class='bx bx-log-out-circle'></i>
             </button>
             <i class='bx bx-pulse'></i>
-            <a href="#">EUPHORIA</a>
+            <a href="/">EUPHORIA</a>
         </div>
 
         <div class="menu">
@@ -63,7 +63,7 @@
                 </li>
                 <li>
                     <i class='bx bxs-heart'></i>
-                    <a href="#">Favourites</a>
+                    <a href="/users/favorites/${user.username}">Favourites</a>
                 </li>
                 <li>
                     <i class='bx bxs-folder'></i>
@@ -85,12 +85,12 @@
                     <a href="/albums/create">Create an album</a>
                 </li>
                 <li>
-                    <i class='bx bxs-caret-right-circle'></i>
-                    <a href="#">Best of 2022</a>
+                    <i class='bx bxs-album'></i>
+                    <a href="/albums/${user.username}">Your Albums</a>
                 </li>
                 <li>
-                    <i class='bx bxs-caret-right-circle'></i>
-                    <a href="#">Kael Fischer</a>
+                    <i class='bx bxl-deezer'></i>
+                    <a href="/artist/${user.username}">Your Songs</a>
                 </li>
 
             </ul>
@@ -161,26 +161,26 @@
                 <div class="items">
                     <#assign counter = 1>
                     <#list artistSongs as song>
-                        <#if counter <= 9>
-                            <div class="item">
-                                <div class="info">
-                                    <p><#if counter <= 9>0</#if>${counter}</p>
-                                    <img src="/files/img/${song.songImageInfoUrl}" alt="song image">
-                                    <div class="details">
-                                        <h5>${song.title}</h5>
-                                        <p>${song.artistName}</p>
-                                    </div>
-                                </div>
-                                <div class="actions">
-                                    <p>${song.duration}</p>
-                                    <div class="icon play-song" data-song-id="${song.songId}">
-                                        <i class='bx bxs-right-arrow'></i>
-                                    </div>
-                                    <i class='bx bxs-checkbox-minus delete-song' data-song-id="${song.songId}"></i>
+                        <div class="item song-item" data-song-id="${song.songId}">
+                            <div class="info">
+                                <p>
+                                    <#if counter <= 9>0</#if>${counter}
+                                </p>
+                                <img src="/files/img/${song.songImageInfoUrl}" alt="${song.title}">
+                                <div class="details">
+                                    <h5>${song.title}</h5>
+                                    <p>${song.artistName}</p>
                                 </div>
                             </div>
-                            <#assign counter = counter + 1>
-                        </#if>
+                            <div class="actions">
+                                <p>${song.duration}</p>
+                                <div class="icon">
+                                    <i class='bx bxs-right-arrow play-song' data-song-id="${song.songId}"></i>
+                                </div>
+                                <i class='bx bxs-checkbox-minus delete-song' data-song-id="${song.songId}"></i>
+                            </div>
+                        </div>
+                        <#assign counter = counter + 1>
                     </#list>
                 </div>
             </div>
@@ -197,7 +197,7 @@
             <div class="dropdown">
                 <i class='bx bxs-cog' id="dropdownMenuButton"></i>
                 <div class="dropdown-content" id="dropdownContent">
-                    <a href="/profile/${user.username}/edit">Edit Profile</a>
+                    <a href="/users/profile/${user.username}/edit">Edit Profile</a>
                     <a href="/password/forgot">Change Password</a>
                     <#if user.role == "ARTIST">
                         <a href="/artist/${user.username}">Artist Page</a>
@@ -206,7 +206,7 @@
                 </div>
             </div>
             <div class="user">
-                <a href="/profile/${user.username}" class="user">
+                <a href="/users/profile/${user.username}" class="user">
                     <div class="left">
                         <img src="/files/img/${user.getProfilePictureUrl()}" alt="Profile Image">
                     </div>

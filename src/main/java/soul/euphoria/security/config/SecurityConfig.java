@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/static/**").permitAll()
                 .antMatchers("/signUp", "/password/**","/genres","/error").permitAll()
                 .antMatchers("/admin").hasAuthority("ADMIN")
-                .antMatchers("/profile/**","/song/**","/artist/**","/albums/**").authenticated()
+                .antMatchers("/users/**","/song/**","/artist/**","/albums/**").authenticated()
         .and()
             .formLogin()
                 .loginPage("/signIn")

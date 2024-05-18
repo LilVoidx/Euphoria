@@ -1,5 +1,6 @@
 package soul.euphoria.services.music;
 
+import javassist.NotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 import soul.euphoria.dto.forms.AlbumForm;
 import soul.euphoria.dto.infos.AlbumDTO;
@@ -17,4 +18,9 @@ public interface AlbumService {
 
     void addSongToAlbum(Long songId, Long albumId);
 
+    List<AlbumDTO> findAllAlbumsByArtist(Long artistId);
+
+    void deleteAlbum(Long albumId) throws NotFoundException;
+
+    void removeSongFromAlbum(Long songId, Long albumId);
 }

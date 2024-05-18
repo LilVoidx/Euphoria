@@ -19,7 +19,7 @@
                 <i class='bx bx-log-out-circle'></i>
             </button>
             <i class='bx bx-pulse'></i>
-            <a href="#">EUPHORIA</a>
+            <a href="/">EUPHORIA</a>
         </div>
 
         <div class="menu">
@@ -61,7 +61,7 @@
                 </li>
                 <li>
                     <i class='bx bxs-heart'></i>
-                    <a href="#">Favourites</a>
+                    <a href="/users/favorites/${user.username}">Favourites</a>
                 </li>
                 <li>
                     <i class='bx bxs-folder'></i>
@@ -72,23 +72,29 @@
         </div>
 
         <div class="menu">
-            <h5>Playlist</h5>
+            <h5>Actions</h5>
             <ul>
                 <li>
-                    <i class='bx bxs-plus-square'></i>
-                    <a href="#">Create New</a>
+                    <i class='bx bxs-home'></i>
+                    <a href="/home">Home Page</a>
                 </li>
                 <li>
-                    <i class='bx bxs-caret-right-circle'></i>
-                    <a href="#">Best of 2023</a>
+                    <i class='bx bxs-edit' ></i>
+                    <a href="/users/profile/${user.username}/edit">Edit Profile</a>
                 </li>
                 <li>
-                    <i class='bx bxs-caret-right-circle'></i>
-                    <a href="#">Best of 2022</a>
+                    <#if user.role == "ARTIST">
+                        <i class='bx bxs-microphone' ></i>
+                        <a href="/artist/${user.username}">Artist Page</a>
+                    <#elseif user.role == "LISTENER">
+                        <i class='bx bxs-microphone' ></i>
+                        <a href="/artists/${user.username}/register">Become an Artist</a>
+                    </#if>
+
                 </li>
                 <li>
-                    <i class='bx bxs-caret-right-circle'></i>
-                    <a href="#">Kael Fischer</a>
+                    <i class='bx bx-refresh' ></i>
+                    <a href="/password/forgot">Password Reset</a>
                 </li>
 
             </ul>
@@ -141,7 +147,7 @@
                     <h4>@${user.username}</h4>
                     <h5>${user.email}</h5>
                     <div class="buttons">
-                        <a href="/profile/${user.username}/edit">
+                        <a href="/users/profile/${user.username}/edit">
                             <button>Edit user info</button>
                         </a>
                     </div>
@@ -187,74 +193,29 @@
                 </div>
 
                 <div class="items">
-                    <div class="item">
-                        <div class="info">
-                            <p>01</p>
-                            <img src="assets/song-1.png">
-                            <div class="details">
-                                <h5>Sunrise</h5>
-                                <p>Lila Rivera</p>
+                    <#assign counter = 1>
+                    <#list songs as song>
+                        <#if counter <= 4>
+                            <div class="item song-item" data-song-id="${song.songId}">
+                                <div class="info">
+                                    <p><#if counter <= 4>0</#if>${counter}</p>
+                                    <img src="/files/img/${song.songImageInfoUrl}" alt="${song.title}">
+                                    <div class="details">
+                                        <h5>${song.title}</h5>
+                                        <p>${song.artistName}</p>
+                                    </div>
+                                </div>
+                                <div class="actions">
+                                    <p>${song.duration}</p>
+                                    <div class="icon">
+                                        <i class='bx bxs-right-arrow play-song' data-song-id="${song.songId}"></i>
+                                    </div>
+                                    <i class='bx bxs-plus-square' id="likeButton" data-song-id="${song.songId}"></i>
+                                </div>
                             </div>
-                        </div>
-                        <div class="actions">
-                            <p>03:45</p>
-                            <div class="icon">
-                                <i class='bx bxs-right-arrow'></i>
-                            </div>
-                            <i class='bx bxs-plus-square'></i>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="info">
-                            <p>02</p>
-                            <img src="assets/song-2.png">
-                            <div class="details">
-                                <h5>Voyage</h5>
-                                <p>Tyde Brennnan</p>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <p>04:35</p>
-                            <div class="icon">
-                                <i class='bx bxs-right-arrow'></i>
-                            </div>
-                            <i class='bx bxs-plus-square'></i>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="info">
-                            <p>03</p>
-                            <img src="assets/song-3.png">
-                            <div class="details">
-                                <h5>Breeze</h5>
-                                <p>Sola Kim</p>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <p>04:22</p>
-                            <div class="icon">
-                                <i class='bx bxs-right-arrow'></i>
-                            </div>
-                            <i class='bx bxs-plus-square'></i>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="info">
-                            <p>04</p>
-                            <img src="assets/song-4.png">
-                            <div class="details">
-                                <h5>Twilight</h5>
-                                <p>Jett Lawsonn</p>
-                            </div>
-                        </div>
-                        <div class="actions">
-                            <p>03:17</p>
-                            <div class="icon">
-                                <i class='bx bxs-right-arrow'></i>
-                            </div>
-                            <i class='bx bxs-plus-square'></i>
-                        </div>
-                    </div>
+                            <#assign counter = counter + 1>
+                        </#if>
+                    </#list>
                 </div>
 
             </div>
@@ -271,7 +232,7 @@
             <div class="dropdown">
                 <i class='bx bxs-cog' id="dropdownMenuButton"></i>
                 <div class="dropdown-content" id="dropdownContent">
-                    <a href="/profile/${user.username}/edit">Edit Profile</a>
+                    <a href="/users/profile/${user.username}/edit">Edit Profile</a>
                     <a href="/password/forgot">Change Password</a>
                     <#if user.role == "ARTIST">
                         <a href="/artist/${user.username}">Artist Page</a>
@@ -283,7 +244,7 @@
                 </div>
             </div>
             <div class="user">
-                <a href="/profile/${user.username}" class="user">
+                <a href="/users/profile/${user.username}" class="user">
                     <div class="left">
                         <img src="/files/img/${user.getProfilePictureUrl()}" alt="Profile Image">
                     </div>
@@ -298,7 +259,8 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="/static/js/search.js"></script>
-<script src="/static/js/player.js"></script>
+<script src="/static/js/miniPlayer.js"></script>
+<script src="/static/js/favorite.js"></script>
 <script src="/static/js/profile.js"></script>
 </body>
 </html>

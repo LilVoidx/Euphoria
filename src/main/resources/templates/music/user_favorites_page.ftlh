@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="/static/css/home/home.css">
-    <title>Home</title>
+    <link rel="stylesheet" href="/static/css/music/song.css">
+    <title>Favourites Playlist</title>
     <link rel="icon" href="/static/files/assets/favicon.ico" type="image/x-icon">
 </head>
 
@@ -86,7 +86,7 @@
                     <#if user.role == "ARTIST">
                         <i class='bx bxs-microphone' ></i>
                         <a href="/artist/${user.username}">Artist Page</a>
-                        <#elseif user.role == "LISTENER">
+                    <#elseif user.role == "LISTENER">
                         <i class='bx bxs-microphone' ></i>
                         <a href="/artists/${user.username}/register">Become an Artist</a>
                     </#if>
@@ -96,7 +96,6 @@
                     <i class='bx bx-refresh' ></i>
                     <a href="/password/forgot">Password Reset</a>
                 </li>
-
             </ul>
         </div>
 
@@ -126,7 +125,7 @@
                 <button class="menu-btn" id="menu-open">
                     <i class='bx bx-menu'></i>
                 </button>
-                <a href="#">Music</a>
+                <a href="/home">Music</a>
                 <a href="#">Live</a>
                 <a href="#">Podcast</a>
             </div>
@@ -141,79 +140,50 @@
 
         <div class="trending">
             <div class="left">
-                <h5>Trending New Song</h5>
-                <div class="info trending-song-info" data-song-id="${trendingSong.songId}">
-                    <h2>${trendingSong.title}</h2>
-                    <h4>${trendingSong.artistName}</h4>
-                    <h5 id="likeCount">${trendingSong.likeCount} Million Favorites</h5>
+                <h5>Favourite Songs Playlist</h5>
+                <div class="info">
+                    <h2>Favourite Songs</h2>
+                    <h4>@${user.getUsername()}</h4>
+                    <h5>${user.fullName}</h5>
                     <div class="buttons">
-                        <button class="play-song">Listen Now</button>
-                        <i class='bx bxs-heart' id="likeButton" data-song-id="${trendingSong.songId}"></i>
+                        <a href="/home">
+                            <button>Back Home</button>
+                        </a>
                     </div>
                 </div>
             </div>
-            <img src="/files/img/${trendingSong.songImageInfoUrl}" alt="${trendingSong.songImageInfoUrl}">
+            <img src="/files/assets/fav.jpeg" alt="fav">
         </div>
 
+
         <div class="playlist">
-            <div class="genres">
-                <div class="header">
-                    <h5>Genres</h5>
-                    <a href="#">See all</a>
-                </div>
-
-                <div class="items">
-                    <div class="item">
-                        <p>Electro<br>Pop</p>
-                    </div>
-                    <div class="item">
-                        <p>Dance<br>Beeat</p>
-                    </div>
-                    <div class="item">
-                        <p>Clubhouse<br>Remix</p>
-                    </div>
-                    <div class="item">
-                        <p>Hip Hop<br>Rap</p>
-                    </div>
-                    <div class="item">
-                        <p>Alternative<br>Indie</p>
-                    </div>
-                    <div class="item">
-                        <p>Classical<br>Period</p>
-                    </div>
-                </div>
-
-            </div>
-
             <div class="music-list">
                 <div class="header">
-                    <h5>Top Songs</h5>
+                    <h5>Your liked songs</h5>
                     <a href="#">See all</a>
                 </div>
 
                 <div class="items">
                     <#assign counter = 1>
-                    <#list allSongs as song>
-                        <#if counter <= 4>
-                            <div class="item song-item" data-song-id="${song.songId}">
-                                <div class="info">
-                                    <p><#if counter <= 4>0</#if>${counter}</p>
-                                    <img src="/files/img/${song.songImageInfoUrl}" alt="${song.title}">
-                                    <div class="details">
-                                        <h5>${song.title}</h5>
-                                        <p>${song.artistName}</p>
-                                    </div>
-                                </div>
-                                <div class="actions">
-                                    <p>${song.duration}</p>
-                                    <div class="icon">
-                                        <i class='bx bxs-right-arrow play-song'></i>
-                                    </div>
-                                    <i class='bx bxs-plus-square' id="likeButton" data-song-id="${song.songId}"></i>
+                    <#list songs as song>
+                        <div class="item song-item" data-song-id="${song.songId}">
+                            <div class="info">
+                                <p><#if counter <= 9>0</#if>${counter}</p>
+                                <img src="/files/img/${song.songImageInfoUrl}" alt="${song.title}">
+                                <div class="details">
+                                    <h5>${song.title}</h5>
+                                    <p>${song.artistName}</p>
                                 </div>
                             </div>
-                            <#assign counter = counter + 1>
-                        </#if>
+                            <div class="actions">
+                                <p>${song.duration}</p>
+                                <div class="icon">
+                                    <i class='bx bxs-right-arrow play-song' data-song-id="${song.songId}"></i>
+                                </div>
+                                <i class='bx bxs-plus-square'></i>
+                            </div>
+                        </div>
+                        <#assign counter = counter + 1>
                     </#list>
                 </div>
 
@@ -294,6 +264,8 @@
                 </div>
             </div>
         </div>
+
+
     </div>
 
 </div>

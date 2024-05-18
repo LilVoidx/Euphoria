@@ -15,6 +15,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const volumeUp = document.querySelector('.volume-up');
     const volumeDown = document.querySelector('.volume-down');
     const volumeButton = document.querySelector('.bx-volume-full');
+    const playLikeButton = document.getElementById('playLikeButton');
+    const likeButton = document.getElementById('likeButton');
 
     let isPlaying = false;
     let isSeeking = false;
@@ -22,18 +24,35 @@ document.addEventListener("DOMContentLoaded", function () {
     audio.volume = 0.5;
 
     // Update song information
-    function updateSongInfo(song, autoplay = true) {
+    function updateSongInfo(song, isFavorite, autoplay = true) {
         songName.textContent = song.title;
         artistName.textContent = song.artistName;
         albumName.textContent = song.albumTitle;
         audio.src = "/files/img/" + song.songFileInfoUrl;
         songImage.src = "/files/img/" + song.songImageInfoUrl;
+
         if (autoplay) {
             audio.play();
             isPlaying = true;
             playButton.classList.remove('bxs-right-arrow');
             playButton.classList.add('bx-pause');
         }
+
+        // Check if the song is favorited by the current user
+        if (isFavorite) {
+            playLikeButton.classList.add('highlighted');
+            likeButton.classList.add('highlighted')
+
+        } else {
+            playLikeButton.classList.remove('highlighted');
+            likeButton.classList.remove('highlighted')
+        }
+
+        // Set the song ID to the like button data attribute
+        playLikeButton.setAttribute('data-song-id', song.songId);
+
+        console.log(isFavorite)
+        console.log(song.songId)
     }
 
     // Function to fetch song data from the server
@@ -42,8 +61,11 @@ document.addEventListener("DOMContentLoaded", function () {
             url: "/song/data/" + songId,
             type: "GET",
             dataType: "json",
-            success: function(songData) {
-                updateSongInfo(songData);
+            success: function(response) {
+                const songData = response.song;
+                const isFavorite = response.isFavorite;
+                updateSongInfo(songData, isFavorite);
+                console.log('Clicked song ID:', songId);
             },
             error: function(xhr, status, error) {
                 console.error('Error fetching song data:', error);
@@ -71,8 +93,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 url: "/song/trending",
                 type: "GET",
                 dataType: "json",
-                success: function(songData) {
-                    updateSongInfo(songData, false);
+                success: function(response) {
+                    const songData = response.song;
+                    const isFavorite = response.isFavorite;
+                    updateSongInfo(songData, isFavorite);
                 },
                 error: function(xhr, status, error) {
                     console.error('Error fetching trending song data:', error);
@@ -92,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const listenNowButton = document.querySelector('.play-song');
     listenNowButton.addEventListener('click', function () {
         const songId = this.closest('.trending-song-info').dataset.songId;
-        fetch("/songData/" + songId)
+        fetch("/song/data/" + songId)
             .then(response => response.json())
             .then(songData => {
                 updateSongInfo(songData);
@@ -100,6 +124,14 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => {
                 console.error('Error fetching song data:', error);
             });
+    });
+
+    // Fetch song data when "play Now" button is clicked
+    document.querySelectorAll('.play-song').forEach(button => {
+        button.addEventListener('click', function() {
+            const songId = this.closest('.song-item').dataset.songId;
+            fetchSongData(songId);
+        });
     });
 
     // Play and Pause
@@ -217,3 +249,44 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+// Define a function to handle liking/unliking a song
+function playLikeSong(songId) {
+    console.log("song : " + songId)
+    // Send request to like/unlike the song
+    $.ajax({
+        url: "/song/" + songId + "/favorite",
+        type: "POST",
+        dataType: "json",
+        success: function(response) {
+            // Extract the song and isFavorite from the response
+            const song = response.song;
+
+            // Get the current text (title and like count) of the likeCount element
+            const likeCountElement = document.getElementById('likeCount');
+
+            // Update the like count on the front end while preserving the song title
+            likeCountElement.textContent = `${song.likeCount} Million Favorites`;
+
+            // Update the appearance of the like button based on isFavorite status
+            const playLikeButton = document.getElementById('playLikeButton');
+            playLikeButton.classList.toggle('highlighted');
+
+            const likeButton = document.getElementById('likeButton');
+            likeButton.classList.toggle('highlighted');
+        },
+        error: function(xhr, status, error) {
+            console.error('Error liking the song:', error);
+        }
+    });
+}
+
+// Add event listener to the heart icon
+document.getElementById('playLikeButton').addEventListener('click', function() {
+    // Get the song ID from the data attribute of the heart icon
+    const songId = this.getAttribute('data-song-id');
+
+    // Call the likeSong function with the songId
+    playLikeSong(songId);
+});
+

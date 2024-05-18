@@ -5,10 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="/static/css/home/profile_edit.css">
-    <title>Register Artist</title>
+    <link rel="stylesheet" href="/static/css/home/artist_page.css">
+    <title>Artist Albums</title>
     <link rel="icon" href="/static/files/assets/favicon.ico" type="image/x-icon">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izimodal/1.6.0/css/iziModal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
 </head>
 
 <body>
@@ -76,20 +77,20 @@
             <h5>Actions</h5>
             <ul>
                 <li>
-                    <i class='bx bxs-home'></i>
-                    <a href="/home">Home Page</a>
+                    <i class='bx bx-music'></i>
+                    <a href="/song/upload">Upload a Song</a>
                 </li>
                 <li>
-                    <i class='bx bxs-edit' ></i>
-                    <a href="/users/profile/${user.username}/edit">Edit Profile</a>
+                    <i class='bx bx-folder-plus'></i>
+                    <a href="/albums/create">Create an album</a>
                 </li>
                 <li>
-                    <i class='bx bxs-microphone' ></i>
-                    <a href="/artists/register">Become an Artist</a>
+                    <i class='bx bxs-album'></i>
+                    <a href="/albums/${user.username}">Your Albums</a>
                 </li>
                 <li>
-                    <i class='bx bx-refresh' ></i>
-                    <a href="/password/forgot">Password Reset</a>
+                    <i class='bx bxl-deezer'></i>
+                    <a href="/artist/${user.username}">Your Songs</a>
                 </li>
 
             </ul>
@@ -136,14 +137,14 @@
 
         <div class="trending">
             <div class="left">
-                <h5>User Account Info</h5>
+                <h5>Artist Account Info</h5>
                 <div class="info">
-                    <h2>${user.fullName}</h2>
+                    <h2>${artist.stageName}</h2>
                     <h4>@${user.username}</h4>
-                    <h5>${user.email}</h5>
+                    <h5>☑️ Verified Artist</h5>
                     <div class="buttons">
-                        <a href="/users/profile/${user.username}/edit">
-                            <button id="changeInfoBtn">Save Info</button>
+                        <a href="/artist/${user.username}/edit">
+                            <button>Edit Artist info</button>
                         </a>
                     </div>
                 </div>
@@ -152,42 +153,39 @@
         </div>
 
         <div class="playlist">
-            <form method="post" action="/artists/register">
-                <div>
-                    <div class="label-wrapper">
-                        <label for="stageName">Stage Name:</label>
-                    </div>
-                    <div class="inputBx">
-                        <input type="text" id="stageName" name="stageName" placeholder="Stage Name" required>
-                    </div>
+            <div class="music-list">
+                <div class="header">
+                    <h5>Your Albums</h5>
+                    <a href="/">See all</a>
                 </div>
-                <div>
-                    <div class="label-wrapper">
-                        <label for="bio">Bio:</label>
-                    </div>
-                    <div class="inputBx">
-                        <textarea id="bio" name="bio" rows="4" cols="40" placeholder="Bio" required></textarea>
-                    </div>
+                <div class="items">
+                    <#assign counter = 1>
+                    <#list albums as album>
+                        <div class="item">
+                            <div class="info">
+                                <p><#if counter <= 9>0</#if>${counter}</p>
+                                <img src="/files/img/${album.coverImageInfoUrl}" alt="${album.title}">
+                                <div class="details">
+                                    <h5>${album.title}</h5>
+                                    <p>${album.artistName}</p>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <p>${album.songCount} Songs</p>
+                                <div class="icon">
+                                    <a href="/albums/${user.getUsername()}/album/${album.albumId}">
+                                        <i class='bx bxs-right-arrow-square'></i>
+                                    </a>
+                                </div>
+                                <i class='bx bxs-checkbox-minus delete-album' data-album-id="${album.albumId}"></i>
+                            </div>
+                        </div>
+                        <#assign counter = counter + 1>
+                    </#list>
                 </div>
-                <div>
-                    <div class="label-wrapper">
-                        <label for="genre">Genre:</label>
-                    </div>
-                    <div class="inputBx">
-                        <select name="genre" placeholder="Genre">
-                            <option>Genre</option>
-                            <#list genres as genre>
-                                <option value="${genre}" style="color: white; background-color: #1d1d1d;">${genre}</option>
-                            </#list>
-                        </select>
-                    </div>
-                </div>
-                <div>
-                    <button id="submitBtn" style="display: none;" type="submit">Register</button>
-                </div>
-            </form>
-
+            </div>
         </div>
+
 
 
     </main>
@@ -220,8 +218,19 @@
         </div>
     </div>
 </div>
+
+<div id="deleteAlbumModal">
+    <p>Are you sure you want to delete this album?</p>
+    <button id="confirmDelete">Yes</button>
+    <button id="cancelDelete">No</button>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izimodal/1.6.0/js/iziModal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+<script src="/static/js/album.js"></script>
 <script src="/static/js/search.js"></script>
+<script src="/static/js/miniPlayer.js"></script>
 <script src="/static/js/profile.js"></script>
 </body>
 </html>

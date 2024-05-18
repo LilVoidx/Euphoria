@@ -25,7 +25,9 @@ import soul.euphoria.services.user.UserService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -162,7 +164,16 @@ public class SongController {
         Long userId = userDetails.getUserId();
         SongDTO result = songService.favorite(userId, songId);
         if (result != null) {
-            return ResponseEntity.ok(result);
+            // Check if the song is favorited by the current user
+            String currentUsername = userDetails.getUsername();
+            boolean isFavorite = songService.isSongFavoritedByCurrentUser(songId, currentUsername);
+
+            // Create response with song data and favorite status using hashmap
+            Map<String, Object> response = new HashMap<>();
+            response.put("song", result);
+            response.put("isFavorite", isFavorite);
+
+            return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to favorite/unfavorite the song.");
         }
@@ -170,14 +181,33 @@ public class SongController {
 
     @GetMapping("/song/data/{songId}")
     @ResponseBody
-    public SongDTO getSongData(@PathVariable Long songId) {
-        return songService.findById(songId);
+    public ResponseEntity<Map<String, Object>> getSongData(@PathVariable Long songId,
+                                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        String currentUsername = userDetails.getUsername();
+        SongDTO song = songService.findById(songId);
+        boolean isFavorite = songService.isSongFavoritedByCurrentUser(songId, currentUsername);
+
+        // Create response with song data and favorite status using hashmap
+        Map<String, Object> response = new HashMap<>();
+        response.put("song", song);
+        response.put("isFavorite", isFavorite);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/song/trending")
     @ResponseBody
-    public SongDTO getTrendingSong() {
-        return songService.getTrendingSong();
+    public ResponseEntity<Map<String, Object>>  getTrendingSong(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        String currentUsername = userDetails.getUsername();
+        SongDTO song = songService.getTrendingSong();
+        long songId = song.getSongId();
+        boolean isFavorite = songService.isSongFavoritedByCurrentUser(songId, currentUsername);
+
+        // Create response with song data and favorite status using hashmap
+        Map<String, Object> response = new HashMap<>();
+        response.put("song", song);
+        response.put("isFavorite", isFavorite);
+        return ResponseEntity.ok(response);
     }
 
 

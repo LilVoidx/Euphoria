@@ -1,5 +1,6 @@
 package soul.euphoria.services.music.impl;
 
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static soul.euphoria.dto.infos.AlbumDTO.albumList;
 
 @Service
 public class AlbumServiceImpl implements AlbumService {
@@ -93,6 +96,47 @@ public class AlbumServiceImpl implements AlbumService {
         }
     }
 
+    @Override
+    public void removeSongFromAlbum(Long songId, Long albumId) {
+        // Retrieve the song and album entities
+        Optional<Song> songOptional = songRepository.findById(songId);
+        Optional<Album> albumOptional = albumRepository.findById(albumId);
+
+        if (songOptional.isPresent() && albumOptional.isPresent()) {
+            Song song = songOptional.get();
+            Album album = albumOptional.get();
+
+            // Check if the song is currently associated with the album
+            if (song.getAlbum() != null && song.getAlbum().getAlbumId().equals(albumId)) {
+                // Remove the association
+                song.setAlbum(null);
+
+                // Save the updated song
+                songRepository.save(song);
+            } else {
+                throw new IllegalArgumentException("The song is not associated with the specified album");
+            }
+        } else {
+            throw new IllegalArgumentException("Song or Album not found");
+        }
+    }
+
+
+    @Override
+    public List<AlbumDTO> findAllAlbumsByArtist(Long artistId) {
+        return albumList(albumRepository.findByArtistArtistId(artistId));
+    }
+
+    @Override
+    public void deleteAlbum(Long albumId) throws NotFoundException {
+        Optional<Album> optionalAlbum = albumRepository.findById(albumId);
+        if(optionalAlbum.isPresent()){
+            Album album = optionalAlbum.get();
+            albumRepository.delete(album);
+        } else {
+            throw new NotFoundException("Album not found with ID: " +albumId);
+        }
+    }
 
     @Override
     public AlbumDTO getAlbumDetails(Long albumId) {

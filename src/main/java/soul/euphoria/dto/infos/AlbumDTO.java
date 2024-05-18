@@ -25,6 +25,7 @@ public class AlbumDTO {
     private String coverImageInfoUrl;
     private Genre genre;
     private List<SongDTO> songs;
+    private Integer songCount;
 
     public static AlbumDTO from(Album album) {
         String coverImageInfoUrl = null;
@@ -41,6 +42,7 @@ public class AlbumDTO {
                 .coverImageInfoUrl(coverImageInfoUrl)
                 .genre(album.getGenre())
                 .songs(SongDTO.songList(album.getSongs()))
+                .songCount(album.getSongs().size())
                 .build();
     }
 
