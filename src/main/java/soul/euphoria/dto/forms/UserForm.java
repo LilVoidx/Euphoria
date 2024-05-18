@@ -37,6 +37,7 @@ public class UserForm {
     @NotBlank
     private String lastName;
 
+    @NotBlank
     @Pattern(regexp = "^7\\d{10}$", message = "Phone number must start with 7 and be followed by 10 digits")
     private String phoneNumber;
 

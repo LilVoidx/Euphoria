@@ -15,6 +15,7 @@ import soul.euphoria.services.user.RegisterService;
 import soul.euphoria.services.user.UserService;
 
 import java.time.LocalDate;
+import java.util.regex.Pattern;
 
 @Service
 public class RegisterServiceImpl implements RegisterService {
@@ -39,6 +40,11 @@ public class RegisterServiceImpl implements RegisterService {
         // Check if passwords match
         if (!userForm.getPassword().equals(userForm.getConfirmPassword())) {
             throw new IllegalArgumentException("Passwords do not match");
+        }
+
+        String phoneNumberPattern = "^7\\d{10}$";
+        if (!Pattern.matches(phoneNumberPattern, userForm.getPhoneNumber())) {
+            throw new IllegalArgumentException("Phone number Incorrect!");
         }
 
         User user = User.builder()

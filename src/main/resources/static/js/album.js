@@ -29,7 +29,7 @@ $(document).ready(function () {
 
     // AJAX form submission
     $('#uploadForm').on('submit', function (event) {
-        event.preventDefault(); // Prevent the form from submitting normally
+        event.preventDefault();
 
         $.ajax({
             url: '/albums/create',

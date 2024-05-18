@@ -6,6 +6,7 @@
     <title>Upload Profile Picture</title>
     <link rel="stylesheet" href="/static/css/auth/auth.css">
     <link rel="icon" href="/static/files/assets/favicon.ico" type="image/x-icon">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <#include "components/navbar.ftlh">
@@ -17,8 +18,7 @@
         <i></i>
         <div class="register">
             <h2>Upload Profile Picture</h2>
-            <form action="/signUp/uploadProfilePicture" method="post" enctype="multipart/form-data">
-
+            <form id="profilePictureForm" enctype="multipart/form-data">
                 <input type="hidden" id="userId" name="userId" value="${userId}">
 
                 <div class="inputBx">
@@ -26,13 +26,15 @@
                 </div>
 
                 <div class="inputBx">
-                    <input type="submit" value="Upload">
+                    <input type="button" value="Upload" onclick="uploadProfilePicture()">
                 </div>
-
             </form>
         </div>
     </div>
 </div>
+
+<script src="/static/js/upload_picture.js"></script>
+
 
 </body>
 </html>
