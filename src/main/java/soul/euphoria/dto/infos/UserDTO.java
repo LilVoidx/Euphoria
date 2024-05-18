@@ -26,7 +26,6 @@ public class UserDTO {
     private LocalDate registrationDate;
     private String profilePictureUrl;
     private String role;
-    private List<PlaylistDTO> playlists;
     private List<SongDTO> favoriteSongs;
 
     public static UserDTO from(User user) {
@@ -44,7 +43,6 @@ public class UserDTO {
                 .registrationDate(user.getRegistrationDate())
                 .profilePictureUrl(profilePictureUrl)
                 .role(String.valueOf(user.getRole()))
-                .playlists(PlaylistDTO.playlistList(user.getPlaylists()))
                 .favoriteSongs(SongDTO.songList(user.getFavoriteSongs()))
                 .build();
     }

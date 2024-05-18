@@ -18,7 +18,6 @@ import soul.euphoria.services.converters.StringToDateConverter;
 import soul.euphoria.services.file.FileStorageService;
 import soul.euphoria.services.music.AlbumService;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +56,6 @@ public class AlbumServiceImpl implements AlbumService {
             // Convert releaseDate string from Form to Date for album
             Date releaseDate = stringToDateConverter.convert(albumForm.getReleaseDate());
 
-
             // Create Album
             Album album = Album.builder()
                     .title(albumForm.getTitle())
@@ -68,10 +66,10 @@ public class AlbumServiceImpl implements AlbumService {
                     .build();
 
             // Save the album
-            album = albumRepository.save(album);
-            return album;
+            return albumRepository.save(album);
+        } else {
+            throw new IllegalArgumentException("Artist not found for user ID: " + userId);
         }
-        return null;
     }
 
     @Override
@@ -90,7 +88,7 @@ public class AlbumServiceImpl implements AlbumService {
             // Save the updated song
             songRepository.save(song);
         } else {
-            throw new IllegalArgumentException("Song or Album not found");
+            throw new IllegalArgumentException("Song or Album not found. Song ID: " + songId + ", Album ID: " + albumId);
         }
     }
 
@@ -112,13 +110,12 @@ public class AlbumServiceImpl implements AlbumService {
                 // Save the updated song
                 songRepository.save(song);
             } else {
-                throw new IllegalArgumentException("The song is not associated with the specified album");
+                throw new IllegalArgumentException("The song is not associated with the specified album. Song ID: " + songId + ", Album ID: " + albumId);
             }
         } else {
-            throw new IllegalArgumentException("Song or Album not found");
+            throw new IllegalArgumentException("Song or Album not found. Song ID: " + songId + ", Album ID: " + albumId);
         }
     }
-
 
     @Override
     public List<AlbumDTO> findAllAlbumsByArtist(Long artistId) {
@@ -132,22 +129,18 @@ public class AlbumServiceImpl implements AlbumService {
             Album album = optionalAlbum.get();
             albumRepository.delete(album);
         } else {
-            throw new NotFoundException("Album not found with ID: " +albumId);
+            throw new NotFoundException("Album not found with ID: " + albumId);
         }
     }
 
     @Override
-    public AlbumDTO getAlbumDetails(Long albumId) {
-        Album album = albumRepository.findById(albumId).orElse(null);
-        if (album != null) {
-            return AlbumDTO.from(album);
-        }
-        return null;
+    public AlbumDTO getAlbumDetails(Long albumId) throws NotFoundException {
+        Album album = albumRepository.findById(albumId).orElseThrow(() -> new NotFoundException("Album not found with ID: " + albumId));
+        return AlbumDTO.from(album);
     }
 
     @Override
     public List<SongDTO> getAlbumSongs(Long albumId) {
         return songRepository.findAllByAlbumId(albumId);
     }
-
 }

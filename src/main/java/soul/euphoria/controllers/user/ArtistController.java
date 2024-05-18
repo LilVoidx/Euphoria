@@ -74,74 +74,89 @@ public class ArtistController {
 
     @GetMapping("/artist/{username}")
     public String artistProfile(Model model, @PathVariable String username, HttpServletRequest request,@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Optional<UserDTO> optionalUser = userService.findByUserName(username);
-        if (optionalUser.isPresent()) {
-            User user = userService.getCurrentUser(userDetails.getUserId());
-            UserDTO userDTO = optionalUser.get();
-            // Check if the user is an artist
-            if (user.getArtist() != null) {
-                ArtistDTO artistDTO = ArtistDTO.from(user.getArtist());
-                // Fetch artist-related songs
-                List<SongDTO> artistSongDTOs = songService.getSongsByArtist(user.getArtist());
-                model.addAttribute("user", userDTO);
-                model.addAttribute("artist", artistDTO);
-                model.addAttribute("artistSongs", artistSongDTOs);
-                return "user_account/artist_page";
+        try {
+            Optional<UserDTO> optionalUser = userService.findByUserName(username);
+            if (optionalUser.isPresent()) {
+                User user = userService.getCurrentUser(userDetails.getUserId());
+                UserDTO userDTO = optionalUser.get();
+                // Check if the user is an artist
+                if (user.getArtist() != null) {
+                    ArtistDTO artistDTO = ArtistDTO.from(user.getArtist());
+                    // Fetch artist-related songs
+                    List<SongDTO> artistSongDTOs = songService.getSongsByArtist(user.getArtist());
+                    model.addAttribute("user", userDTO);
+                    model.addAttribute("artist", artistDTO);
+                    model.addAttribute("artistSongs", artistSongDTOs);
+                    return "user_account/artist_page";
+                } else {
+                    // Forward the request to the error controller
+                    request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+                    return "forward:/error";
+                }
             } else {
                 // Forward the request to the error controller
-                request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+                request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 500);
                 return "forward:/error";
             }
-        } else {
+        } catch (Exception e) {
+            logger.error("Error fetching artist profile: {}", e.getMessage());
             // Forward the request to the error controller
-            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 500);
             return "forward:/error";
         }
     }
+
     @GetMapping("/artist/{username}/edit")
     public String editArtist(Model model, @PathVariable String username, HttpServletRequest request,@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        Optional<UserDTO> optionalUser = userService.findByUserName(username);
-        if (optionalUser.isPresent()) {
-            UserDTO userDTO = optionalUser.get();
-            User user = userService.getCurrentUser(userDetails.getUserId());
-            // Check if the user is an artist
-            if (user.getArtist() != null) {
-                ArtistDTO artistDTO = ArtistDTO.from(user.getArtist());
-                Artist artist = user.getArtist();
-                ArtistForm artistForm = artistService.convertArtistToForm(artist);
-                model.addAttribute("user", userDTO);
-                model.addAttribute("artist", artistDTO);
-                model.addAttribute("genres", Genre.values());
-                model.addAttribute("artistForm", artistForm);
-                return "user_account/edit_artist_page";
+        try {
+            Optional<UserDTO> optionalUser = userService.findByUserName(username);
+            if (optionalUser.isPresent()) {
+                UserDTO userDTO = optionalUser.get();
+                User user = userService.getCurrentUser(userDetails.getUserId());
+                // Check if the user is an artist
+                if (user.getArtist() != null) {
+                    ArtistDTO artistDTO = ArtistDTO.from(user.getArtist());
+                    Artist artist = user.getArtist();
+                    ArtistForm artistForm = artistService.convertArtistToForm(artist);
+                    model.addAttribute("user", userDTO);
+                    model.addAttribute("artist", artistDTO);
+                    model.addAttribute("genres", Genre.values());
+                    model.addAttribute("artistForm", artistForm);
+                    return "user_account/edit_artist_page";
+                } else {
+                    // Forward the request to the error controller
+                    request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+                    return "forward:/error";
+                }
             } else {
                 // Forward the request to the error controller
                 request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
                 return "forward:/error";
             }
-        } else {
+        } catch (Exception e) {
+            logger.error("Error editing artist: {}", e.getMessage());
             // Forward the request to the error controller
-            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 500);
             return "forward:/error";
         }
     }
 
     @PostMapping("/artist/{username}/edit")
     public String updateArtist(@PathVariable String username, @Valid @ModelAttribute ArtistForm artistForm, HttpServletRequest request) {
-        Optional<UserDTO> optionalUser = userService.findByUserName(username);
-        if (optionalUser.isPresent()) {
-            try {
+        try {
+            Optional<UserDTO> optionalUser = userService.findByUserName(username);
+            if (optionalUser.isPresent()) {
                 artistService.updateArtist(username, artistForm);
                 return "redirect:/artist/" + username;
-            } catch (Exception e) {
-                logger.error("Error updating artist: {}", e.getMessage());
+            } else {
                 // Forward the request to the error controller
-                request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 500);
+                request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
                 return "forward:/error";
             }
-        } else {
+        } catch (Exception e) {
+            logger.error("Error updating artist: {}", e.getMessage());
             // Forward the request to the error controller
-            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 500);
             return "forward:/error";
         }
     }

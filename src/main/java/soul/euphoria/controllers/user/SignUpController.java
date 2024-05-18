@@ -35,10 +35,10 @@ public class SignUpController {
     @PostMapping("/signUp")
     public String registerUser(@Valid @ModelAttribute("userForm") UserForm userForm,
                                BindingResult bindingResult, Model model, HttpServletRequest request) {
-        if (bindingResult.hasErrors()) {
-            return "auth/sign_up_page";
-        }
         try {
+            if (bindingResult.hasErrors()) {
+                return "auth/sign_up_page";
+            }
             logger.info("User registration details: {}", userForm.toString());
             // Register the user without profile picture
             Long registeredUserId = registerService.registerUser(userForm).getUserId();
@@ -50,7 +50,7 @@ public class SignUpController {
             // Check the exception message to determine the error type
             if (e.getMessage().equals("Passwords do not match")) {
                 bindingResult.rejectValue("confirmPassword", "error.userForm", e.getMessage());
-                model.addAttribute("errorMessage", "Passwords Dont Match");
+                model.addAttribute("errorMessage", "Passwords Don't Match");
 
             } else if (e.getMessage().equals("Phone number Incorrect!")) {
                 bindingResult.rejectValue("phoneNumber", "error.userForm", e.getMessage());

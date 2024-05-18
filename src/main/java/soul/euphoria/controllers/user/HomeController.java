@@ -1,5 +1,7 @@
 package soul.euphoria.controllers.user;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,8 @@ import java.util.List;
 @Controller
 public class HomeController {
 
+    private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+
     @Autowired
     private UserService userService;
 
@@ -37,34 +41,48 @@ public class HomeController {
 
     @GetMapping("/home")
     public String home(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        UserDTO userDTO = userService.getUserById(userDetails.getUserId());
-        if (userDTO != null) {
-            // Convert User entity to UserDTO
-            model.addAttribute("user", userDTO);
+        try {
+            UserDTO userDTO = userService.getUserById(userDetails.getUserId());
+            if (userDTO != null) {
+                // Convert User entity to UserDTO
+                model.addAttribute("user", userDTO);
 
-            // Fetch all songs
-            List<SongDTO> allSongs = songService.getAllSongs();
-            model.addAttribute("allSongs", allSongs);
+                // Fetch all songs
+                List<SongDTO> allSongs = songService.getAllSongs();
+                model.addAttribute("allSongs", allSongs);
 
-            // Fetch trending song
-            SongDTO trendingSong = songService.getTrendingSong();
-            model.addAttribute("trendingSong", trendingSong);
-            return "user_account/home_page";
-
-        } else {
+                // Fetch trending song
+                SongDTO trendingSong = songService.getTrendingSong();
+                model.addAttribute("trendingSong", trendingSong);
+                return "user_account/home_page";
+            } else {
+                // Redirect to error page
+                return "redirect:/error";
+            }
+        } catch (Exception e) {
+            logger.error("Error in home page: {}", e.getMessage());
             // Redirect to error page
             return "redirect:/error";
         }
     }
-    
+
     @GetMapping("/search")
     @ResponseBody
     public List<SongDTO> searchSongs(@RequestParam("query") String query) {
-        return songService.search(query);
+        try {
+            return songService.search(query);
+        } catch (Exception e) {
+            logger.error("Error in searching songs: {}", e.getMessage());
+            return null;
+        }
     }
 
     @GetMapping("/files/img/{file-name:.+}")
     public void getFile(@PathVariable("file-name") String fileName, HttpServletResponse response) {
-        fileStorageService.writeFileToResponse(fileName, response);
+        try {
+            fileStorageService.writeFileToResponse(fileName, response);
+        } catch (Exception e) {
+            logger.error("Error getting file {}: {}", fileName, e.getMessage());
+        }
     }
 }

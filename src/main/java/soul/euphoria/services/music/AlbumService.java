@@ -12,7 +12,7 @@ import java.util.List;
 public interface AlbumService {
     Album createAlbum(AlbumForm albumForm, MultipartFile imageFile, Long userId);
 
-    AlbumDTO getAlbumDetails(Long albumId);
+    AlbumDTO getAlbumDetails(Long albumId) throws NotFoundException;
 
     List<SongDTO> getAlbumSongs(Long albumId);
 

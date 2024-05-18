@@ -194,31 +194,42 @@ public class SongController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getSongData(@PathVariable Long songId,
                                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String currentUsername = userDetails.getUsername();
-        SongDTO song = songService.findById(songId);
-        boolean isFavorite = songService.isSongFavoritedByCurrentUser(songId, currentUsername);
+        try {
+            String currentUsername = userDetails.getUsername();
+            SongDTO song = songService.findById(songId);
+            boolean isFavorite = songService.isSongFavoritedByCurrentUser(songId, currentUsername);
 
-        // Create response with song data and favorite status using hashmap
-        Map<String, Object> response = new HashMap<>();
-        response.put("song", song);
-        response.put("isFavorite", isFavorite);
-        return ResponseEntity.ok(response);
+            // Create response with song data and favorite status using hashmap
+            Map<String, Object> response = new HashMap<>();
+            response.put("song", song);
+            response.put("isFavorite", isFavorite);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("Failed to get song data", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
+
 
     @GetMapping("/song/trending")
     @ResponseBody
     public ResponseEntity<Map<String, Object>>  getTrendingSong(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        String currentUsername = userDetails.getUsername();
-        SongDTO song = songService.getTrendingSong();
-        long songId = song.getSongId();
-        boolean isFavorite = songService.isSongFavoritedByCurrentUser(songId, currentUsername);
+        try {
+            String currentUsername = userDetails.getUsername();
+            SongDTO song = songService.getTrendingSong();
+            long songId = song.getSongId();
+            boolean isFavorite = songService.isSongFavoritedByCurrentUser(songId, currentUsername);
 
-        // Create response with song data and favorite status using hashmap
-        Map<String, Object> response = new HashMap<>();
-        response.put("song", song);
-        response.put("isFavorite", isFavorite);
-        return ResponseEntity.ok(response);
+            // Create response with song data and favorite status using hashmap
+            Map<String, Object> response = new HashMap<>();
+            response.put("song", song);
+            response.put("isFavorite", isFavorite);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("Failed to get song data", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
 

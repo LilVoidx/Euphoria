@@ -4,7 +4,6 @@ import lombok.*;
 import soul.euphoria.models.*;
 import soul.euphoria.models.Enum.Role;
 import soul.euphoria.models.Enum.State;
-import soul.euphoria.models.music.Playlist;
 import soul.euphoria.models.music.Song;
 
 import javax.persistence.*;
@@ -70,9 +69,6 @@ public class User {
     @OneToOne
     @JoinColumn(name = "profile_picture_id", referencedColumnName = "fileInfoId")
     private FileInfo profilePicture;
-
-    @OneToMany(mappedBy = "user")
-    private List<Playlist> playlists;
 
     @ManyToMany
     @JoinTable(

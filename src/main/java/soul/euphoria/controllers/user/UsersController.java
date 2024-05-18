@@ -34,7 +34,6 @@ public class UsersController {
 
     private static final Logger logger = LoggerFactory.getLogger(UsersController.class);
 
-
     @GetMapping("/profile/{username}")
     public String userProfile(Model model, @PathVariable String username, HttpServletRequest request) {
         Optional<UserDTO> optionalUser = userService.findByUserName(username);
@@ -42,7 +41,7 @@ public class UsersController {
         if (optionalUser.isPresent()) {
             UserDTO userDTO = optionalUser.get();
             List<SongDTO> songDTO = songService.getAllUserFavorites(username);
-            model.addAttribute("songs",songDTO);
+            model.addAttribute("songs", songDTO);
             model.addAttribute("user", userDTO);
             return "user_account/profile_page";
         } else {
@@ -69,7 +68,6 @@ public class UsersController {
             return "forward:/error";
         }
     }
-
 
     @PostMapping("/profile/{username}/edit")
     public String editProfile(@Valid @ModelAttribute("userForm") UserForm userForm,
@@ -102,7 +100,7 @@ public class UsersController {
         if (optionalUser.isPresent()) {
             UserDTO userDTO = optionalUser.get();
             List<SongDTO> songDTO = songService.getAllUserFavorites(username);
-            model.addAttribute("songs",songDTO);
+            model.addAttribute("songs", songDTO);
             model.addAttribute("user", userDTO);
             return "music/user_favorites_page";
         } else {

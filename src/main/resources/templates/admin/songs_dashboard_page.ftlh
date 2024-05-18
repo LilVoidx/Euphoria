@@ -17,9 +17,9 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <header class="d-flex w-100">
             <div class="nav-links d-flex flex-grow-1">
-                <a href="/home">Music</a>
-                <a href="#">Live</a>
-                <a href="#">Podcast</a>
+                <a href="/admin/songs">Music</a>
+                <a href="/admin/users">Users</a>
+                <a href="/home">Home</a>
             </div>
 
             <div class="search d-flex flex-grow-1 justify-content-center">

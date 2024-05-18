@@ -27,6 +27,7 @@ import soul.euphoria.services.user.UserService;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,15 +78,20 @@ public class AlbumController {
     public String createAlbum(@Valid @ModelAttribute AlbumForm albumForm,
                               @RequestParam("coverImage") MultipartFile coverImage,
                               @RequestParam("userId") Long userId,
-                              Model model) {
+                              Model model,
+                              HttpServletRequest request) {
         try {
-            Album album = albumService.createAlbum(albumForm, coverImage, userId);
+            albumService.createAlbum(albumForm, coverImage, userId);
             UserDTO userDTO = userService.getUserById(userId);
-            model.addAttribute("userId", userId);
-            System.out.println("Album Id: " + album.getAlbumId());
             return "redirect:/albums/" + userDTO.getUsername();
+        } catch (ValidationException e) {
+            logger.error("Failed to create album due to validation error: {}", e.getMessage());
+            model.addAttribute("error", "Invalid album data. Please check your input.");
+            return "music/album_create_page";
         } catch (Exception e) {
-            return "redirect:/error";
+            logger.error("Failed to create album", e);
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 500);
+            return "forward:/error";
         }
     }
 
@@ -95,52 +101,86 @@ public class AlbumController {
                                    Model model,
                                    @AuthenticationPrincipal UserDetailsImpl userDetails,
                                    HttpServletRequest request) {
-        AlbumDTO album = albumService.getAlbumDetails(albumId);
-        Optional<UserDTO> optionalUser = userService.findByUserName(username);
-        if (optionalUser.isPresent()) {
-        User user = userService.getCurrentUser(userDetails.getUserId());
-        if (user.getArtist() != null) {
+        try {
+            // Fetch album details
+            AlbumDTO album = albumService.getAlbumDetails(albumId);
+            if (album == null) {
+                throw new NotFoundException("Album not found with ID: " + albumId);
+            }
+
+            // Fetch user details
+            Optional<UserDTO> optionalUser = userService.findByUserName(username);
+            if (optionalUser.isEmpty()) {
+                request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+                return "forward:/error";
+            }
+
+            // Fetch current user
+            User user = userService.getCurrentUser(userDetails.getUserId());
+            if (user.getArtist() == null) {
+                request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
+                return "forward:/error";
+            }
+
+            // Fetch album songs and artist's songs not associated with any album
             UserDTO userDTO = optionalUser.get();
             List<SongDTO> albumSongs = albumService.getAlbumSongs(albumId);
             List<SongDTO> artistSongDTOs = songService.getSongsByArtistAlbumNull(user.getArtist());
-            model.addAttribute("user",userDTO);
+
+            // Populate model attributes
+            model.addAttribute("user", userDTO);
             model.addAttribute("album", album);
             model.addAttribute("albumSongs", albumSongs);
             model.addAttribute("artistSongDTOs", artistSongDTOs);
+
             return "music/album_page";
-        }else {
-            // Forward the request to the error controller
+        } catch (NotFoundException e) {
+            logger.error("NotFoundException: ", e);
             request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 404);
             return "forward:/error";
-        }
-        } else {
-            // Forward the request to the error controller
+        } catch (Exception e) {
+            logger.error("Exception: ", e);
             request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, 500);
             return "forward:/error";
         }
     }
 
+
     @PostMapping("/albums/{username}/album/{albumId}/addSong")
     public String addSongToAlbum(@RequestParam("songId") Long songId,
                                  @PathVariable String username,
-                                 @PathVariable Long albumId) {
+                                 @PathVariable Long albumId,
+                                 HttpServletRequest request) {
         try {
             albumService.addSongToAlbum(songId, albumId);
             return "redirect:/albums/" + albumId;
+        } catch (IllegalArgumentException e) {
+            logger.error("Failed to add song to album: {}", e.getMessage());
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
+            return "forward:/error";
         } catch (Exception e) {
-            return "redirect:/error";
+            logger.error("Failed to add song to album: {}", e.getMessage());
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return "forward:/error";
         }
     }
 
     @PostMapping("/albums/{username}/album/{albumId}/removeSong")
     public String removeSongFromAlbum(@RequestParam("songId") Long songId,
-                                 @PathVariable String username,
-                                 @PathVariable Long albumId) {
+                                      @PathVariable String username,
+                                      @PathVariable Long albumId,
+                                      HttpServletRequest request) {
         try {
             albumService.removeSongFromAlbum(songId, albumId);
             return "redirect:/albums/" + albumId;
+        } catch (IllegalArgumentException e) {
+            logger.error("Failed to remove song from album: {}", e.getMessage());
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.NOT_FOUND.value());
+            return "forward:/error";
         } catch (Exception e) {
-            return "redirect:/error";
+            logger.error("Failed to remove song from album: {}", e.getMessage());
+            request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, HttpStatus.INTERNAL_SERVER_ERROR.value());
+            return "forward:/error";
         }
     }
 

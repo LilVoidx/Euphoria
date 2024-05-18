@@ -167,7 +167,6 @@
                                 </#if>
                             </td>
                             <td>
-                                <button class="btn btn-outline-warning btn-sm" onclick="editUser('${user.username}')">Edit</button>
                                 <button class="btn btn-outline-danger btn-sm" onclick="deleteUser('${user.username}', ${user.userId})">Delete</button>
                             </td>
                         </tr>

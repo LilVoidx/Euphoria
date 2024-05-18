@@ -23,7 +23,6 @@ import soul.euphoria.dto.forms.SongForm;
 import soul.euphoria.services.music.SongService;
 import soul.euphoria.services.notification.impl.PusherService;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -53,40 +52,44 @@ public class SongServiceImpl implements SongService {
 
     private static final Logger logger = LoggerFactory.getLogger(SongService.class);
 
-
     @Override
     public void uploadSong(SongForm songForm, MultipartFile songFile, MultipartFile imageFile, Long userId) {
+        try {
+            // Get the artist by user ID
+            Optional<Artist> artistOptional = artistRepository.findArtistByUserUserId(userId);
+            if (artistOptional.isPresent()) {
+                Artist artist = artistOptional.get();
 
-        // Get the artist by user ID
-        Optional<Artist> artistOptional = artistRepository.findArtistByUserUserId(userId);
-        if (artistOptional.isPresent()) {
-            Artist artist = artistOptional.get();
+                // Save song file
+                String songFileName = fileStorageService.saveFile(songFile);
 
-            // Save song file
-            String songFileName = fileStorageService.saveFile(songFile);
+                // Save image file
+                String imageFileName = fileStorageService.saveFile(imageFile);
 
-            // Save image file
-            String imageFileName = fileStorageService.saveFile(imageFile);
+                // Convert releaseDate string from Form to Date for Song
+                Date releaseDate = stringToDateConverter.convert(songForm.getReleaseDate());
 
-            // Convert releaseDate string from Form to Date for Song
-            Date releaseDate = stringToDateConverter.convert(songForm.getReleaseDate());
+                // Create and save the song
+                Song song = Song.builder()
+                        .title(songForm.getTitle())
+                        .releaseDate(releaseDate)
+                        .duration(songForm.getDuration())
+                        .songFileInfo(fileStorageService.findByStorageName(songFileName))
+                        .songImageInfo(fileStorageService.findByStorageName(imageFileName))
+                        .genre(Genre.valueOf(songForm.getGenre()))
+                        .artist(artist)
+                        .build();
+                songRepository.save(song);
 
-
-            // Create and save the song
-            Song song = Song.builder()
-                    .title(songForm.getTitle())
-                    .releaseDate(releaseDate)
-                    .duration(songForm.getDuration())
-                    .songFileInfo(fileStorageService.findByStorageName(songFileName))
-                    .songImageInfo(fileStorageService.findByStorageName(imageFileName))
-                    .genre(Genre.valueOf(songForm.getGenre()))
-                    .artist(artist)
-                    .build();
-            songRepository.save(song);
-
-            // Notify all users about the new song upload
-            String message = "A new song has been uploaded by " + artist.getStageName();
-            pusherService.sendNotification("music-channel", "new-song", message, song.getTitle(), song.getSongId());
+                // Notify all users about the new song upload
+                String message = "A new song has been uploaded by " + artist.getStageName();
+                pusherService.sendNotification("music-channel", "new-song", message, song.getTitle(), song.getSongId());
+            } else {
+                throw new IllegalArgumentException("Artist not found for user ID: " + userId);
+            }
+        } catch (Exception e) {
+            logger.error("Error uploading song", e);
+            throw e;  // Re-throwing the exception to propagate it
         }
     }
 
@@ -97,22 +100,20 @@ public class SongServiceImpl implements SongService {
             Song song = optionalSong.get();
             songRepository.delete(song);
         } else {
-            logger.error("error finding song with ID: " + songId);
+            logger.error("Error finding song with ID: " + songId);
             throw new NotFoundException("Song not found with ID: " + songId);
         }
     }
 
     @Override
     public Page<SongDTO> searchSongs(String query, int page, int size) {
-        Page<Song> songsPage = songRepository.searchSongsQuery(query, PageRequest.of(page, size));
-        return songsPage.map(SongDTO::from);
+        return songRepository.searchSongsQuery(query, PageRequest.of(page, size)).map(SongDTO::from);
     }
 
     @Override
     public List<SongDTO> getAllUserFavorites(String username) {
-        List<SongDTO> favoriteSongs =songList(songRepository.findAllFavoritesByUsername(username));
+        List<SongDTO> favoriteSongs = songList(songRepository.findAllFavoritesByUsername(username));
         logger.info("Found {} favorite songs for user: {}", favoriteSongs.size(), username);
-
         return favoriteSongs;
     }
 
@@ -133,25 +134,24 @@ public class SongServiceImpl implements SongService {
             }
 
             usersRepository.save(user);
-
             return SongDTO.from(song);
         } else {
-            throw new IllegalArgumentException("User or song not found");
+            throw new IllegalArgumentException("User or song not found. User ID: " + userId + ", Song ID: " + songId);
         }
     }
 
     @Override
     public boolean isSongFavoritedByCurrentUser(Long songId, String currentUsername) {
         Optional<User> optionalCurrentUser = usersRepository.findByUsername(currentUsername);
-        User currentUser = optionalCurrentUser.orElseThrow(() -> new IllegalArgumentException("Current user not found"));
+        User currentUser = optionalCurrentUser.orElseThrow(() -> new IllegalArgumentException("Current user not found: " + currentUsername));
 
         return songRepository.existsBySongIdAndFavoritesContaining(songId, currentUser);
     }
 
     @Override
     public SongDTO findById(Long songId) {
-        Song song = songRepository.findById(songId).orElse(null);
-        assert song != null;
+        Song song = songRepository.findById(songId)
+                .orElseThrow(() -> new IllegalArgumentException("Song not found with ID: " + songId));
         return SongDTO.from(song);
     }
 
@@ -177,7 +177,8 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public Song getCurrentSong(Long songId) {
-        return songRepository.findById(songId).orElse(null);
+        return songRepository.findById(songId)
+                .orElseThrow(() -> new IllegalArgumentException("Song not found with ID: " + songId));
     }
 
     @Override
