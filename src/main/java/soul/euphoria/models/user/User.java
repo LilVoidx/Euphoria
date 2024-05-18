@@ -10,6 +10,7 @@ import soul.euphoria.models.music.Song;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
@@ -49,6 +50,8 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
+    @Pattern(regexp = "^7\\d{10}$", message = "Phone number must start with 7 and be followed by 10 digits")
+    @Column
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)

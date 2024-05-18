@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
@@ -36,6 +37,7 @@ public class UserForm {
     @NotBlank
     private String lastName;
 
+    @Pattern(regexp = "^7\\d{10}$", message = "Phone number must start with 7 and be followed by 10 digits")
     private String phoneNumber;
 
     private MultipartFile profilePicture;

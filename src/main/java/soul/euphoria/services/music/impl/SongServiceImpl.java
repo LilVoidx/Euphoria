@@ -18,6 +18,7 @@ import soul.euphoria.services.converters.StringToDateConverter;
 import soul.euphoria.services.file.FileStorageService;
 import soul.euphoria.dto.forms.SongForm;
 import soul.euphoria.services.music.SongService;
+import soul.euphoria.services.notification.impl.PusherService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,6 +44,9 @@ public class SongServiceImpl implements SongService {
 
     @Autowired
     private StringToDateConverter stringToDateConverter;
+
+    @Autowired
+    private PusherService pusherService;
 
     private static final Logger logger = LoggerFactory.getLogger(SongService.class);
 
@@ -76,6 +80,10 @@ public class SongServiceImpl implements SongService {
                     .artist(artist)
                     .build();
             songRepository.save(song);
+
+            // Notify all users about the new song upload
+            String message = "A new song has been uploaded by " + artist.getStageName();
+            pusherService.sendNotification("music-channel", "new-song", message, song.getTitle());
         }
     }
 
