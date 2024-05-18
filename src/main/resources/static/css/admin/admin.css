@@ -1,0 +1,219 @@
+a {
+    text-decoration: none;
+    color: #fff;
+}
+i {
+    color: #fff;
+    cursor: pointer;
+}
+img {
+    object-fit: cover;
+    object-position: top;
+    border-radius: 8px;
+}
+html,
+body {
+    background: linear-gradient(#050505, #18181d);
+    height: 100vh;
+    color: #fff;
+}
+.navbar {
+    background-color: transparent !important;
+    color: #ccc;
+    padding-left: 340px;
+    margin-top: 10px;
+}
+.navbar-nav .nav-link {
+    color: #ccc !important;
+}
+.navbar-toggler {
+    border-color: #ccc !important;
+}
+.side-menu {
+    height: 100vh;
+    background-color: #18181d;
+    padding-top: 35px;
+}
+.side-menu h5 {
+    color: #fff;
+    padding: 0 0 60px 95px;
+}
+.side-menu a i,
+.side-menu .nav-link {
+    color: #bbb;
+    padding: 20px 20px;
+    transition: all 0.3s ease;
+}
+.side-menu a i,
+.side-menu .nav-link:hover {
+    color: #6600cc;
+}
+.main-content {
+    padding: 20px;
+}
+.table {
+    background-color: transparent;
+    color: #fff;
+}
+.table th,
+.table td {
+    padding: 15px;
+    border: none;
+}
+.table-hover tbody tr:hover {
+    background-color: #2a2d34;
+    color: #ffffff;
+}
+.pagination a {
+    color: #ffffff;
+}
+.pagination .page-item.disabled .page-link,
+.pagination .page-item.active .page-link {
+    background-color: #343a40;
+    border-color: #454d55;
+}
+.pagination .page-link {
+    background-color: #212529;
+    border-color: #454d55;
+    color: #ffffff;
+}
+.form-control-dark {
+    background-color: #343a40;
+    color: #ffffff;
+    border: 1px solid #454d55;
+}
+.btn-outline-dark {
+    color: #ffffff;
+    border: 1px solid #ffffff;
+}
+.badge-outline {
+    border: 1px solid #ffffff;
+    background-color: transparent;
+    color: #ffffff;
+}
+.badge-outline.badge-danger,
+.badge-outline.badge-info,
+.badge-outline.badge-success {
+    padding: 5px 8px;
+}
+.badge-outline.badge-danger {
+    background-color: #dc3545;
+}
+.badge-outline.badge-info {
+    background-color: #17a2b8;
+}
+.badge-outline.badge-success {
+    background-color: #28a745;
+}
+.mt-4, .my-4 {
+    margin-top: 10.5rem !important;
+}
+.user {
+    display: flex;
+}
+.user .left {
+    display: flex;
+    align-items: center;
+    background: #32323d;
+    padding: 6px;
+    border-radius: 6px 0 0 6px;
+}
+.user .left img {
+    width: 30px;
+    height: 30px;
+}
+.user .right {
+    background-color: #25252d;
+    border-radius: 0 6px 6px 0;
+    padding: 13px;
+    color: #fff;
+}
+.sidebar {
+    height: 100vh;
+    background-color: #18181d;
+    padding: 20px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 10000;
+    transition: all 0.6s ease;
+}
+.sidebar .logo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.sidebar .logo > i {
+    font-size: 24px;
+    transition: all 0.3s ease;
+}
+.sidebar .logo a {
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+.sidebar .logo a:hover,
+.sidebar .menu ul li:hover a,
+.sidebar .menu ul li:hover i {
+    color: #6600cc;
+}
+.sidebar .menu h5 {
+    color: #919191;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+.sidebar .menu ul {
+    list-style: none;
+}
+.sidebar .menu ul li {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+}
+.sidebar .menu ul li a {
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+.sidebar .playing .top {
+    background-color: #32323d;
+    border-radius: 6px 6px 0 0;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    font-size: 13px;
+}
+.sidebar .playing .top .song-info {
+    display: flex;
+    flex-direction: column;
+}
+.sidebar .playing .top h4 {
+    width: 90px;
+    cursor: pointer;
+}
+#mini-artist-name {
+    font-size: 10px;
+    padding-top: 2px;
+    color: #aaa;
+}
+.sidebar .playing .top img {
+    width: 36px;
+    height: 36px;
+}
+.sidebar .playing .bottom {
+    background-color: #25252d;
+    border-radius: 0 0 6px 6px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 12px;
+}
+.sidebar .playing .bottom i,
+.sidebar .playing .bottom p {
+    color: #919191;
+}

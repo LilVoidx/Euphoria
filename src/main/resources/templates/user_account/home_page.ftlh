@@ -86,11 +86,10 @@
                     <#if user.role == "ARTIST">
                         <i class='bx bxs-microphone' ></i>
                         <a href="/artist/${user.username}">Artist Page</a>
-                        <#elseif user.role == "LISTENER">
+                        <#elseif user.role == "LISTENER" || user.role =="ADMIN">
                         <i class='bx bxs-microphone' ></i>
                         <a href="/artists/${user.username}/register">Become an Artist</a>
                     </#if>
-
                 </li>
                 <li>
                     <i class='bx bx-refresh' ></i>

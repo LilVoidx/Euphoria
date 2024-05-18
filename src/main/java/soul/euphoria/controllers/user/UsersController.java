@@ -53,7 +53,7 @@ public class UsersController {
     }
 
     @GetMapping("/profile/{username}/edit")
-    public String editProfile(Model model, @PathVariable String username, HttpServletRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public String editProfile(Model model, @PathVariable String username, HttpServletRequest request) {
         Optional<UserDTO> optionalUser = userService.findByUserName(username);
         if (optionalUser.isPresent()) {
             // Convert User entity to UserDTO

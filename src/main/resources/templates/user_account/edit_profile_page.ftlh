@@ -83,10 +83,13 @@
                     <i class='bx bxs-edit' ></i>
                     <a href="/users/profile/${user.username}/edit">Edit Profile</a>
                 </li>
-                <li>
+                <#if user.role == "ARTIST">
                     <i class='bx bxs-microphone' ></i>
-                    <a href="/artists/register">Become an Artist</a>
-                </li>
+                    <a href="/artist/${user.username}">Artist Page</a>
+                <#elseif user.role == "LISTENER" || user.role =="ADMIN">
+                    <i class='bx bxs-microphone' ></i>
+                    <a href="/artists/${user.username}/register">Become an Artist</a>
+                </#if>
                 <li>
                     <i class='bx bx-refresh' ></i>
                     <a href="/password/forgot">Password Reset</a>

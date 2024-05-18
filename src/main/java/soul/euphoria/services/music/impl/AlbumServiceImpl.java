@@ -14,6 +14,7 @@ import soul.euphoria.models.user.Artist;
 import soul.euphoria.repositories.music.AlbumRepository;
 import soul.euphoria.repositories.music.SongRepository;
 import soul.euphoria.repositories.user.ArtistRepository;
+import soul.euphoria.services.converters.StringToDateConverter;
 import soul.euphoria.services.file.FileStorageService;
 import soul.euphoria.services.music.AlbumService;
 
@@ -39,6 +40,9 @@ public class AlbumServiceImpl implements AlbumService {
     @Autowired
     private FileStorageService fileStorageService;
 
+    @Autowired
+    private StringToDateConverter stringToDateConverter;
+
     @Override
     public Album createAlbum(AlbumForm albumForm, MultipartFile imageFile, Long userId) {
         // Get the artist by user ID
@@ -50,15 +54,9 @@ public class AlbumServiceImpl implements AlbumService {
             // Save cover image
             String coverImageFileName = fileStorageService.saveFile(imageFile);
 
-            // Convert releaseDate string from Form to Date for Song
-            Date releaseDate;
-            try {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                releaseDate = dateFormat.parse(albumForm.getReleaseDate());
+            // Convert releaseDate string from Form to Date for album
+            Date releaseDate = stringToDateConverter.convert(albumForm.getReleaseDate());
 
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Invalid release date format");
-            }
 
             // Create Album
             Album album = Album.builder()

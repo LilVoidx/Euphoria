@@ -14,6 +14,7 @@ import soul.euphoria.models.user.User;
 import soul.euphoria.repositories.music.SongRepository;
 import soul.euphoria.repositories.user.ArtistRepository;
 import soul.euphoria.repositories.user.UsersRepository;
+import soul.euphoria.services.converters.StringToDateConverter;
 import soul.euphoria.services.file.FileStorageService;
 import soul.euphoria.dto.forms.SongForm;
 import soul.euphoria.services.music.SongService;
@@ -40,6 +41,9 @@ public class SongServiceImpl implements SongService {
     @Autowired
     private UsersRepository usersRepository;
 
+    @Autowired
+    private StringToDateConverter stringToDateConverter;
+
     private static final Logger logger = LoggerFactory.getLogger(SongService.class);
 
 
@@ -58,14 +62,8 @@ public class SongServiceImpl implements SongService {
             String imageFileName = fileStorageService.saveFile(imageFile);
 
             // Convert releaseDate string from Form to Date for Song
-            Date releaseDate = null;
-            try {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                releaseDate = dateFormat.parse(songForm.getReleaseDate());
+            Date releaseDate = stringToDateConverter.convert(songForm.getReleaseDate());
 
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Invalid release date format");
-            }
 
             // Create and save the song
             Song song = Song.builder()

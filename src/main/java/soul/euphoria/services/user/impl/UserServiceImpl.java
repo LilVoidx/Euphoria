@@ -3,6 +3,8 @@ package soul.euphoria.services.user.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import soul.euphoria.dto.forms.UserForm;
@@ -110,6 +112,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Page<UserDTO> searchUsers(String query, int page, int size) {
+        Page<User> usersPage = userRepository.searchUsersByQuery(query, PageRequest.of(page, size));
+        return usersPage.map(UserDTO::from);
+    }
+
+    @Override
     public UserDTO getUserById(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -142,12 +150,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDTO> getAllUsers() {
-        return userList(userRepository.findAll());
+    public User getCurrentUser(Long userId) {
+        return userRepository.getOne(userId);
     }
 
     @Override
-    public User getCurrentUser(Long userId) {
-        return userRepository.getOne(userId);
+    public boolean deleteUserByUsername(String username) {
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            userRepository.delete(user);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

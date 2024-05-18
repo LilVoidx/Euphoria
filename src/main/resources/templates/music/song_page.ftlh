@@ -71,26 +71,31 @@
             </ul>
         </div>
 
-        <div class="menu">
-            <h5>Playlist</h5>
+        <<div class="menu">
+            <h5>Actions</h5>
             <ul>
                 <li>
-                    <i class='bx bxs-plus-square'></i>
-                    <a href="#">Create New</a>
+                    <i class='bx bxs-home'></i>
+                    <a href="/home">Home Page</a>
                 </li>
                 <li>
-                    <i class='bx bxs-caret-right-circle'></i>
-                    <a href="#">Best of 2023</a>
+                    <i class='bx bxs-edit' ></i>
+                    <a href="/users/profile/${user.username}/edit">Edit Profile</a>
                 </li>
                 <li>
-                    <i class='bx bxs-caret-right-circle'></i>
-                    <a href="#">Best of 2022</a>
-                </li>
-                <li>
-                    <i class='bx bxs-caret-right-circle'></i>
-                    <a href="#">Kael Fischer</a>
-                </li>
+                    <#if user.role == "ARTIST">
+                        <i class='bx bxs-microphone' ></i>
+                        <a href="/artist/${user.username}">Artist Page</a>
+                    <#elseif user.role == "LISTENER" || user.role =="ADMIN">
+                        <i class='bx bxs-microphone' ></i>
+                        <a href="/artists/${user.username}/register">Become an Artist</a>
+                    </#if>
 
+                </li>
+                <li>
+                    <i class='bx bx-refresh' ></i>
+                    <a href="/password/forgot">Password Reset</a>
+                </li>
             </ul>
         </div>
 
