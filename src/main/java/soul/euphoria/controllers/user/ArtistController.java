@@ -63,7 +63,7 @@ public class ArtistController {
         try {
             User user = userService.getCurrentUser(userDetails.getUserId());
             artistService.registerAsArtist(user, artistForm);
-            return "redirect:/profile/" + user.getUsername();
+            return "redirect:/users/profile/" + user.getUsername();
         } catch (Exception e) {
             logger.error("Error registering artist: {}", e.getMessage());
             // Forward the request to the error controller
