@@ -207,7 +207,7 @@
                     location.reload();
                 },
                 error: function(err) {
-                    alert('Failed to delete user.');
+                    alert('Failed to delete Song.');
                 }
             });
         }
